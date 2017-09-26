@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="gov.kl.chengguan.modules.cms.dao.BaseArticleDao">
     
-	<sql id="cmsArticleColumns">
+	<sql id="cmsBaseArticleColumns">
 		a.id AS "id",
 		a.category_id AS "category.id",
 		a.title AS "title",
@@ -11,14 +11,14 @@
     
 	<select id="get" resultType="BaseArticle">
 		SELECT 
-			<include refid="cmsArticleColumns"/>
+			<include refid="cmsBaseArticleColumns"/>
 		FROM cms_article a
 		WHERE a.id = #{id}
 	</select>
 	
 	<select id="findList" resultType="BaseArticle">
 		SELECT 
-			<include refid="cmsArticleColumns"/>
+			<include refid="cmsBaseArticleColumns"/>
 		FROM cms_article a
 		<where>
 			a.del_flag = #{delFlag}
@@ -29,21 +29,14 @@
 					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
 			</if>
 			<if test="category.id != null and category.id != ''">
-				AND (a.category_id = #{category.id}
-				<if test="category.parentIds != null and category.parentIds != ''">
-					or c.parent_ids like 
-						<if test="dbName == 'oracle'">'%'||#{category.id}||'%'</if>
-						<if test="dbName == 'mssql'">'%,'+#{category.id}+',%'</if>
-						<if test="dbName == 'mysql'">CONCAT('%,', #{category.id}, ',%')</if>
-				</if>)
+				AND a.category_id = #{category.id}
 			</if>
-			<!-- ${sqlMap.dsf}-->
 		</where>
 	</select>
 	
 	<select id="findAllList" resultType="BaseArticle">
 		SELECT 
-			<include refid="cmsArticleColumns"/>
+			<include refid="cmsBaseArticleColumns"/>
 		FROM cms_article a	
 	</select>
 	
@@ -51,7 +44,7 @@
 	
 	<select id="findByIdIn" resultType="BaseArticle">
 		SELECT 
-			<include refid="cmsArticleColumns"/>
+			<include refid="cmsBaseArticleColumns"/>
 		from cms_article a where 
 		<where>
 			id in (${id});

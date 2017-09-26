@@ -39,28 +39,13 @@ import gov.kl.chengguan.modules.sys.utils.UserUtils;
 public class BaseArticleService extends CrudService<BaseArticleDao, BaseArticle> {
 
 	@Autowired
-	private BaseArticleDataDao articleDataDao;
+	private BaseArticleDao baseArticleDao;
 	@Autowired
 	private CategoryDao categoryDao;
 	
 	@Transactional(readOnly = false)
-	public Page<BaseArticle> findPage(Page<BaseArticle> page, BaseArticle article, boolean isDataScopeFilter) {
-		// 更新过期的权重，间隔为“6”个小时
-
-		if (article.getCategory()!=null && StringUtils.isNotBlank(article.getCategory().getId()) && !Category.isRoot(article.getCategory().getId())){
-			Category category = categoryDao.get(article.getCategory().getId());
-			if (category==null){
-				category = new Category();
-			}
-			category.setParentIds(category.getId());
-			category.setSite(category.getSite());
-			article.setCategory(category);
-		}
-		else{
-			article.setCategory(new Category());
-		}
-		return super.findPage(page, article);
-		
+	public List<BaseArticle> getList(BaseArticle article) {
+		return baseArticleDao.findList(article);
 	}
 
 	

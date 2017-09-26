@@ -21,7 +21,6 @@ import gov.kl.chengguan.modules.cms.utils.CmsUtils;
  */
 public class BaseArticle extends DataEntity<BaseArticle> {
 
-    public static final String DEFAULT_TEMPLATE = "frontViewArticle";
 	
 	private static final long serialVersionUID = 1L;
 	private Category category;// 分类编号

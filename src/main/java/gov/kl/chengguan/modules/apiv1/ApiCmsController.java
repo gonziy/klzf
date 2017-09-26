@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.h2.util.New;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 
 import gov.kl.chengguan.common.web.BaseController;
+import gov.kl.chengguan.modules.cms.dao.BaseArticleDao;
+import gov.kl.chengguan.modules.cms.entity.BaseArticle;
+import gov.kl.chengguan.modules.cms.entity.Category;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
 import gov.kl.chengguan.modules.cms.utils.CmsUtils;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
@@ -30,6 +34,10 @@ import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 @RestController
 @RequestMapping(value = "/apiv1")
 public class ApiCmsController  extends BaseController {
+	
+	@Autowired
+	private BaseArticleDao baseArticleDao;
+	
 	
 	@RequestMapping(value = {"test"})
 	public void test(HttpServletRequest request, HttpServletResponse response) {
@@ -73,21 +81,103 @@ public class ApiCmsController  extends BaseController {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String categoryid = request.getParameter("categoryid");
+		if(categoryid==null || categoryid.isEmpty())
+		{
+			jsonObject.put("msg", "missing url, categoryid is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 		try {
-			jsonObject.put("msg", "success");
-			jsonObject.put("code", 200);
+			BaseArticle whereArticle = new BaseArticle();
+			Category whereCategory = new Category();
+			whereCategory.setId(categoryid);
+			whereArticle.setCategory(whereCategory);
+						
 			
-		
-			jsonObject.put("data", CmsUtils.getBaseArticleList("1", "5", 100, ""));
+			java.util.List<BaseArticle> list = baseArticleDao.findList(whereArticle) ;
+			if(list!=null)
+			{
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 200);
+				ArrayList<ApiArticle> articles = new ArrayList<ApiArticle>();
+				for (BaseArticle article : list) {
+					ApiArticle apiArticle = new ApiArticle();
+					apiArticle.setId(article.getId());
+					apiArticle.setTitle(article.getTitle());
+					apiArticle.setCategoryId(article.getCategory().getId());
+					apiArticle.setDescription(article.getDescription());
+					
+					articles.add(apiArticle);
+				}
+
+				jsonObject.put("data", articles);
+			}
+			else
+			{
+				jsonObject.put("msg", "data is null");
+				jsonObject.put("code", 44004);
+			}
+			
 			PrintWriter out = response.getWriter();
 			out.print(jsonObject.toJSONString());
 			out.flush();
 
 		} catch (Exception e) {
-
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
 		}
 
 	}
 		
+	
+	public class ApiArticle {
+		private String id;
+		private String categoryId;
+		private String title;
+		private String description;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getCategoryId() {
+			return categoryId;
+		}
+		public void setCategoryId(String categoryId) {
+			this.categoryId = categoryId;
+		}
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		
+	}
 
 }

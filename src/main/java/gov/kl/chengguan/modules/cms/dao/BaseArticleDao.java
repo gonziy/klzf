@@ -17,7 +17,7 @@ import gov.kl.chengguan.modules.cms.entity.Category;
 @MyBatisDao
 public interface BaseArticleDao extends CrudDao<BaseArticle> {
 	
-	public List<BaseArticle> findByIdIn(String[] ids);
+	public List<BaseArticle> findList(BaseArticle article);
 	
 	
 }

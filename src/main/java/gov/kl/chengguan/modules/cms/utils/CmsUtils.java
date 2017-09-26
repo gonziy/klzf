@@ -180,31 +180,6 @@ public class CmsUtils {
 		return page.getList();
 	}
 	/**
-	 * 
-	 * @param siteId
-	 * @param categoryId
-	 * @param number
-	 * @param param
-	 * @return
-	 */
-	public static List<BaseArticle> getBaseArticleList(String siteId, String categoryId, int number, String param) {
-		Page<BaseArticle> page = new Page<BaseArticle>(1, number, -1);
-		Category category = new Category(categoryId, new Site(siteId));
-		category.setParentIds(categoryId);
-		BaseArticle article = new BaseArticle(category);
-		if (StringUtils.isNotBlank(param)){
-			@SuppressWarnings({ "rawtypes" })
-			Map map = JsonMapper.getInstance().fromJson("{"+param+"}", Map.class);
-			if (StringUtils.isNotBlank((String)map.get("orderBy"))){
-				page.setOrderBy((String)map.get("orderBy"));
-			}
-		}
-		page = baseArticleService.findPage(page, article, false);
-		return page.getList();
-		
-	}
-	
-	/**
 	 * 获取链接
 	 * @param linkId 文章编号
 	 * @return
