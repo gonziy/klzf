@@ -15,11 +15,13 @@ import gov.kl.chengguan.common.service.BaseService;
 import gov.kl.chengguan.common.utils.CacheUtils;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.modules.sys.dao.AreaDao;
+import gov.kl.chengguan.modules.sys.dao.BaseUserDao;
 import gov.kl.chengguan.modules.sys.dao.MenuDao;
 import gov.kl.chengguan.modules.sys.dao.OfficeDao;
 import gov.kl.chengguan.modules.sys.dao.RoleDao;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.entity.Area;
+import gov.kl.chengguan.modules.sys.entity.BaseUser;
 import gov.kl.chengguan.modules.sys.entity.Menu;
 import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.Role;
@@ -32,6 +34,7 @@ import gov.kl.chengguan.modules.sys.security.SystemAuthorizingRealm.Principal;
 public class UserUtils {
 
 	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
+	private static BaseUserDao baseUserDao = SpringContextHolder.getBean(BaseUserDao.class);
 	private static RoleDao roleDao = SpringContextHolder.getBean(RoleDao.class);
 	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
 	private static AreaDao areaDao = SpringContextHolder.getBean(AreaDao.class);
@@ -87,13 +90,28 @@ public class UserUtils {
 		return user;
 	}
 	
-	public static User getBaseByLoginName(String loginName) {
-		User user = userDao.getBaseByLoginName(new User(null, loginName));
+	public static BaseUser getBaseByLoginName(String loginName) {
+		BaseUser user = baseUserDao.getByLoginName((new BaseUser(null, loginName)));
 		if (user == null) {
 			return null;
 		}
 
 		return user;
+	}
+	public static BaseUser getBaseById(String id){
+		BaseUser user = baseUserDao.get(id);
+		if (user == null){
+			return null;
+		}
+		return user;
+	}
+	public static List<BaseUser> getBaseAllList(BaseUser user) {
+		List<BaseUser> list = baseUserDao.findAllList(user);
+		if (list == null) {
+			return null;
+		}
+
+		return list;
 	}
 
 	/**

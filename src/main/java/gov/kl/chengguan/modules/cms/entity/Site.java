@@ -133,7 +133,7 @@ public class Site extends DataEntity<Site> {
    	public static final String TPL_BASE = "/WEB-INF/views/modules/cms/front/themes";
 
     /**
-   	 * 获得模板方案路径。如：/WEB-INF/views/modules/cms/front/themes/jeesite
+   	 * 获得模板方案路径。如：/WEB-INF/views/modules/cms/front/themes/
    	 *
    	 * @return
    	 */

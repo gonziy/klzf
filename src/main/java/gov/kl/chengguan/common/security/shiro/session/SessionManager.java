@@ -126,7 +126,7 @@ public class SessionManager extends DefaultWebSessionManager {
     	try{
     		return super.getAttributeKeys(key);
     	}catch (InvalidSessionException e) {
-    		// 获取不到SESSION不抛出异常
+    		// 获取不到SESSION不抛出异常 
         	return null;
 		}
     }

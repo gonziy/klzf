@@ -12,6 +12,8 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import gov.kl.chengguan.common.utils.StringUtils;
@@ -22,6 +24,8 @@ import gov.kl.chengguan.common.utils.StringUtils;
 @Service
 public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.FormAuthenticationFilter {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	public static final String DEFAULT_CAPTCHA_PARAM = "validateCode";
 	public static final String DEFAULT_MOBILE_PARAM = "mobileLogin";
 	public static final String DEFAULT_MESSAGE_PARAM = "message";
@@ -31,15 +35,19 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 	private String messageParam = DEFAULT_MESSAGE_PARAM;
 
 	protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
-		String username = getUsername(request);
+		String username = getUsername(request,response);
 		String password = getPassword(request);
+		logger.debug("FormAuthenticationFilter username:{},pwd:{}", username,password);
 		if (password==null){
 			password = "";
 		}
+
+		
 		boolean rememberMe = isRememberMe(request);
 		String host = StringUtils.getRemoteAddr((HttpServletRequest)request);
 		String captcha = getCaptcha(request);
 		boolean mobile = isMobileLogin(request);
+	    //return new org.apache.shiro.authc.UsernamePasswordToken(username, password.toCharArray());
 		return new UsernamePasswordToken(username, password.toCharArray(), rememberMe, host, captcha, mobile);
 	}
 	

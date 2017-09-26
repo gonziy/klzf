@@ -1,6 +1,3 @@
-/**
- * There are <a href="https://github.com/thinkgem/jeesite">JeeSite</a> code generation
- */
 package gov.kl.chengguan.modules.oa.web;
 
 import java.util.List;

@@ -8,18 +8,20 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+
 import gov.kl.chengguan.common.config.Global;
 import gov.kl.chengguan.common.utils.StringUtils;
-
 import gov.kl.chengguan.common.mapper.JsonMapper;
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.utils.CacheUtils;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.modules.cms.entity.Article;
+import gov.kl.chengguan.modules.cms.entity.BaseArticle;
 import gov.kl.chengguan.modules.cms.entity.Category;
 import gov.kl.chengguan.modules.cms.entity.Link;
 import gov.kl.chengguan.modules.cms.entity.Site;
 import gov.kl.chengguan.modules.cms.service.ArticleService;
+import gov.kl.chengguan.modules.cms.service.BaseArticleService;
 import gov.kl.chengguan.modules.cms.service.CategoryService;
 import gov.kl.chengguan.modules.cms.service.LinkService;
 import gov.kl.chengguan.modules.cms.service.SiteService;
@@ -38,6 +40,7 @@ public class CmsUtils {
 	private static SiteService siteService = SpringContextHolder.getBean(SiteService.class);
 	private static CategoryService categoryService = SpringContextHolder.getBean(CategoryService.class);
 	private static ArticleService articleService = SpringContextHolder.getBean(ArticleService.class);
+	private static BaseArticleService baseArticleService = SpringContextHolder.getBean(BaseArticleService.class);
 	private static LinkService linkService = SpringContextHolder.getBean(LinkService.class);
     private static ServletContext context = SpringContextHolder.getBean(ServletContext.class);
 
@@ -175,6 +178,30 @@ public class CmsUtils {
 		article.setDelFlag(Article.DEL_FLAG_NORMAL);
 		page = articleService.findPage(page, article, false);
 		return page.getList();
+	}
+	/**
+	 * 
+	 * @param siteId
+	 * @param categoryId
+	 * @param number
+	 * @param param
+	 * @return
+	 */
+	public static List<BaseArticle> getBaseArticleList(String siteId, String categoryId, int number, String param) {
+		Page<BaseArticle> page = new Page<BaseArticle>(1, number, -1);
+		Category category = new Category(categoryId, new Site(siteId));
+		category.setParentIds(categoryId);
+		BaseArticle article = new BaseArticle(category);
+		if (StringUtils.isNotBlank(param)){
+			@SuppressWarnings({ "rawtypes" })
+			Map map = JsonMapper.getInstance().fromJson("{"+param+"}", Map.class);
+			if (StringUtils.isNotBlank((String)map.get("orderBy"))){
+				page.setOrderBy((String)map.get("orderBy"));
+			}
+		}
+		page = baseArticleService.findPage(page, article, false);
+		return page.getList();
+		
 	}
 	
 	/**

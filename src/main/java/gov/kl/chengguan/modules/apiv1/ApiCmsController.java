@@ -14,10 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+
 import gov.kl.chengguan.common.web.BaseController;
+import gov.kl.chengguan.modules.cms.service.BaseArticleService;
+import gov.kl.chengguan.modules.cms.utils.CmsUtils;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.service.SystemService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
+
 import com.sun.tools.javac.resources.javac;
 import com.sun.tools.javac.util.List;
 import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
@@ -57,8 +61,13 @@ public class ApiCmsController  extends BaseController {
 		}
 
 	}
-	@RequestMapping(value = {"user/info/get"})
-	public void getUserInfo(HttpServletRequest request, HttpServletResponse response) {
+	/**
+	 * 获取文章列表（未完成）
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = {"cms/article/list"})
+	public void getArticleList(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -67,7 +76,9 @@ public class ApiCmsController  extends BaseController {
 		try {
 			jsonObject.put("msg", "success");
 			jsonObject.put("code", 200);
-			jsonObject.put("data", UserUtils.getBaseByLoginName("gonziy"));
+			
+		
+			jsonObject.put("data", CmsUtils.getBaseArticleList("1", "5", 100, ""));
 			PrintWriter out = response.getWriter();
 			out.print(jsonObject.toJSONString());
 			out.flush();
