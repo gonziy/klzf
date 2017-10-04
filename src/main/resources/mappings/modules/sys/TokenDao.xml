@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.kl.chengguan.modules.sys.dao.TokenDao">
+	
+	
+	<sql id="tokenColumns">
+    	a.id,
+    	a.token,
+    	a.expire_time,
+    	a.app_id
+    </sql>
+    
+	
+	<!-- 根据编号获得用户 -->
+	<select id="checkToken" resultType="Token">
+		SELECT COUNT(1) FROM sys_token a
+		WHERE a.token = #{token} AND a.expire_time >= #{expire_time} AND a.app_id = #{app_id}
+	</select>
+	
+	
+</mapper>
