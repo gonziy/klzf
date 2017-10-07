@@ -26,10 +26,6 @@ import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.service.SystemService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
-import com.sun.tools.javac.resources.javac;
-import com.sun.tools.javac.util.List;
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
-
 
 @RestController
 @RequestMapping(value = "/apiv1")
@@ -44,6 +40,8 @@ public class ApiCmsController  extends BaseController {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		
 		java.util.List<String> users = new ArrayList<String>();
@@ -59,7 +57,7 @@ public class ApiCmsController  extends BaseController {
 		
 		try {
 			jsonObject.put("msg", "method is " + method + ", msg is " +msg);
-			jsonObject.put("code", 200);
+			jsonObject.put("code", 0);
 			jsonObject.put("data", users);
 			PrintWriter out = response.getWriter();
 			out.print(jsonObject.toJSONString());
@@ -79,6 +77,8 @@ public class ApiCmsController  extends BaseController {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
 		String categoryid = request.getParameter("categoryid");
@@ -108,7 +108,7 @@ public class ApiCmsController  extends BaseController {
 			if(list!=null)
 			{
 				jsonObject.put("msg", "success");
-				jsonObject.put("code", 200);
+				jsonObject.put("code", 0);
 				ArrayList<ApiArticle> articles = new ArrayList<ApiArticle>();
 				for (BaseArticle article : list) {
 					ApiArticle apiArticle = new ApiArticle();

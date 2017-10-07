@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.kl.chengguan.modules.oa.dao.OaCaseFieldsDao">
+	
+    <sql id="columns">
+		no,
+		value_first AS "valueFirst",
+		value_second AS "valueSecond",
+		value_third AS "valueThird",
+		intro,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		
+	</sql>
+    
+    <select id="get" resultType="OaCaseFields">
+		SELECT 
+			<include refid="columns"/>
+		FROM oa_case_fields
+		WHERE no = #{no}
+	</select>
+		
+	<insert id="insert">
+		INSERT INTO oa_case_fields(
+			no, 
+			value_first,
+			value_second,
+			value_third,
+			intro,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+						
+		) VALUES (
+			#{no}, 
+			#{valueFirst},
+			#{valueSecond},
+			#{valueThird},
+			#{intro},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_case_fields SET 
+			value_first = #{valueFirst}, 
+			value_second = #{valueSecond}, 
+			value_third = #{valueThird}, 
+			intro = #{intro},
+			create_date = #{createDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			del_flag = #{delFlag}
+		WHERE no = #{no}
+	</update>
+
+</mapper>

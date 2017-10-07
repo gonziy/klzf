@@ -8,6 +8,8 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.util.ByteSource;
 import org.h2.util.New;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,39 +18,141 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import gov.kl.chengguan.common.security.Digests;
+import gov.kl.chengguan.common.utils.Encodes;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
 import gov.kl.chengguan.modules.cms.utils.CmsUtils;
+import gov.kl.chengguan.modules.sys.dao.BaseUserDao;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.entity.BaseUser;
 import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.User;
+import gov.kl.chengguan.modules.sys.security.SystemAuthorizingRealm.Principal;
 import gov.kl.chengguan.modules.sys.service.SystemService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
-import com.sun.tools.javac.resources.javac;
-import com.sun.tools.javac.util.List;
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 
 @RestController
 @RequestMapping(value = "/apiv1")
 public class ApiUserController  extends BaseController {
-	
+
 	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
+	private static BaseUserDao baseUserDao = SpringContextHolder.getBean(BaseUserDao.class);
 	
+	@RequestMapping(value = {"user/info/login"})
+	public void login(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String login_name = request.getParameter("login_name");
+		String password = request.getParameter("password");
+		if((login_name==null || login_name.isEmpty())||(password==null || password.isEmpty()))
+		{
+			jsonObject.put("msg", "missing url, username or password is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		try {
+			BaseUser baseUser = UserUtils.getBaseByLoginName(login_name);
+			if(baseUser==null)
+			{
+
+				jsonObject.put("msg", "user data is null");
+				jsonObject.put("code", 44004);
+				PrintWriter out;
+				try {
+					out = response.getWriter();
+					out.print(jsonObject.toJSONString());
+					out.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return;
+			}
+
+			String plainPassword = password;
+			String sourcePassword = baseUser.getPassword();
+			String plain = Encodes.unescapeHtml(plainPassword);
+			byte[] salt = Encodes.decodeHex(sourcePassword.substring(0,16));
+			byte[] hashPassword = Digests.sha1(plain.getBytes(),salt,1024);
+			String pwd = Encodes.encodeHex(salt)+Encodes.encodeHex(hashPassword);
+			boolean result = sourcePassword.equals(pwd);
+			
+
+			if(!result)
+			{
+				jsonObject.put("remark", "login failed");
+				jsonObject.put("result", "failed");
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+				
+			}else {
+
+				jsonObject.put("remark", "login success");
+				jsonObject.put("result", "success");
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+
+				ApiUser user = new ApiUser();
+				user.setId(baseUser.getId());
+				user.setUsername(baseUser.getLoginName());
+				user.setNo(baseUser.getNo());
+				user.setName(baseUser.getName());
+				user.setOfficeId(baseUser.getOffice().getId());
+				user.setOfficeName(baseUser.getOffice().getName());
+				
+				jsonObject.put("data",JSONObject.toJSON(user));
+			}
+			
+			PrintWriter out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+			
+		}
+
+	}
 	
 	@RequestMapping(value = {"user/info/get"})
 	public void getUserInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		String username = request.getParameter("username");
+		String login_name = request.getParameter("login_name");
 		String userid = request.getParameter("userid");
-		if((username==null || username.isEmpty())&&(userid==null || userid.isEmpty()))
+		if((login_name==null || login_name.isEmpty())&&(userid==null || userid.isEmpty()))
 		{
 			jsonObject.put("msg", "missing url, username and userid is null, please put a parameter");
 			jsonObject.put("code", 41010);
@@ -65,12 +169,12 @@ public class ApiUserController  extends BaseController {
 		}
 		try {
 			BaseUser baseUser = new BaseUser();
-			if((username == null || username.isEmpty()) && !userid.isEmpty())
+			if((login_name == null || login_name.isEmpty()) && !userid.isEmpty())
 			{
 				baseUser = UserUtils.getBaseById(userid);
-			}else if(!username.isEmpty() && (userid==null || userid.isEmpty()))
+			}else if(!login_name.isEmpty() && (userid==null || userid.isEmpty()))
 			{
-				baseUser = UserUtils.getBaseByLoginName(username);
+				baseUser = UserUtils.getBaseByLoginName(login_name);
 			}
 			
 			if(baseUser == null)
@@ -81,7 +185,7 @@ public class ApiUserController  extends BaseController {
 			}else {
 
 				jsonObject.put("msg", "success");
-				jsonObject.put("code", 200);
+				jsonObject.put("code", 0);
 
 				ApiUser user = new ApiUser();
 				user.setId(baseUser.getId());
@@ -119,6 +223,8 @@ public class ApiUserController  extends BaseController {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		String officeId = request.getParameter("office_id");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
@@ -137,7 +243,7 @@ public class ApiUserController  extends BaseController {
 			}else {
 
 				jsonObject.put("msg", "success");
-				jsonObject.put("code", 200);
+				jsonObject.put("code", 0);
 				
 				ArrayList<ApiUser> apiUsers = new ArrayList<ApiUser>();
 				for (BaseUser user : list) {

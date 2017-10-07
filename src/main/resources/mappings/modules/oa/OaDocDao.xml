@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.kl.chengguan.modules.oa.dao.OaDocDao">
+	
+    <sql id="docColumns">
+		a.*,
+		u.id AS "createBy.id",
+		u.name AS "createBy.name",
+		o.id AS "publisher.office.id",
+		o.name AS "publisher.office.name"
+	</sql>
+	
+	<sql id="docJoins">
+		JOIN sys_user u ON u.id = a.create_by
+		JOIN sys_office o ON o.id = u.office_id
+    </sql>
+    
+    <select id="get" resultType="OaDoc">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc a
+			<include refid="docJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaDoc">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc a
+			<include refid="docJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="docQueryCreateDateStart != null">
+			AND a.create_date &gt;= #{docQueryPublishDateStart}
+		</if>
+		<if test="docQueryCreateDateEnd != null">
+			AND a.create_date &lt;= #{docQueryPublishDateEnd}
+		</if>
+		<if test="docTitle != null and docTitle != ''">
+			AND a.doc_title like (${docTitle})
+		</if>
+		${sqlMap.dsf}
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="findAllList" resultType="OaDoc">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc a
+			<include refid="docJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.id DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_doc(
+			id,
+			doc_title,
+			doc_attach_links,
+			approver_ids,
+			due_date,
+			del_flag, 
+			process_instance_id
+		) VALUES (
+			#{id}, 
+			#{docTitle},
+			#{docAttachmentLinks},
+			#{docApproverIDs},
+			#{dueDate},
+			#{delFlag},			
+			#{processInstanceId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_doc SET 
+			doc_title = #{docTitle}, 
+			doc_attach_links = #{docAttachmentLinks},
+			approver_ids = #{docApproverIDs},
+			due_date = #{dueDate}
+		WHERE id = #{id}
+	</update>
+		
+	<update id="updateProcessInstanceId">
+		UPDATE oa_doc SET 
+			process_instance_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_doc SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
