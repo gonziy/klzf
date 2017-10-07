@@ -6,11 +6,6 @@ import gov.kl.chengguan.modules.oa.entity.OaCase;
 
 @MyBatisDao
 public interface OaCaseDao extends CrudDao<OaCase>{
-	/**
-	 * 更新流程实例ID
-	 * @param OaDoc
-	 * @return
-	 */
-	public int updateProcessInstanceId(OaCase oaCase);
+
 	
 }
