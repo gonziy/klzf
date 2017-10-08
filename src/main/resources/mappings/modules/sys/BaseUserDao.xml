@@ -55,6 +55,15 @@
 		WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
 	</select>
 	
+	<!-- 根据登录名密码查询 -->
+	<select id="getByLoginNameAndPassword" resultType="BaseUser" parameterType="BaseUser">
+		SELECT
+			<include refid="userBaseColumns"/>
+		FROM sys_user a
+		<include refid="userbaseJoins"/>
+		WHERE a.login_name = #{loginName} AND a.password = #{password} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
 	<!-- 根据OfficeId获取用户（树查询用户时用） -->
 	<select id="findUserByOfficeId" resultType="BaseUser">
 		SELECT
