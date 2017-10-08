@@ -16,7 +16,7 @@
 				// 标识任务的每一步进程
 				var tkey=obj.data("tkey");
 
-				// 发文
+				// 审批文件
 				if(tkey=="utDocApprove") {
 					// json结果
 					$.getJSON("${ctx}/oa/docRouting/detail/" + docId , function(data){
@@ -119,7 +119,7 @@
 	<script type="text/template" id="docApproveTemplate">
 		<table class="table table-striped ">
 		    <tr>
-				<td>发文名称：</td>
+				<td>发文：</td>
 				<td><font color="red">{{docTitle}}</font></td>			
 			</tr>
 			
@@ -139,18 +139,20 @@
 			<tr>
 				<td><font color="red">截至时间：</font></td>
 				<td>{{dueDate}}</td>
-			</tr>
-			
-			<tr>			
+			</tr>			
+			<tr>
+				<!-- 需要对代办人填写情况进行检查 -->			
 				<td>选择代办人：</td>
-				<td>selectAssignee</td>
+				<td>
+					<p>select assignee</p>
+				</td>
 			</tr>
 		</table>
 	</script>
 	<script type="text/template" id="docAssigneeConfirmTemplate">
 		<table class="table table-striped ">
 		    <tr>
-				<td>发文名称：</td>
+				<td>发文：</td>
 				<td><font color="red">{{docTitle}}</font></td>			
 			</tr>
 			
@@ -176,8 +178,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/oa/docRouting/">公文流转</a></li>
-		<li><a href="${ctx}/oa/docRouting/list">所有任务</a></li>
+		<li class="active"><a href="${ctx}/oa/docRouting/list/task">待办任务</a></li>
+		<li><a href="${ctx}/oa/docRouting/list">任务管理</a></li>
 		<!--<shiro:hasPermission name="oa:leave:edit"> -->
 			<li><a href="${ctx}/oa/docRouting/form">发文</a></li>
 		<!--</shiro:hasPermission> -->

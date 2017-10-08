@@ -16,13 +16,13 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/oa/docRouting/">待办任务</a></li>
-		<li class="active"><a href="${ctx}/oa/docRouting/list">所有任务</a></li>
+		<li><a href="${ctx}/oa/docRouting/list/task">待办任务</a></li>
+		<li class="active"><a href="${ctx}/oa/docRouting/list">任务管理</a></li>
 		<!--<shiro:hasPermission name="oa:docRouting:edit"> -->
-		<li><a href="${ctx}/oa/docRouting/form">公文传阅</a></li>
+		<li><a href="${ctx}/oa/docRouting/form">发文</a></li>
 		<!--</shiro:hasPermission> -->
 	</ul>
-	<form:form id="searchForm" modelAttribute="docRouting" action="${ctx}/oa/docRouting/list" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="doc" action="${ctx}/oa/docRouting/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<div>
@@ -46,13 +46,12 @@
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr>
-			<th>编号</th>
 			<th>发文名称</th>
 			<th>创建人</th>
 			<th>创建时间</th>
 			<th>截至时间</th>
 			<th>审批人列表</th>
-			<th>当前节点</th>
+			<th>当前环节</th>
 			<th>操作</th>
 		</tr></thead>
 		<tbody>
@@ -61,13 +60,11 @@
 			<c:set var="pi" value="${doc.processInstance }" />
 			<c:set var="hpi" value="${doc.historicProcessInstance }" />
 			<tr>
-				<td>${doc.id}</td>
 				<td>${doc.docTitle}</td>
 				<td>${doc.createBy.name}</td>
 				<td><fmt:formatDate value="${doc.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td><fmt:formatDate value="${doc.dueDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>	
 				<td>${doc.docApproverIDs}</td>								
-				<!--  <td>${docRouting.reason}</td> -->
 				<c:if test="${not empty task}">
 					<td>${task.name}</td>
 					<td><a target="_blank" href="${ctx}/act/task/trace/photo/${task.processDefinitionId}/${task.executionId}">进度</a></td>

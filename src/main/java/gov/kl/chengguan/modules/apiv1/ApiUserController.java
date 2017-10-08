@@ -117,6 +117,9 @@ public class ApiUserController  extends BaseController {
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
 		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		
 		String officeId = request.getParameter("office_id");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
 		try {
@@ -154,7 +157,7 @@ public class ApiUserController  extends BaseController {
 				jsonObject.put("data",JSONObject.toJSON(apiUsers));
 			}
 			
-			PrintWriter out = response.getWriter();
+			PrintWriter out = response.getWriter();		
 			out.print(jsonObject.toJSONString());
 			out.flush();
 

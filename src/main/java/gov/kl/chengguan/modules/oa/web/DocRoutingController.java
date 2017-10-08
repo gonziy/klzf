@@ -1,8 +1,13 @@
 package gov.kl.chengguan.modules.oa.web;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.search.DateTerm;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,13 +18,17 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Maps;
@@ -63,7 +72,12 @@ public class DocRoutingController extends BaseController {
 	//@RequiresPermissions("oa:docRouting:edit")
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String save(@ModelAttribute("doc") OaDoc doc, RedirectAttributes redirectAttributes) {
-		try {
+		try {						
+			// 部分字段需要补充
+			doc.setCreateBy(UserUtils.getUser());	
+			doc.setCreateDate(Calendar.getInstance().getTime());
+			
+			//System.out.println("docRouting save:" + doc.toString());				
 			Map<String, Object> variables = Maps.newHashMap();
 			docRoutingService.save(doc, variables);
 			addMessage(redirectAttributes, "流程已启动，流程ID：" + doc.getProcessInstanceId());
@@ -71,8 +85,8 @@ public class DocRoutingController extends BaseController {
 			logger.error("启动公文流转失败：", e);
 			addMessage(redirectAttributes, "系统内部错误！");
 		}
-		System.out.println("adminPath:" + adminPath);
-		return "redirect:" + adminPath + "/oa/leave/form";
+		return "modules/oa/docRoutingList";
+		//return "redirect:" + adminPath + "/act/task/todo/";
 	}
 	
 	/**
@@ -83,8 +97,10 @@ public class DocRoutingController extends BaseController {
 	@RequestMapping(value = {"list/task",""})
 	public String taskList(HttpSession session, Model model) {
 		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
+		
+		System.out.println("the User Task list:" + userId);
 		List<OaDoc> results = docRoutingService.findTodoTasks(userId);
-		model.addAttribute("docRoutingTasks", results);
+		model.addAttribute("docs", results);
 		return "modules/oa/docRoutingTask";
 	}
 
@@ -126,5 +142,13 @@ public class DocRoutingController extends BaseController {
 		doc.setVariables(variables);
 		return JsonMapper.getInstance().toJson(doc);
 	}
+	
+    @InitBinder  
+    public void initBinder(WebDataBinder binder, WebRequest request) {  
+          
+        //转换日期  
+        DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }  
 
 }

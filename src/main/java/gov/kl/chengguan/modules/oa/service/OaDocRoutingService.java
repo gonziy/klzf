@@ -93,8 +93,17 @@ public class OaDocRoutingService extends BaseService{
 		
 		// 启动流程
 		String businessKey = doc.getId().toString();
-		// !!! 这里需要对相应的字符串进行分解处理，填写doc中的相应字段
 		
+		// !!! 这里需要对相应的字符串进行分解处理，填写doc中的相应字段
+		String[] ss = doc.getDocApproverIDs().split(";");
+		ArrayList< String> approvers = new ArrayList<String>();
+		for(String s: ss)
+		{
+			System.out.println(s.trim());
+			approvers.add(s.trim());
+		}		
+		
+		variables.put("approvers", approvers);
 		variables.put("type", "docRouting");
 		variables.put("busId", businessKey);
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(

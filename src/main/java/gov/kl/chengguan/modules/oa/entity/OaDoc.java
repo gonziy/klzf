@@ -1,18 +1,14 @@
 package gov.kl.chengguan.modules.oa.entity;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.xmlbeans.impl.jam.internal.elements.VoidClassImpl;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sun.mail.handlers.text_html;
 
 import gov.kl.chengguan.common.persistence.ActEntity;
 
@@ -181,5 +177,16 @@ public class OaDoc extends ActEntity<OaDoc> {
 
 	public void setDocQueryCreateDateEnd(Date docQueryCreateDateEnd) {
 		this.docQueryCreateDateEnd = docQueryCreateDateEnd;
+	}
+	
+	@Override
+	public String toString() {
+		return "OaDoc [docTitle=" + docTitle 
+				+ ", docAttachmentLinks=" + docAttachmentLinks 
+				+ ", docApproverIDs=" + docApproverIDs 
+				+ ", dueDate=" + dueDate 
+				+ ", createBy=" + createBy.getId() 
+				+ ", createTime=" + createDate.toString() 
+				+"]";
 	}
 }

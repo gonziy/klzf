@@ -29,22 +29,37 @@
 		FROM oa_case a
 			<include refid="docJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
-		<if test="caseQueryParty != null">
-			AND a.parties like #{caseQueryParty} 
+		<if test="caseQueryParty != null and caseQueryParty != ''" >
+			AND a.parties LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryParty}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryParty}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryParty}+'%'</if>
 		</if>
-		<if test="caseQueryLegalAgent != null">
-			AND a.legal_agent like #{caseQueryLegalAgent}
+		<if test="caseQueryLegalAgent != null and caseQueryLegalAgent != ''">
+			AND a.legal_agent LIKE 
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryLegalAgent}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryLegalAgent}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryLegalAgent}+'%'</if>
 		</if>
-		<if test="caseQueryAddress != null">
-			AND a.address like #{caseQueryAddress}
+		<if test="caseQueryAddress != null and caseQueryAddress != ''">
+			AND a.address LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAddress}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryAddress}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryAddress}+'%'</if>
 		</if>	
-		<if test="caseQueryPhoneNumber != null">
-			AND a.phone_number like #{caseQueryPhoneNumber}
+		<if test="caseQueryPhoneNumber != null and caseQueryPhoneNumber != ''">
+			AND a.phone_number LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryPhoneNumber}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryPhoneNumber}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryPhoneNumber}+'%'</if>			
 		</if>
-		<if test="caseQueryAssignee != null">
-			AND a.assigneeIds like #{caseQueryAssignee}
+		<if test="caseQueryAssignee != null and caseQueryAssignee != ''">
+			AND a.assigneeIds LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAssignee}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee}+'%'</if>
 		</if>
-		<if test="caseQueryBrokeLaw != null">
+		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
 			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
 		</if>	
 		<if test="caseQueryPenal != null">
@@ -126,7 +141,13 @@
 			mainLeader_close_flag,
 			caseCloseUpStartDate,
 			caseCloseUpEndDate,
-			process_instance_id
+			process_instance_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag			
 		) VALUES (
 			#{id}, 
 			#{caseParties},
@@ -171,7 +192,13 @@
 			#{mainLeaderCloseCaseApproval},
 			#{caseCloseUpStartDate},
 			#{caseCloseUpEndDate},
-			#{processInstanceId}
+			#{processInstanceId},
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	

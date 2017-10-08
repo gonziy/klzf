@@ -35,8 +35,11 @@
 		<if test="docQueryCreateDateEnd != null">
 			AND a.create_date &lt;= #{docQueryPublishDateEnd}
 		</if>
-		<if test="docTitle != null and docTitle != ''">
-			AND a.doc_title like (${docTitle})
+		<if test="docQueryTitle != null and docQueryTitle != ''">
+			AND a.doc_title LIKE
+					<if test="dbName == 'mysql'">CONCAT('%', #{docQueryTitle}, '%')</if>
+					<if test="dbName == 'oracle'">'%'||#{docQueryTitle}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{udocQueryTitle}+'%'</if>
 		</if>
 		${sqlMap.dsf}
 		ORDER BY a.id DESC
@@ -51,6 +54,14 @@
 		ORDER BY a.id DESC
 	</select>
 	
+	<select id="getByProcInsId" resultType="OaDoc">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc a
+			<include refid="docJoins"/>
+		WHERE a.process_instance_id = #{procInsId}
+	</select>
+	
 	<insert id="insert">
 		INSERT INTO oa_doc(
 			id,
@@ -58,16 +69,26 @@
 			doc_attach_links,
 			approver_ids,
 			due_date,
-			del_flag, 
-			process_instance_id
+			process_instance_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag	
 		) VALUES (
 			#{id}, 
 			#{docTitle},
 			#{docAttachmentLinks},
 			#{docApproverIDs},
-			#{dueDate},
-			#{delFlag},			
-			#{processInstanceId}
+			#{dueDate},		
+			#{processInstanceId},
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	
@@ -89,6 +110,14 @@
 	<update id="delete">
 		UPDATE oa_doc SET 
 			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateInsId">
+		UPDATE oa_doc SET 
+			process_instance_id = #{procInsId},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
 	

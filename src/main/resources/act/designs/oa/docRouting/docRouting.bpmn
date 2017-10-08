@@ -12,11 +12,11 @@
     <subProcess id="subpDocApproval" name="公文审阅子流程">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="approvers" activiti:elementVariable="approver"></multiInstanceLoopCharacteristics>
       <startEvent id="startevent2" name="Start"></startEvent>
-      <userTask id="utDocApprove" name="公文签收，是否需要代办，指定代办人" activiti:assignee="${approver}"></userTask>
+      <userTask id="utDocApprove" name="审阅公文，并或指定代办人" activiti:assignee="${approver}"></userTask>
       <sequenceFlow id="flow4" sourceRef="startevent2" targetRef="utDocApprove"></sequenceFlow>
-      <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="flow9"></exclusiveGateway>
+      <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
       <sequenceFlow id="flow5" sourceRef="utDocApprove" targetRef="exclusivegateway1"></sequenceFlow>
-      <userTask id="utDocAssigneeApprove" name="通知代办人，代办人确认"></userTask>
+      <userTask id="utDocAssigneeApprove" name="通知代办人并确认"></userTask>
       <sequenceFlow id="flow7" name="需要代办" sourceRef="exclusivegateway1" targetRef="utDocAssigneeApprove">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[${bNeedCommission}]]></conditionExpression>
       </sequenceFlow>
