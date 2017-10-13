@@ -97,8 +97,6 @@ public class DocRoutingController extends BaseController {
 	@RequestMapping(value = {"list/task",""})
 	public String taskList(HttpSession session, Model model) {
 		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
-		
-		System.out.println("the User Task list:" + userId);
 		List<OaDoc> results = docRoutingService.findTodoTasks(userId);
 		model.addAttribute("docs", results);
 		return "modules/oa/docRoutingTask";

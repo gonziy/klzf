@@ -66,6 +66,7 @@ import gov.kl.chengguan.modules.act.service.creator.SimpleRuntimeActivityDefinit
 import gov.kl.chengguan.modules.act.utils.ActUtils;
 import gov.kl.chengguan.modules.act.utils.ProcessDefCache;
 import gov.kl.chengguan.modules.act.utils.ProcessDefUtils;
+import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
@@ -105,7 +106,8 @@ public class ActTaskService extends BaseService {
 	 * @return
 	 */
 	public List<Act> todoList(Act act){
-		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
+		//String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
+		String userId = UserUtils.getUser().getId();//ObjectUtils.toString(UserUtils.getUser().getId());		
 		
 		List<Act> result = new ArrayList<Act>();
 		
@@ -344,6 +346,7 @@ public class ActTaskService extends BaseService {
 		if (StringUtils.isNotBlank(procDefId)){
 			if (StringUtils.isNotBlank(taskDefKey)){
 				try{
+					System.out.println("taskDefKey:" + taskDefKey);
 					formKey = formService.getTaskFormKey(procDefId, taskDefKey);
 				}catch (Exception e) {
 					formKey = "";
@@ -957,6 +960,99 @@ public class ActTaskService extends BaseService {
 
 	public ProcessEngine getProcessEngine() {
 		return processEngine;
+	}
+	
+	
+	/*
+	 * 根据用户id查找任务
+	 */
+	public List<Act> findTodoTasks(String userId)
+	{	
+		List<Act> result = new ArrayList<Act>();
+		
+		// =============== 已经签收的任务  ===============
+		TaskQuery todoTaskQuery = taskService.createTaskQuery().taskAssignee(userId).active()
+				.includeProcessVariables().orderByTaskCreateTime().desc();
+		
+		// 查询列表
+		List<Task> todoList = todoTaskQuery.list();
+		for (Task task : todoList) {
+			Act e = new Act();
+			e.setTask(task);
+			e.setVars(task.getProcessVariables());
+			String processInstanceId = task.getProcessInstanceId();
+			ProcessInstance processInstance = runtimeService
+					.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId).active().singleResult();			
+			e.setProcIns(processInstance);
+			
+			String businessKey = processInstance.getBusinessKey();			
+			e.setBusinessId(businessKey);
+//			e.setTaskVars(task.getTaskLocalVariables());
+//			System.out.println(task.getId()+"  =  "+task.getProcessVariables() + "  ========== " + task.getTaskLocalVariables());
+			e.setProcDef(ProcessDefCache.get(task.getProcessDefinitionId()));
+//			e.setProcIns(runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult());
+//			e.setProcExecUrl(ActUtils.getProcExeUrl(task.getProcessDefinitionId()));
+			e.setStatus("todo");
+			result.add(e);
+		}
+		// =============== 等待签收的任务  ===============
+		TaskQuery toClaimQuery = taskService.createTaskQuery().taskCandidateUser(userId)
+				.includeProcessVariables().active().orderByTaskCreateTime().desc();
+		
+		// 查询列表
+		List<Task> toClaimList = toClaimQuery.list();
+		for (Task task : toClaimList) {
+			Act e = new Act();
+			e.setTask(task);
+			e.setVars(task.getProcessVariables());
+			
+			String processInstanceId = task.getProcessInstanceId();
+			ProcessInstance processInstance = runtimeService
+					.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId).active().singleResult();			
+			e.setProcIns(processInstance);
+			
+			String businessKey = processInstance.getBusinessKey();			
+			e.setBusinessId(businessKey);
+//			e.setTaskVars(task.getTaskLocalVariables());
+//			System.out.println(task.getId()+"  =  "+task.getProcessVariables() + "  ========== " + task.getTaskLocalVariables());
+			e.setProcDef(ProcessDefCache.get(task.getProcessDefinitionId()));
+//			e.setProcIns(runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult());
+//			e.setProcExecUrl(ActUtils.getProcExeUrl(task.getProcessDefinitionId()));
+			e.setStatus("claim");
+			result.add(e);
+		}
+		
+		return result;
+	}
+
+	/*
+	 * 查询已经完成的任务
+	 */
+	public List<Act> findFinishedTasks(String userId) 
+	{
+		List<Act> results = new ArrayList<Act>();
+		HistoricTaskInstanceQuery histTaskQuery = historyService
+				.createHistoricTaskInstanceQuery().taskAssignee(userId).finished()
+				.includeProcessVariables().orderByHistoricTaskInstanceEndTime().desc();
+		
+		// 根据流程业务ID查询OaDocn表
+		for (HistoricTaskInstance histTask : histTaskQuery.list()) {
+			Act e = new Act();
+			e.setHistTask(histTask);
+			e.setVars(histTask.getProcessVariables());
+//			e.setTaskVars(histTask.getTaskLocalVariables());
+//			System.out.println(histTask.getId()+"  =  "+histTask.getProcessVariables() + "  ========== " + histTask.getTaskLocalVariables());
+			e.setProcDef(ProcessDefCache.get(histTask.getProcessDefinitionId()));
+//			e.setProcIns(runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult());
+//			e.setProcExecUrl(ActUtils.getProcExeUrl(task.getProcessDefinitionId()));
+			e.setStatus("finish");
+			results.add(e);
+			//page.getList().add(e);
+		}
+		
+		return results;
 	}
 	
 }
