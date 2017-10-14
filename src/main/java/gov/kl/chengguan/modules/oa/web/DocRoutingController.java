@@ -72,7 +72,9 @@ public class DocRoutingController extends BaseController {
 	//@RequiresPermissions("oa:docRouting:edit")
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String save(@ModelAttribute("doc") OaDoc doc, RedirectAttributes redirectAttributes) {
-		try {						
+		try {				
+			//将js分割的逗号改为分号
+			doc.setDocApproverIDs(doc.getDocApproverIDs().replace(",",";"));
 			// 部分字段需要补充
 			doc.setCreateBy(UserUtils.getUser());	
 			doc.setCreateDate(Calendar.getInstance().getTime());

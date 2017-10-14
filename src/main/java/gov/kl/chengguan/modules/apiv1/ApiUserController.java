@@ -228,14 +228,17 @@ public class ApiUserController  extends BaseController {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		
+
 		String officeId = request.getParameter("office_id");
+		String childOfficeName = request.getParameter("child_office_name");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
 		try {
 			
 			BaseUser whereBaseUser = new BaseUser();
 			Office whereOffice = new Office();
-			whereOffice.setId(officeId);
+			if(officeId!=null && !officeId.isEmpty()){
+				whereOffice.setId(officeId);
+			}
 			whereBaseUser.setOffice(whereOffice);
 			java.util.List<BaseUser> list =  UserUtils.getBaseAllList(whereBaseUser);
 			if(list == null)
@@ -250,18 +253,34 @@ public class ApiUserController  extends BaseController {
 				
 				ArrayList<ApiUser> apiUsers = new ArrayList<ApiUser>();
 				for (BaseUser user : list) {
-					ApiUser apiUser = new ApiUser();
-					apiUser.setId(user.getId());
-					apiUser.setUsername(user.getLoginName());
-					apiUser.setNo(user.getNo());
-					apiUser.setName(user.getName());
-					apiUser.setOfficeId(user.getOffice().getId());
-					String office_name = user.getOffice().getName();
-					apiUser.setOfficeName(user.getOffice().getName());
-					apiUsers.add(apiUser);
+					if(childOfficeName!=null && !childOfficeName.isEmpty())
+					{
+						String tmp_office_name = "";
+						tmp_office_name = user.getOffice().getName();
+						if(tmp_office_name.equals(childOfficeName))
+						{
+							ApiUser apiUser = new ApiUser();
+							apiUser.setId(user.getId());
+							apiUser.setUsername(user.getLoginName());
+							apiUser.setNo(user.getNo());
+							apiUser.setName(user.getName());
+							apiUser.setOfficeId(user.getOffice().getId());
+							String office_name = user.getOffice().getName();
+							apiUser.setOfficeName(user.getOffice().getName());
+							apiUsers.add(apiUser);
+						}
+					}else{
+						ApiUser apiUser = new ApiUser();
+						apiUser.setId(user.getId());
+						apiUser.setUsername(user.getLoginName());
+						apiUser.setNo(user.getNo());
+						apiUser.setName(user.getName());
+						apiUser.setOfficeId(user.getOffice().getId());
+						String office_name = user.getOffice().getName();
+						apiUser.setOfficeName(user.getOffice().getName());
+						apiUsers.add(apiUser);
+					}
 				}
-				
-				
 				
 				jsonObject.put("data",JSONObject.toJSON(apiUsers));
 			}
