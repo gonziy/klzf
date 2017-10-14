@@ -4,10 +4,13 @@
 	
     <sql id="caseColumns">
 		a.*,
+		a.parties as "caseParties",
+		a.legal_agent as "caseLegalAgent",
+		a.case_desc as "caseDescription",
 		u.id AS "createBy.id",
 		u.name AS "createBy.name",
 		o.id AS "publisher.office.id",
-		o.name AS "publisher.office.name"
+		o.name AS "publisher.office.name" 
 	</sql>
 	
 	<sql id="caseJoins">
@@ -258,6 +261,53 @@
 	<update id="updateProcessInstanceId">
 		UPDATE oa_case SET 
 			proc_ins_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateCaseCheckResult">
+		UPDATE oa_case SET 
+			case_check_result = #{caseCheckResult},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateCaseRecord">
+		UPDATE oa_case SET 
+			case_attach_links = #{caseAttachmentLinks},
+			case_source = #{caseSource},
+			assigneeIds = #{assigneeIds}, 
+			norm_desc_Part1 = #{normCaseDescPart1},
+			norm_desc_Part2 = #{normCaseDescPart2},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateInstitutionRegOption">
+		UPDATE oa_case SET 
+			institution_reg_opt = #{institutionRegOption},
+			institution_reg_flag = #{institutionRegApproval},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateDeptLeaderRegOption">
+		UPDATE oa_case SET 
+			deptLeader_reg_opt = #{deptLeaderRegOption},
+			deptLeader_reg_flag = #{deptLeaderRegApproval},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateMainLeaderRegOption">
+		UPDATE oa_case SET 
+			mainLeader_reg_opt = #{mainLeaderRegOption},
+			mainLeader_reg_flag = #{mainLeaderRegApproval},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
 	

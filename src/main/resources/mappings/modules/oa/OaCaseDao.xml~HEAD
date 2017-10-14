@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="gov.kl.chengguan.modules.oa.dao.OaCaseDao">
 	
-    <sql id="docColumns">
+    <sql id="caseColumns">
 		a.*,
 		u.id AS "createBy.id",
 		u.name AS "createBy.name",
@@ -10,24 +10,24 @@
 		o.name AS "publisher.office.name"
 	</sql>
 	
-	<sql id="docJoins">
+	<sql id="caseJoins">
 		JOIN sys_user u ON u.id = a.create_by
 		JOIN sys_office o ON o.id = u.office_id
     </sql>
     
     <select id="get" resultType="OaCase">
 		SELECT 
-			<include refid="docColumns"/>
+			<include refid="caseColumns"/>
 		FROM oa_case a
-			<include refid="docJoins"/>
+			<include refid="caseJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
 	<select id="findList" resultType="OaCase">
 		SELECT 
-			<include refid="docColumns"/>
+			<include refid="caseColumns"/>
 		FROM oa_case a
-			<include refid="docJoins"/>
+			<include refid="caseJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
 		<if test="caseQueryParty != null and caseQueryParty != ''" >
 			AND a.parties LIKE
@@ -53,11 +53,11 @@
 				<if test="dbName == 'oracle'">'%'||#{caseQueryPhoneNumber}||'%'</if>
 				<if test="dbName == 'mssql'">'%'+#{caseQueryPhoneNumber}+'%'</if>			
 		</if>
-		<if test="caseQueryAssignee != null and caseQueryAssignee != ''">
+		<if test="caseQueryAssignee != null">
 			AND a.assigneeIds LIKE
-				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAssignee}, '%')</if>
-				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee}+'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAssignee.id}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee.id}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee.id}+'%'</if>	
 		</if>
 		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
 			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
@@ -82,16 +82,19 @@
 		</if>
 		<if test="caseQueryCloseDateEnd != null">
 			AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateEnd}
-		</if>	
+		</if>
+		<if test="caseQueryStage != null">
+			AND a.case_stage = #{caseQueryStage}
+		</if>			
 		${sqlMap.dsf}
 		ORDER BY a.id DESC
 	</select>
 	
 	<select id="findAllList" resultType="OaCase">
 		SELECT 
-			<include refid="docColumns"/>
+			<include refid="caseColumns"/>
 		FROM oa_case a
-			<include refid="docJoins"/>
+			<include refid="caseJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
 		ORDER BY a.id DESC
 	</select>
@@ -104,6 +107,7 @@
 			address,
 			phone_number,
 			case_desc,
+			case_check_result,
 			case_attach_links,
 			case_source,
 			assigneeIds,
@@ -117,7 +121,6 @@
 			mainLeader_reg_flag,
 			caseRegStartDate,
 			caseRegEndDate,
-			survey_finish_flag,
 			caseSurveyEndDate,
 			norm_penal_Part1,
 			norm_penal_Part2,
@@ -136,12 +139,13 @@
 			institution_close_opt,
 			institution_close_flag,
 			caseMgtCenter_close_opt,
-			caseMgtCenter_close_flag,
+			caseMgtCenter_close_flag,		
 			mainLeader_close_opt,
 			mainLeader_close_flag,
 			caseCloseUpStartDate,
 			caseCloseUpEndDate,
-			process_instance_id,
+			case_stage,
+			proc_ins_id,
 			create_by,
 			create_date,
 			update_by,
@@ -155,6 +159,7 @@
 			#{address},
 			#{phoneNumber},
 			#{caseDescription},
+			#{caseCheckResult},
 			#{caseAttachmentLinks},
 			#{caseSource},
 			#{assigneeIds},
@@ -168,7 +173,6 @@
 			#{mainLeaderRegApproval},
 			#{caseRegStartDate},
 			#{caseRegEndDate},
-			#{bCaseSurveyFinish},
 			#{caseSurveyEndDate},
 			#{normAssigneePenalOptPart1},
 			#{normAssigneePenalOptPart2},
@@ -192,6 +196,7 @@
 			#{mainLeaderCloseCaseApproval},
 			#{caseCloseUpStartDate},
 			#{caseCloseUpEndDate},
+			#{caseStage},
 			#{processInstanceId},
 			#{createBy.id}, 
 			#{createDate}, 
@@ -209,6 +214,7 @@
 			address = #{address},
 			phone_number = #{phoneNumber},
 			case_desc = #{caseDescription},
+			case_check_result = #{caseCheckResult},
 			case_attach_links = #{caseAttachmentLinks},
 			case_source = #{caseSource},
 			assigneeIds = #{assigneeIds},
@@ -222,7 +228,6 @@
 			mainLeader_reg_flag = #{mainLeaderRegApproval},
 			caseRegStartDate = #{caseRegStartDate},
 			caseRegEndDate = #{caseRegEndDate},
-			survey_finish_flag = #{bCaseSurveyFinish},
 			caseSurveyEndDate = #{caseSurveyEndDate},
 			norm_penal_Part1 = #{normAssigneePenalOptPart1},
 			norm_penal_Part2 = #{normAssigneePenalOptPart2},
@@ -245,13 +250,14 @@
 			mainLeader_close_opt = #{mainLeaderCloseCaseOption},
 			mainLeader_close_flag = #{mainLeaderCloseCaseApproval},
 			caseCloseUpStartDate = #{caseCloseUpStartDate},
-			caseCloseUpEndDate = #{caseCloseUpEndDate}
+			caseCloseUpEndDate = #{caseCloseUpEndDate},
+			case_stage = #{caseStage}
 		WHERE id = #{id}
 	</update>
 		
 	<update id="updateProcessInstanceId">
 		UPDATE oa_case SET 
-			process_instance_id = #{processInstanceId}
+			proc_ins_id = #{processInstanceId}
 		WHERE id = #{id}
 	</update>
 	

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.h2.util.New;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +40,8 @@ import gov.kl.chengguan.common.supcan.common.Common;
 import gov.kl.chengguan.common.utils.FileUtils;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.web.BaseController;
+import gov.kl.chengguan.modules.act.entity.Act;
+import gov.kl.chengguan.modules.act.service.ActTaskService;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
 import gov.kl.chengguan.modules.cms.utils.CmsUtils;
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
@@ -62,6 +66,10 @@ public class ApiOaController  extends BaseController {
 	private static OaCaseFieldsDao caseFieldsDao = SpringContextHolder.getBean(OaCaseFieldsDao.class);
 	private static OaCaseDao caseDao = SpringContextHolder.getBean(OaCaseDao.class);
 	private static OaFilesDao filesDao = SpringContextHolder.getBean(OaFilesDao.class);
+	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
+	
+	@Autowired
+	private ActTaskService actTaskService;
 	
 	
 	@RequestMapping(value = {"oa/case/list"})
@@ -73,10 +81,11 @@ public class ApiOaController  extends BaseController {
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		/*String no = request.getParameter("no");
-		if(no==null || no.isEmpty())
+		String status = request.getParameter("status");
+		String userId = request.getParameter("user_id");
+		if(status==null || status.isEmpty())
 		{
-			jsonObject.put("msg", "missing url, no is null, please put a parameter");
+			jsonObject.put("msg", "missing url, status is null");
 			jsonObject.put("code", 41010);
 			PrintWriter out;
 			try {
@@ -88,30 +97,131 @@ public class ApiOaController  extends BaseController {
 				e.printStackTrace();
 			}
 			return;
-		}*/
+		}
+		if(userId==null || userId.isEmpty())
+		{
+			jsonObject.put("msg", "missing url, user_id is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 		try {
-			OaCase caseWhere = new OaCase();
-			caseWhere.setDelFlag("0");
-			java.util.List<OaCase> list = caseDao.findList(caseWhere);
+			
+			java.util.List<Act> acts = actTaskService.findTodoTasks(userId);
+			java.util.List<ApiOaCase> results = new ArrayList<ApiOaCase>();
+		
+			for(Act act : acts)
+			{
+				
+				String businessId= act.getBusinessId();
+				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+				
+				OaCase oaCase = caseDao.get(businessId);
+				if(oaCase != null){
+					ApiOaCase apiOaCase = new ApiOaCase();
+					
+					apiOaCase.setId(oaCase.getId());
+					apiOaCase.setCaseParties (oaCase.getCaseParties ());
+					apiOaCase.setCaseLegalAgent(oaCase.getCaseLegalAgent());
+					apiOaCase.setAddress(oaCase.getAddress());
+					apiOaCase.setPhoneNumber(oaCase.getPhoneNumber());
+					apiOaCase.setCaseDescription(oaCase.getCaseDescription());
+					apiOaCase.setCaseAttachmentLinks(oaCase.getCaseAttachmentLinks());
+					apiOaCase.setCaseCheckResult(oaCase.getCaseCheckResult());
+					apiOaCase.setCaseSource(oaCase.getCaseSource());
+					apiOaCase.setAssigneeIds(oaCase.getAssigneeIds());
+					apiOaCase.setNormCaseDescPart1(oaCase.getNormCaseDescPart1());
+					apiOaCase.setNormCaseDescPart2(oaCase.getNormCaseDescPart2());
+					apiOaCase.setInstitutionRegOption(oaCase.getInstitutionRegOption());
+					apiOaCase.setInstitutionRegApproval((Boolean)oaCase.isInstitutionRegApproval());
+					apiOaCase.setDeptLeaderRegOption(oaCase.getDeptLeaderRegOption());
+					apiOaCase.setDeptLeaderRegApproval(oaCase.isDeptLeaderRegApproval());
+					apiOaCase.setMainLeaderRegOption(oaCase.getMainLeaderRegOption());
+					apiOaCase.setMainLeaderRegApproval(oaCase.isMainLeaderRegApproval());
+					apiOaCase.setCaseRegStartDate(oaCase.getCaseRegStartDate());
+					apiOaCase.setCaseRegEndDate(oaCase.getCaseRegEndDate());
+					apiOaCase.setCaseSurveyEndDate(oaCase.getCaseSurveyEndDate());
+					apiOaCase.setNormAssigneePenalOptPart1(oaCase.getNormAssigneePenalOptPart1());
+					apiOaCase.setNormAssigneePenalOptPart2(oaCase.getNormAssigneePenalOptPart2());
+					apiOaCase.setAssigneePenalOption(oaCase.getAssigneePenalOption());
+					apiOaCase.setInstitutionPenalOption(oaCase.getInstitutionPenalOption());
+					apiOaCase.setInstitutionPenalApproval(oaCase.getInstitutionPenalApproval());
+					apiOaCase.setCaseMgtCenterPenalOption(oaCase.getCaseMgtCenterPenalOption());
+					apiOaCase.setCaseMgtCenterPenalApproval(oaCase.getCaseMgtCenterPenalApproval());
+					apiOaCase.setDeptLeaderPenalOption(oaCase.getDeptLeaderPenalOption());
+					apiOaCase.setDeptLeaderPenalApproval(oaCase.getDeptLeaderPenalApproval());
+					apiOaCase.setMainLeaderPenalOption(oaCase.getMainLeaderPenalOption());
+					apiOaCase.setMainLeaderPenalApproval(oaCase.getMainLeaderPenalApproval());
+					apiOaCase.setCasePenalStartDate(oaCase.getCasePenalStartDate());
+					apiOaCase.setCasePenalEndDate(oaCase.getCasePenalEndDate());
+					apiOaCase.setCaseStage(oaCase.getCaseStage());
+					apiOaCase.setAssigneeCloseCaseOption(oaCase.getAssigneeCloseCaseOption());
+					apiOaCase.setInstitutionCloseCaseOption(oaCase.getInstitutionCloseCaseOption());
+					apiOaCase.setInstitutionCloseCaseApproval(oaCase.getInstitutionCloseCaseApproval());
+					apiOaCase.setCaseMgtCenterCloseCaseOption(oaCase.getCaseMgtCenterCloseCaseOption());
+					apiOaCase.setCaseMgtCenterCloseCaseApproval(oaCase.getCaseMgtCenterCloseCaseApproval());
+					apiOaCase.setMainLeaderCloseCaseOption(oaCase.getMainLeaderCloseCaseOption());
+					apiOaCase.setMainLeaderCloseCaseApproval(oaCase.getMainLeaderCloseCaseApproval());
+					apiOaCase.setCaseCloseUpStartDate(oaCase.getCaseCloseUpStartDate());
+					apiOaCase.setCaseCloseUpEndDate(oaCase.getCaseCloseUpEndDate());
+					apiOaCase.setNormCaseDesc(oaCase.getNormCaseDesc());
+					apiOaCase.setNormAssigneePenalOpt(oaCase.getNormAssigneePenalOpt());
+					apiOaCase.setProcessInstanceId(oaCase.getProcessInstanceId());
+					apiOaCase.setCaseQueryParty(oaCase.getCaseQueryParty());
+					apiOaCase.setCaseQueryLegalAgent(oaCase.getCaseQueryLegalAgent());
+					apiOaCase.setCaseQueryAddress(oaCase.getCaseQueryAddress());
+					apiOaCase.setCaseQueryPhoneNumber(oaCase.getCaseQueryPhoneNumber());
+					apiOaCase.setCaseQueryBrokeLaw (oaCase.getCaseQueryBrokeLaw ());
+					apiOaCase.setCaseQueryPenal (oaCase.getCaseQueryPenal ());
+					apiOaCase.setCaseQueryRegStartDateStart(oaCase.getCaseQueryRegStartDateStart());
+					apiOaCase.setCaseQueryRegStartDateEnd(oaCase.getCaseQueryRegStartDateEnd());
+					apiOaCase.setCaseQueryRegEndDateStart(oaCase.getCaseQueryRegEndDateStart());
+					apiOaCase.setCaseQueryRegEndDateEnd(oaCase.getCaseQueryRegEndDateEnd());
+					apiOaCase.setCaseQueryCloseDateStart(oaCase.getCaseQueryCloseDateStart());
+					apiOaCase.setCaseQueryCloseDateEnd(oaCase.getCaseQueryCloseDateEnd());
+					apiOaCase.setCaseQueryStage(oaCase.getCaseQueryStage());
+
+					String strAssigneeNames = "";
+					if(apiOaCase.getAssigneeIds()!=null && !apiOaCase.getAssigneeIds().isEmpty()){
+						String[] assigneeIdsList = apiOaCase.getAssigneeIds().split(";");
+						if(assigneeIdsList.length>0){
+							for (String id : assigneeIdsList) {
+								User user = userDao.get(id);
+								if(user!=null){
+									strAssigneeNames += user.getName() + ";";
+								}
+							}
+							if(strAssigneeNames.endsWith(";")){
+								strAssigneeNames = strAssigneeNames.substring(0,strAssigneeNames.length()-1);
+							}
+						}
+					}
+					apiOaCase.setAssigneeNames(strAssigneeNames);
+					
+					results.add(apiOaCase);
+				}
+			}
 			
 			
-			if(list == null)
+			if(results == null || results.isEmpty())
 			{
 				jsonObject.put("msg", "data is null");
 				jsonObject.put("code", 44004);
 				
 			}else {
-				/*ApiOaCaseFields apiFields = new ApiOaCaseFields();
-				apiFields.setNo(fields.getNo());
-				apiFields.setValueFirst(fields.getValueFirst());
-				apiFields.setValueSecond(fields.getValueSecond());
-				apiFields.setValueThird(fields.getValueThird());
-				apiFields.setIntro(fields.getIntro());*/
 				
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
 				
-				jsonObject.put("data",JSONObject.toJSON(list));
+				jsonObject.put("data",JSONObject.toJSON(results));
 			}
 			
 			PrintWriter out = response.getWriter();
@@ -824,6 +934,440 @@ public class ApiOaController  extends BaseController {
 		}
 		public void setDel_flag(String del_flag) {
 			this.del_flag = del_flag;
+		}
+	}
+	
+	public class ApiOaCase
+	{
+		private String id;
+
+		private String caseParties; 
+		private String caseLegalAgent;
+		private String address;
+		private String  phoneNumber;
+		private String caseDescription;
+		private String caseAttachmentLinks;	
+		private String caseCheckResult;
+		private String caseSource;
+		private String assigneeIds;
+		private String assigneeNames;
+		private String normCaseDescPart1;
+		private String normCaseDescPart2;	
+		private String institutionRegOption;
+		private Boolean institutionRegApproval;	
+		private String deptLeaderRegOption;
+		private Boolean deptLeaderRegApproval;	
+		private String mainLeaderRegOption;
+		private Boolean mainLeaderRegApproval;
+		private Date caseRegStartDate;
+		private Date caseRegEndDate;
+		private Date caseSurveyEndDate;
+		private String normAssigneePenalOptPart1;
+		private String normAssigneePenalOptPart2;
+		private String assigneePenalOption;
+		private String institutionPenalOption;
+		private Boolean institutionPenalApproval;
+		private String caseMgtCenterPenalOption;
+		private Boolean caseMgtCenterPenalApproval;
+		private String deptLeaderPenalOption;
+		private Boolean deptLeaderPenalApproval;
+		private String mainLeaderPenalOption;
+		private Boolean mainLeaderPenalApproval;
+		private Date casePenalStartDate;
+		private Date casePenalEndDate;
+		private Integer caseStage;
+		private String assigneeCloseCaseOption;
+		private String institutionCloseCaseOption;
+		private Boolean institutionCloseCaseApproval;
+		private String caseMgtCenterCloseCaseOption;
+		private Boolean caseMgtCenterCloseCaseApproval;
+		private String mainLeaderCloseCaseOption;
+		private Boolean mainLeaderCloseCaseApproval;	
+		private Date caseCloseUpStartDate;
+		private Date caseCloseUpEndDate;
+		private String normCaseDesc;
+		private String normAssigneePenalOpt;	
+		private String processInstanceId;
+		private String caseQueryParty;	 
+		private String caseQueryLegalAgent;	
+		private String caseQueryAddress;	 
+		private String caseQueryPhoneNumber;	 
+		private String caseQueryBrokeLaw; 
+		private String caseQueryPenal; 	
+		private Date caseQueryRegStartDateStart;  
+		private Date caseQueryRegStartDateEnd;  
+		private Date caseQueryRegEndDateStart;  
+		private Date caseQueryRegEndDateEnd;  
+		private Date caseQueryCloseDateStart;  
+		private Date caseQueryCloseDateEnd;
+		private Integer caseQueryStage;
+		
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getCaseParties() {
+			return caseParties;
+		}
+		public void setCaseParties(String caseParties) {
+			this.caseParties = caseParties;
+		}
+		public String getCaseLegalAgent() {
+			return caseLegalAgent;
+		}
+		public void setCaseLegalAgent(String caseLegalAgent) {
+			this.caseLegalAgent = caseLegalAgent;
+		}
+		public String getAddress() {
+			return address;
+		}
+		public void setAddress(String address) {
+			this.address = address;
+		}
+		public String getPhoneNumber() {
+			return phoneNumber;
+		}
+		public void setPhoneNumber(String phoneNumber) {
+			this.phoneNumber = phoneNumber;
+		}
+		public String getCaseDescription() {
+			return caseDescription;
+		}
+		public void setCaseDescription(String caseDescription) {
+			this.caseDescription = caseDescription;
+		}
+		public String getCaseAttachmentLinks() {
+			return caseAttachmentLinks;
+		}
+		public void setCaseAttachmentLinks(String caseAttachmentLinks) {
+			this.caseAttachmentLinks = caseAttachmentLinks;
+		}
+		public String getCaseCheckResult() {
+			return caseCheckResult;
+		}
+		public void setCaseCheckResult(String caseCheckResult) {
+			this.caseCheckResult = caseCheckResult;
+		}
+		public String getCaseSource() {
+			return caseSource;
+		}
+		public void setCaseSource(String caseSource) {
+			this.caseSource = caseSource;
+		}
+		public String getAssigneeIds() {
+			return assigneeIds;
+		}
+		public void setAssigneeIds(String assigneeIds) {
+			this.assigneeIds = assigneeIds;
+		}
+		public String getNormCaseDescPart1() {
+			return normCaseDescPart1;
+		}
+		public void setNormCaseDescPart1(String normCaseDescPart1) {
+			this.normCaseDescPart1 = normCaseDescPart1;
+		}
+		public String getNormCaseDescPart2() {
+			return normCaseDescPart2;
+		}
+		public void setNormCaseDescPart2(String normCaseDescPart2) {
+			this.normCaseDescPart2 = normCaseDescPart2;
+		}
+		public String getInstitutionRegOption() {
+			return institutionRegOption;
+		}
+		public void setInstitutionRegOption(String institutionRegOption) {
+			this.institutionRegOption = institutionRegOption;
+		}
+		public Boolean getInstitutionRegApproval() {
+			return institutionRegApproval;
+		}
+		public void setInstitutionRegApproval(Boolean institutionRegApproval) {
+			this.institutionRegApproval = institutionRegApproval;
+		}
+		public String getDeptLeaderRegOption() {
+			return deptLeaderRegOption;
+		}
+		public void setDeptLeaderRegOption(String deptLeaderRegOption) {
+			this.deptLeaderRegOption = deptLeaderRegOption;
+		}
+		public Boolean getDeptLeaderRegApproval() {
+			return deptLeaderRegApproval;
+		}
+		public void setDeptLeaderRegApproval(Boolean deptLeaderRegApproval) {
+			this.deptLeaderRegApproval = deptLeaderRegApproval;
+		}
+		public String getMainLeaderRegOption() {
+			return mainLeaderRegOption;
+		}
+		public void setMainLeaderRegOption(String mainLeaderRegOption) {
+			this.mainLeaderRegOption = mainLeaderRegOption;
+		}
+		public Boolean getMainLeaderRegApproval() {
+			return mainLeaderRegApproval;
+		}
+		public void setMainLeaderRegApproval(Boolean mainLeaderRegApproval) {
+			this.mainLeaderRegApproval = mainLeaderRegApproval;
+		}
+		public Date getCaseRegStartDate() {
+			return caseRegStartDate;
+		}
+		public void setCaseRegStartDate(Date caseRegStartDate) {
+			this.caseRegStartDate = caseRegStartDate;
+		}
+		public Date getCaseRegEndDate() {
+			return caseRegEndDate;
+		}
+		public void setCaseRegEndDate(Date caseRegEndDate) {
+			this.caseRegEndDate = caseRegEndDate;
+		}
+		public Date getCaseSurveyEndDate() {
+			return caseSurveyEndDate;
+		}
+		public void setCaseSurveyEndDate(Date caseSurveyEndDate) {
+			this.caseSurveyEndDate = caseSurveyEndDate;
+		}
+		public String getNormAssigneePenalOptPart1() {
+			return normAssigneePenalOptPart1;
+		}
+		public void setNormAssigneePenalOptPart1(String normAssigneePenalOptPart1) {
+			this.normAssigneePenalOptPart1 = normAssigneePenalOptPart1;
+		}
+		public String getNormAssigneePenalOptPart2() {
+			return normAssigneePenalOptPart2;
+		}
+		public void setNormAssigneePenalOptPart2(String normAssigneePenalOptPart2) {
+			this.normAssigneePenalOptPart2 = normAssigneePenalOptPart2;
+		}
+		public String getAssigneePenalOption() {
+			return assigneePenalOption;
+		}
+		public void setAssigneePenalOption(String assigneePenalOption) {
+			this.assigneePenalOption = assigneePenalOption;
+		}
+		public String getInstitutionPenalOption() {
+			return institutionPenalOption;
+		}
+		public void setInstitutionPenalOption(String institutionPenalOption) {
+			this.institutionPenalOption = institutionPenalOption;
+		}
+		public Boolean getInstitutionPenalApproval() {
+			return institutionPenalApproval;
+		}
+		public void setInstitutionPenalApproval(Boolean institutionPenalApproval) {
+			this.institutionPenalApproval = institutionPenalApproval;
+		}
+		public String getCaseMgtCenterPenalOption() {
+			return caseMgtCenterPenalOption;
+		}
+		public void setCaseMgtCenterPenalOption(String caseMgtCenterPenalOption) {
+			this.caseMgtCenterPenalOption = caseMgtCenterPenalOption;
+		}
+		public Boolean getCaseMgtCenterPenalApproval() {
+			return caseMgtCenterPenalApproval;
+		}
+		public void setCaseMgtCenterPenalApproval(Boolean caseMgtCenterPenalApproval) {
+			this.caseMgtCenterPenalApproval = caseMgtCenterPenalApproval;
+		}
+		public String getDeptLeaderPenalOption() {
+			return deptLeaderPenalOption;
+		}
+		public void setDeptLeaderPenalOption(String deptLeaderPenalOption) {
+			this.deptLeaderPenalOption = deptLeaderPenalOption;
+		}
+		public Boolean getDeptLeaderPenalApproval() {
+			return deptLeaderPenalApproval;
+		}
+		public void setDeptLeaderPenalApproval(Boolean deptLeaderPenalApproval) {
+			this.deptLeaderPenalApproval = deptLeaderPenalApproval;
+		}
+		public String getMainLeaderPenalOption() {
+			return mainLeaderPenalOption;
+		}
+		public void setMainLeaderPenalOption(String mainLeaderPenalOption) {
+			this.mainLeaderPenalOption = mainLeaderPenalOption;
+		}
+		public Boolean getMainLeaderPenalApproval() {
+			return mainLeaderPenalApproval;
+		}
+		public void setMainLeaderPenalApproval(Boolean mainLeaderPenalApproval) {
+			this.mainLeaderPenalApproval = mainLeaderPenalApproval;
+		}
+		public Date getCasePenalStartDate() {
+			return casePenalStartDate;
+		}
+		public void setCasePenalStartDate(Date casePenalStartDate) {
+			this.casePenalStartDate = casePenalStartDate;
+		}
+		public Date getCasePenalEndDate() {
+			return casePenalEndDate;
+		}
+		public void setCasePenalEndDate(Date casePenalEndDate) {
+			this.casePenalEndDate = casePenalEndDate;
+		}
+		public Integer getCaseStage() {
+			return caseStage;
+		}
+		public void setCaseStage(Integer caseStage) {
+			this.caseStage = caseStage;
+		}
+		public String getAssigneeCloseCaseOption() {
+			return assigneeCloseCaseOption;
+		}
+		public void setAssigneeCloseCaseOption(String assigneeCloseCaseOption) {
+			this.assigneeCloseCaseOption = assigneeCloseCaseOption;
+		}
+		public String getInstitutionCloseCaseOption() {
+			return institutionCloseCaseOption;
+		}
+		public void setInstitutionCloseCaseOption(String institutionCloseCaseOption) {
+			this.institutionCloseCaseOption = institutionCloseCaseOption;
+		}
+		public Boolean getInstitutionCloseCaseApproval() {
+			return institutionCloseCaseApproval;
+		}
+		public void setInstitutionCloseCaseApproval(Boolean institutionCloseCaseApproval) {
+			this.institutionCloseCaseApproval = institutionCloseCaseApproval;
+		}
+		public String getCaseMgtCenterCloseCaseOption() {
+			return caseMgtCenterCloseCaseOption;
+		}
+		public void setCaseMgtCenterCloseCaseOption(String caseMgtCenterCloseCaseOption) {
+			this.caseMgtCenterCloseCaseOption = caseMgtCenterCloseCaseOption;
+		}
+		public Boolean getCaseMgtCenterCloseCaseApproval() {
+			return caseMgtCenterCloseCaseApproval;
+		}
+		public void setCaseMgtCenterCloseCaseApproval(
+				Boolean caseMgtCenterCloseCaseApproval) {
+			this.caseMgtCenterCloseCaseApproval = caseMgtCenterCloseCaseApproval;
+		}
+		public String getMainLeaderCloseCaseOption() {
+			return mainLeaderCloseCaseOption;
+		}
+		public void setMainLeaderCloseCaseOption(String mainLeaderCloseCaseOption) {
+			this.mainLeaderCloseCaseOption = mainLeaderCloseCaseOption;
+		}
+		public Boolean getMainLeaderCloseCaseApproval() {
+			return mainLeaderCloseCaseApproval;
+		}
+		public void setMainLeaderCloseCaseApproval(Boolean mainLeaderCloseCaseApproval) {
+			this.mainLeaderCloseCaseApproval = mainLeaderCloseCaseApproval;
+		}
+		public Date getCaseCloseUpStartDate() {
+			return caseCloseUpStartDate;
+		}
+		public void setCaseCloseUpStartDate(Date caseCloseUpStartDate) {
+			this.caseCloseUpStartDate = caseCloseUpStartDate;
+		}
+		public Date getCaseCloseUpEndDate() {
+			return caseCloseUpEndDate;
+		}
+		public void setCaseCloseUpEndDate(Date caseCloseUpEndDate) {
+			this.caseCloseUpEndDate = caseCloseUpEndDate;
+		}
+		public String getNormCaseDesc() {
+			return normCaseDesc;
+		}
+		public void setNormCaseDesc(String normCaseDesc) {
+			this.normCaseDesc = normCaseDesc;
+		}
+		public String getNormAssigneePenalOpt() {
+			return normAssigneePenalOpt;
+		}
+		public void setNormAssigneePenalOpt(String normAssigneePenalOpt) {
+			this.normAssigneePenalOpt = normAssigneePenalOpt;
+		}
+		public String getProcessInstanceId() {
+			return processInstanceId;
+		}
+		public void setProcessInstanceId(String processInstanceId) {
+			this.processInstanceId = processInstanceId;
+		}
+		public String getCaseQueryParty() {
+			return caseQueryParty;
+		}
+		public void setCaseQueryParty(String caseQueryParty) {
+			this.caseQueryParty = caseQueryParty;
+		}
+		public String getCaseQueryLegalAgent() {
+			return caseQueryLegalAgent;
+		}
+		public void setCaseQueryLegalAgent(String caseQueryLegalAgent) {
+			this.caseQueryLegalAgent = caseQueryLegalAgent;
+		}
+		public String getCaseQueryAddress() {
+			return caseQueryAddress;
+		}
+		public void setCaseQueryAddress(String caseQueryAddress) {
+			this.caseQueryAddress = caseQueryAddress;
+		}
+		public String getCaseQueryPhoneNumber() {
+			return caseQueryPhoneNumber;
+		}
+		public void setCaseQueryPhoneNumber(String caseQueryPhoneNumber) {
+			this.caseQueryPhoneNumber = caseQueryPhoneNumber;
+		}
+		public String getCaseQueryBrokeLaw() {
+			return caseQueryBrokeLaw;
+		}
+		public void setCaseQueryBrokeLaw(String caseQueryBrokeLaw) {
+			this.caseQueryBrokeLaw = caseQueryBrokeLaw;
+		}
+		public String getCaseQueryPenal() {
+			return caseQueryPenal;
+		}
+		public void setCaseQueryPenal(String caseQueryPenal) {
+			this.caseQueryPenal = caseQueryPenal;
+		}
+		public Date getCaseQueryRegStartDateStart() {
+			return caseQueryRegStartDateStart;
+		}
+		public void setCaseQueryRegStartDateStart(Date caseQueryRegStartDateStart) {
+			this.caseQueryRegStartDateStart = caseQueryRegStartDateStart;
+		}
+		public Date getCaseQueryRegStartDateEnd() {
+			return caseQueryRegStartDateEnd;
+		}
+		public void setCaseQueryRegStartDateEnd(Date caseQueryRegStartDateEnd) {
+			this.caseQueryRegStartDateEnd = caseQueryRegStartDateEnd;
+		}
+		public Date getCaseQueryRegEndDateStart() {
+			return caseQueryRegEndDateStart;
+		}
+		public void setCaseQueryRegEndDateStart(Date caseQueryRegEndDateStart) {
+			this.caseQueryRegEndDateStart = caseQueryRegEndDateStart;
+		}
+		public Date getCaseQueryRegEndDateEnd() {
+			return caseQueryRegEndDateEnd;
+		}
+		public void setCaseQueryRegEndDateEnd(Date caseQueryRegEndDateEnd) {
+			this.caseQueryRegEndDateEnd = caseQueryRegEndDateEnd;
+		}
+		public Date getCaseQueryCloseDateStart() {
+			return caseQueryCloseDateStart;
+		}
+		public void setCaseQueryCloseDateStart(Date caseQueryCloseDateStart) {
+			this.caseQueryCloseDateStart = caseQueryCloseDateStart;
+		}
+		public Date getCaseQueryCloseDateEnd() {
+			return caseQueryCloseDateEnd;
+		}
+		public void setCaseQueryCloseDateEnd(Date caseQueryCloseDateEnd) {
+			this.caseQueryCloseDateEnd = caseQueryCloseDateEnd;
+		}
+		public Integer getCaseQueryStage() {
+			return caseQueryStage;
+		}
+		public void setCaseQueryStage(Integer caseQueryStage) {
+			this.caseQueryStage = caseQueryStage;
+		}
+		public String getAssigneeNames() {
+			return assigneeNames;
+		}
+		public void setAssigneeNames(String assigneeNames) {
+			this.assigneeNames = assigneeNames;
 		}
 	}
 	

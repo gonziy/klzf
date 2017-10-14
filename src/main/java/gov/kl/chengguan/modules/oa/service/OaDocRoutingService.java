@@ -11,6 +11,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
@@ -162,6 +163,30 @@ public class OaDocRoutingService extends BaseService{
 		return results;
 	}
 
+	/*
+	 * 查询已经完成的任务
+	 */
+	public List<OaDoc> findFinishedTasks(String userId) {		
+		List<OaDoc> results = new ArrayList<OaDoc>();
+		List<Task> tasks = new ArrayList<Task>();
+		// 根据当前人的ID查询
+		List<HistoricTaskInstance> userHistoricTasks = historyService.createHistoricTaskInstanceQuery()
+			.processDefinitionKey(ActUtils.PD_DOC_ROUTIN[0])
+			.taskAssignee(userId)
+			.orderByTaskCreateTime().desc()
+			.finished()
+			.list();
+		
+		// 根据流程业务ID查询OaDocn表
+		for (HistoricTaskInstance hti : userHistoricTasks) {
+			String processInstanceId = hti.getProcessInstanceId();
+			OaDoc doc = docDao.getByProcInsId(processInstanceId);
+			results.add(doc);
+		}
+		
+		return results;
+	}
+	
 	public Page<OaDoc> find(Page<OaDoc> page, OaDoc doc) {
 		doc.getSqlMap().put("dsf", dataScopeFilter(doc.getCurrentUser(), "o", "u"));
 		

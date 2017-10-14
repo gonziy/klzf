@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.search.AddressStringTerm;
+import javax.swing.SortingFocusTraversalPolicy;
+
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.mail.handlers.text_html;
 
 import gov.kl.chengguan.common.persistence.ActEntity;
+import gov.kl.chengguan.modules.sys.entity.User;
 
 /*
  * 公文流转实体类
@@ -24,8 +28,7 @@ public class OaCase extends ActEntity<OaCase> {
 	/**
 	 * 版本id
 	 */
-	private static final long serialVersionUID = 1L;	
-	
+	private static final long serialVersionUID = 1L;		
 	
 	/*
 	 * 需要对案件经办各个环节，时间进行记录
@@ -43,7 +46,8 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseDescription;
 	// 案件的链接，可能一次发布多个文件，用;分割
 	private String caseAttachmentLinks;	
-	// --
+	// 初步审核意见
+	private String caseCheckResult;
 	// 案件来源，如果能列出应该时id值，
 	private String caseSource;
 	// 案件承办人,可以多个，用;隔开
@@ -51,12 +55,6 @@ public class OaCase extends ActEntity<OaCase> {
 	// 案件的规范描述：[某行为] 违反了 [某条例]
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
-	public String getNormCaseDesc() {
-		StringBuilder sb = new StringBuilder(normCaseDescPart1);
-		sb.append(" 违反了： ").append(normCaseDescPart2).append(" 之规定");
-		return sb.toString();
-	}
-	// ---
 	// 承办机构意见
 	private String institutionRegOption;
 	// 承办机构确认
@@ -75,20 +73,14 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseRegStartDate;
 	private Date caseRegEndDate;
 	// ------
-	// 案件侦查，是否完成
-	private boolean bCaseSurveyFinish;
+	// 案件勘察完成日期
 	private Date caseSurveyEndDate;
 	
 	//==
 	// 承办人意见：[依据法条]，给出处罚，[处罚类型]
 	private String normAssigneePenalOptPart1;
 	private String normAssigneePenalOptPart2;
-	public String getNormAssigneePenalOpt() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(" 建议依据： ").append(normAssigneePenalOptPart1).append(" 给于处罚: ")
-			.append(normAssigneePenalOptPart2);
-		return sb.toString();
-	}
+
 	private String assigneePenalOption;
 	//===
 	// 承办单位处罚意见：
@@ -109,8 +101,16 @@ public class OaCase extends ActEntity<OaCase> {
 	// 处罚处理开始和完成时间
 	private Date casePenalStartDate;
 	private Date casePenalEndDate;
+	/*
+	 * 案件办理阶段
+	 * 0：申报
+	 * 1：立案
+	 * 2：调查
+	 * 3：处罚
+	 * 4：结案
+	 */
+	private int caseStage;
 	
-	// 
 	//++
 	// 承办人结案意见
 	private String assigneeCloseCaseOption;
@@ -129,26 +129,21 @@ public class OaCase extends ActEntity<OaCase> {
 	// 结案开始和完成时间
 	private Date caseCloseUpStartDate;
 	private Date caseCloseUpEndDate;
-	
-	//
+	private String normCaseDesc;
+	private String normAssigneePenalOpt;	
 	// 与Case实例相关的流程定义，
 	// 所在的流程实例、所在任务，其中的流程变量，
 	// 流程历史实例
 	private ProcessDefinition processDefinition;
-	//
 	// 运行中的流程实例
 	private ProcessInstance processInstance;
+	//使用该流程实例ID作为外键记录流程中上传的照片、文档、视频等资源
 	private String processInstanceId; // 流程实例编号
 	//
 	private Task task;
 	private Map<String, Object> variables;
-	
 	// 历史的流程实例
 	private HistoricProcessInstance historicProcessInstance;
-	
-	/*
-	 * 查询时使用的变量列表
-	 */
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人
@@ -158,12 +153,11 @@ public class OaCase extends ActEntity<OaCase> {
 	//电话
 	private String caseQueryPhoneNumber;	 
 	// 经办人
-	private String caseQueryAssignee;	
+	private User caseQueryAssignee;	
 	// 违反的法条 normCaseDescPart2
 	private String caseQueryBrokeLaw; 
 	// 处罚类型 normAssigneePenalOptPart2
 	private String caseQueryPenal; 	
-	
 	// 立案开始时间
 	private Date caseQueryRegStartDateStart;  
 	private Date caseQueryRegStartDateEnd;  
@@ -173,14 +167,54 @@ public class OaCase extends ActEntity<OaCase> {
 	// 结案时间
 	private Date caseQueryCloseDateStart;  
 	private Date caseQueryCloseDateEnd;
-
+	// 案件办理进度
+	private int caseQueryStage;
+	
+	/*
+	 * 用于标识案件的名称
+	 */
+	public String  getCaseTitle() {
+		return caseParties;			
+	}	
+	
+	public String getNormCaseDesc() {
+		if(normCaseDescPart1 != null && normCaseDescPart2 != null)
+		{
+			StringBuilder sb = new StringBuilder(normCaseDescPart1);
+			sb.append(" 违反了： ").append(normCaseDescPart2).append(" 之规定");
+			normCaseDesc = sb.toString();
+			return normCaseDesc;
+		}
+		return  "";
+	}
+	
+	public String getNormAssigneePenalOpt() {
+		if(normAssigneePenalOpt !=null && normAssigneePenalOptPart2!=null)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append(" 建议依{据： ").append(normAssigneePenalOptPart1).append(" 给于处罚: ")
+				.append(normAssigneePenalOptPart2);
+			normAssigneePenalOpt = sb.toString();
+			return normAssigneePenalOpt;
+		}
+		return "";
+	}
+	
 	
 	public OaCase() {
 		super();
+		caseStage = 0;
 		// TODO Auto-generated constructor stub
 	}
 	public OaCase(String id) {
 		super(id);
+		
+		if(caseParties!= null && caseParties.length() >0 )
+		{
+			String[] ss = caseParties.split(";");
+			caseLegalAgent = ss[0];
+		}
+		caseStage = 0;
 		// TODO Auto-generated constructor stub
 	}
 	public String getCaseParties() {
@@ -218,6 +252,12 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	public void setCaseAttachmentLinks(String caseAttachmentLinks) {
 		this.caseAttachmentLinks = caseAttachmentLinks;
+	}
+	public String getCaseCheckResult() {
+		return caseCheckResult;
+	}
+	public void setCaseCheckResult(String caseCheckResult) {
+		this.caseCheckResult = caseCheckResult;
 	}
 	public String getCaseSource() {
 		return caseSource;
@@ -278,12 +318,6 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	public void setMainLeaderRegApproval(boolean mainLeaderRegApproval) {
 		this.mainLeaderRegApproval = mainLeaderRegApproval;
-	}
-	public boolean isbCaseSurveyFinish() {
-		return bCaseSurveyFinish;
-	}
-	public void setbCaseSurveyFinish(boolean bCaseSurveyFinish) {
-		this.bCaseSurveyFinish = bCaseSurveyFinish;
 	}
 	public String getNormAssigneePenalOptPart1() {
 		return normAssigneePenalOptPart1;
@@ -518,10 +552,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseQueryPhoneNumber(String caseQueryPhoneNumber) {
 		this.caseQueryPhoneNumber = caseQueryPhoneNumber;
 	}
-	public String getCaseQueryAssignee() {
+	public User getCaseQueryAssignee() {
 		return caseQueryAssignee;
 	}
-	public void setCaseQueryAssignee(String caseQueryAssignee) {
+	public void setCaseQueryAssignee(User caseQueryAssignee) {
 		this.caseQueryAssignee = caseQueryAssignee;
 	}
 	public String getCaseQueryBrokeLaw() {
@@ -584,4 +618,34 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseQueryCloseDateEnd(Date caseQueryCloseDateEnd) {
 		this.caseQueryCloseDateEnd = caseQueryCloseDateEnd;
 	}
+	
+	//
+	public int getCaseStage() {
+		return caseStage;
+	}
+	public void setCaseStage(int caseStage) {
+		this.caseStage = caseStage;
+	}
+	
+	public int getCaseQueryStage() {
+		return caseQueryStage;
+	}
+	public void setCaseQueryStage(int caseQueryStage) {
+		this.caseQueryStage = caseQueryStage;
+	}
+	
+	public void setNormCaseDesc(String normCaseDesc) {
+		this.normCaseDesc = normCaseDesc;
+	}
+	public void setNormAssigneePenalOpt(String normAssigneePenalOpt) {
+		this.normAssigneePenalOpt = normAssigneePenalOpt;
+	}
+	@Override
+	public String toString() {
+		return "OaCase [caseParties=" + caseParties + ", caseLegalAgent=" + caseLegalAgent + ", address=" + address
+				+ ", phoneNumber=" + phoneNumber + ", caseDescription=" + caseDescription + ", caseAttachmentLinks="
+				+ caseAttachmentLinks + ", caseCheckResult=" + caseCheckResult + ", caseSource=" + caseSource
+				+ ", assigneeIds=" + assigneeIds + "]";
+	}
+	
 }

@@ -68,7 +68,7 @@ public class ApiCmsController  extends BaseController {
 
 	}
 	/**
-	 * 获取文章列表（未完成）
+	 * 获取文章列表
 	 * @param request
 	 * @param response
 	 */
