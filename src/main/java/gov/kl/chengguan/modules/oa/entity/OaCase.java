@@ -32,7 +32,10 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseLegalAgent;
 	// 地址
 	private String address;
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 电话
 	private String  phoneNumber;
 	// 描述
@@ -41,7 +44,6 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseAttachmentLinks;	
 	// 初步审核意见
 	private String caseCheckResult;
-	// --
 	// 案件来源，如果能列出应该时id值，
 	private String caseSource;
 	// 案件承办人,可以多个，用;隔开
@@ -49,9 +51,12 @@ public class OaCase extends ActEntity<OaCase> {
 	// 案件的规范描述：[某行为] 违反了 [某条例]
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
+<<<<<<< HEAD
 	private boolean illegalConstructionFlag; //17-1015违建标识
 	
 	// ---
+=======
+>>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 承办机构意见
 	private String institutionRegOption;
 	// 承办机构确认
@@ -127,49 +132,22 @@ public class OaCase extends ActEntity<OaCase> {
 	// 结案开始和完成时间
 	private Date caseCloseUpStartDate;
 	private Date caseCloseUpEndDate;
-	
 	private String normCaseDesc;
-	public String getNormCaseDesc() {
-		if(normCaseDescPart1 != null && normCaseDescPart2 != null)
-		{
-			StringBuilder sb = new StringBuilder(normCaseDescPart1);
-			sb.append(" 违反了： ").append(normCaseDescPart2).append(" 之规定");
-			normCaseDesc = sb.toString();
-			return normCaseDesc;
-		}
-		return  "";
-	}
 	private String normAssigneePenalOpt;	
-	public String getNormAssigneePenalOpt() {
-		if(normAssigneePenalOpt !=null && normAssigneePenalOptPart2!=null)
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.append(" 建议依{据： ").append(normAssigneePenalOptPart1).append(" 给于处罚: ")
-				.append(normAssigneePenalOptPart2);
-			normAssigneePenalOpt = sb.toString();
-			return normAssigneePenalOpt;
-		}
-		return "";
-	}
-	
-	//
 	// 与Case实例相关的流程定义，
 	// 所在的流程实例、所在任务，其中的流程变量，
 	// 流程历史实例
 	private ProcessDefinition processDefinition;
-	//
 	// 运行中的流程实例
 	private ProcessInstance processInstance;
-	/*
-	 * 使用该流程实例ID作为外键记录流程中上传的照片、文档、视频等资源
-	 */
+	//使用该流程实例ID作为外键记录流程中上传的照片、文档、视频等资源
 	private String processInstanceId; // 流程实例编号
 	//
 	private Task task;
 	private Map<String, Object> variables;
-	
 	// 历史的流程实例
 	private HistoricProcessInstance historicProcessInstance;
+<<<<<<< HEAD
 	
 	/*
 	 * 查询时使用的变量列表
@@ -177,6 +155,8 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseQueryTitle;	 
 	private String caseQueryDocNo;	 
 	private String caseQueryIllegalConstruct;
+=======
+>>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人
@@ -191,7 +171,6 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseQueryBrokeLaw; 
 	// 处罚类型 normAssigneePenalOptPart2
 	private String caseQueryPenal; 	
-	
 	// 立案开始时间
 	private Date caseQueryRegStartDateStart;  
 	private Date caseQueryRegStartDateEnd;  
@@ -203,6 +182,37 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseQueryCloseDateEnd;
 	// 案件办理进度
 	private int caseQueryStage;
+	
+	/*
+	 * 用于标识案件的名称
+	 */
+	public String  getCaseTitle() {
+		return caseParties;			
+	}	
+	
+	public String getNormCaseDesc() {
+		if(normCaseDescPart1 != null && normCaseDescPart2 != null)
+		{
+			StringBuilder sb = new StringBuilder(normCaseDescPart1);
+			sb.append(" 违反了： ").append(normCaseDescPart2).append(" 之规定");
+			normCaseDesc = sb.toString();
+			return normCaseDesc;
+		}
+		return  "";
+	}
+	
+	public String getNormAssigneePenalOpt() {
+		if(normAssigneePenalOpt !=null && normAssigneePenalOptPart2!=null)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append(" 建议依{据： ").append(normAssigneePenalOptPart1).append(" 给于处罚: ")
+				.append(normAssigneePenalOptPart2);
+			normAssigneePenalOpt = sb.toString();
+			return normAssigneePenalOpt;
+		}
+		return "";
+	}
+	
 	
 	public OaCase() {
 		super();
