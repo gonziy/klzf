@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>案件录入</title>
+	<title>案件调查</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -30,7 +30,7 @@
 		<li><a href="${ctx}/oa/oaCase/">案件列表</a></li>
 		<li class="active"><a href="${ctx}/oa/oaCase/form?id=${oaCase.id}"><shiro:hasPermission name="oa:oaCase:edit">办理${not empty oaCase.id?'修改':'申请'}流程</shiro:hasPermission><shiro:lacksPermission name="oa:oaCase:edit">查看</shiro:lacksPermission></a></li>
 	</ul>
-	<form:form id="inputForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/saveCase" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<form:hidden path="act.taskId"/>
 		<form:hidden path="act.taskName"/>
@@ -40,7 +40,7 @@
 		<form:hidden id="flag" path="act.flag"/>
 		<sys:message content="${message}"/>
 		<fieldset>
-			<legend>案件调查</legend>
+			<legend>案件调查：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件简报 -->
 				<tr>
@@ -87,9 +87,12 @@
 		</fieldset>
 		<div class="form-actions">
 			<shiro:hasPermission name="oa:oaCase:edit">
-				<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交申请" onclick="$('#flag').val('yes')"/>&nbsp;
+			    <!-- submit是更新数据，向数据库和存储中上传案件调查的数据信息 -->
+			    <!-- 此处是否要实现对上传文件数据的管理功能 -->
+				<input id="btnSubmit" class="btn btn-primary" type="submit" value="更新数据" onclick="$('#flag').val('no')"/>&nbsp;
 				<c:if test="${not empty oaCase.id}">
-					<input id="btnSubmit2" class="btn btn-inverse" type="submit" value="撤销申请" onclick="$('#flag').val('no')"/>&nbsp;
+					<!-- 完成案件调查，准备开始下一个阶段 -->
+					<input id="btnSubmit2" class="btn btn-inverse" type="submit" value="确定，调查完成！" onclick="$('#flag').val('yes')"/>&nbsp;
 				</c:if>
 			</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>

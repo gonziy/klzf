@@ -44,16 +44,18 @@
 			<table class="table-form">
 				<!-- 案件申报 -->
 				<tr>
+					<td class="tit">案件名称</td>
+					<td><form:input path="title" class="required" maxlength="100"/></td>			
 					<td class="tit">当事人</td>
 					<td><form:input path="caseParties" class="required" maxlength="100"/></td>			
 					<td class="tit">法人</td>
 					<td><form:input path="caseLegalAgent" class="required" maxlength="50"/></td>
-					<td class="tit">联系方式</td>
-					<td><form:input path="phoneNumber" class="required" maxlength="50"/></td>
 				</tr>
 				<tr>
+					<td class="tit">联系方式</td>
+					<td><form:input path="phoneNumber" class="required" maxlength="50"/></td>
 					<td class="tit">地址</td>
-					<td colspan="4"><form:input path="address" class="required" maxlength="150"/></td>
+					<td colspan="2"><form:input path="address" class="required" maxlength="150"/></td>
 				</tr>
 				<tr>
 					<td class="tit">案情简述</td>

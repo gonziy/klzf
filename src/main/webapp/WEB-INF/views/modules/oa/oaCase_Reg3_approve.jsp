@@ -40,11 +40,10 @@
 		<form:hidden id="flag" path="act.flag"/>
 		<sys:message content="${message}"/>
 		<fieldset>
-			<legend>承办机构审核</legend>
+			<legend>承办机构审核：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件申报 -->
-				<tr>
-				<tr><td class="tit" colspan=6><h4>立案初审</h4></td></tr>	
+				<tr><td class="tit" colspan=6><h4>立案审批</h4></td></tr>	
 				<tr>
 					<td class="tit">当事人</td><td>${oaCase.caseParties}</td>
 					<td class="tit">法人</td><td>${oaCase.caseLegalAgent}</td>
@@ -81,7 +80,7 @@
 		</fieldset>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="通过审核" onclick="$('#flag').val('yes')"/>&nbsp;		
-			<input id="btnCancel" class="btn" type="button" value="驳回" onclick="history.go(-1)"/>
+			<input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('no')"/>&nbsp;
 		</div>
 	</form:form>
 </body>

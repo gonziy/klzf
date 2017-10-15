@@ -3,7 +3,7 @@
 
 <html>
 <head>
-	<title>待办任务</title>
+	<title>待办任务111</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -57,7 +57,7 @@
 				<c:set var="task" value="${oaCase.task}" />
 				<c:set var="pi" value="${oaCase.processInstance}" />
 				<tr id="${oaCase.id }" tid="${oaCase.id}">
-					<td>${oaCase.createBy.Name}</td>
+					<td>${oaCase.createBy.name}</td>
 					<td>${oaCase.caseParties}</td>
 					<td>${oaCase.caseLegalAgent}</td>
 					<td>${oaCase.phoneNumber}</td>

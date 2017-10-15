@@ -1,23 +1,14 @@
 package gov.kl.chengguan.modules.oa.entity;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
-
-import javax.mail.search.AddressStringTerm;
-import javax.swing.SortingFocusTraversalPolicy;
 
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.ibatis.annotations.Case;
-import org.apache.xmlbeans.impl.jam.internal.elements.VoidClassImpl;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sun.mail.handlers.text_html;
-
 import gov.kl.chengguan.common.persistence.ActEntity;
 import gov.kl.chengguan.modules.sys.entity.User;
 
@@ -34,18 +25,14 @@ public class OaCase extends ActEntity<OaCase> {
 	 * 需要对案件经办各个环节，时间进行记录
 	 * 每个流程的办理人是否需要临时修改，人员变动会引起问题
 	 */
+	private String title; //17-1015案件名
 	// 案件当事人
 	private String caseParties; 
 	// 法定代理人
 	private String caseLegalAgent;
 	// 地址
 	private String address;
-	/*
-	 * 用于标识案件的名称
-	 */
-	public String  getCaseTitle() {
-		return caseParties;			
-	}	
+
 	// 电话
 	private String  phoneNumber;
 	// 描述
@@ -62,6 +49,7 @@ public class OaCase extends ActEntity<OaCase> {
 	// 案件的规范描述：[某行为] 违反了 [某条例]
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
+	private boolean illegalConstructionFlag; //17-1015违建标识
 	
 	// ---
 	// 承办机构意见
@@ -91,6 +79,7 @@ public class OaCase extends ActEntity<OaCase> {
 	private String normAssigneePenalOptPart2;
 
 	private String assigneePenalOption;
+	private String caseDocNo; //17-1015案件文号
 	//===
 	// 承办单位处罚意见：
 	private String institutionPenalOption;
@@ -185,7 +174,9 @@ public class OaCase extends ActEntity<OaCase> {
 	/*
 	 * 查询时使用的变量列表
 	 */
-	
+	private String caseQueryTitle;	 
+	private String caseQueryDocNo;	 
+	private String caseQueryIllegalConstruct;
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人
@@ -651,6 +642,48 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	public void setNormAssigneePenalOpt(String normAssigneePenalOpt) {
 		this.normAssigneePenalOpt = normAssigneePenalOpt;
+	}
+	
+	//	20171015
+	public boolean isIllegalConstructionFlag() {
+		return illegalConstructionFlag;
+	}
+	public void setIllegalConstructionFlag(boolean illegalConstructionFlag) {
+		this.illegalConstructionFlag = illegalConstructionFlag;
+	}
+	public String getCaseDocNo() {
+		return caseDocNo;
+	}
+	public void setCaseDocNo(String caseDocNo) {
+		this.caseDocNo = caseDocNo;
+	}
+	/*
+	 * 用于标识案件的名称
+	 */
+
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}	
+	public String getCaseQueryTitle() {
+		return caseQueryTitle;
+	}
+	public void setCaseQueryTitle(String caseQueryTitle) {
+		this.caseQueryTitle = caseQueryTitle;
+	}
+	public String getCaseQueryDocNo() {
+		return caseQueryDocNo;
+	}
+	public void setCaseQueryDocNo(String caseQueryDocNo) {
+		this.caseQueryDocNo = caseQueryDocNo;
+	}
+	public String getCaseQueryIllegalConstruct() {
+		return caseQueryIllegalConstruct;
+	}
+	public void setCaseQueryIllegalConstruct(String caseQueryIllegalConstruct) {
+		this.caseQueryIllegalConstruct = caseQueryIllegalConstruct;
 	}
 	@Override
 	public String toString() {

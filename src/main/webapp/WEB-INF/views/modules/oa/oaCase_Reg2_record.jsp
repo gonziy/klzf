@@ -40,7 +40,7 @@
 		<form:hidden id="flag" path="act.flag"/>
 		<sys:message content="${message}"/>
 		<fieldset>
-			<legend>案情提报</legend>
+			<legend>案情提报：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件申报 ，此时可以再次设置和核准相应的信息-->
 				<tr>
@@ -99,6 +99,10 @@
 							<form:option value="3">条例3</form:option>																
 						</form:select>
 					</td>
+				</tr>
+				<tr>
+					<td class="tit">是否违法建设</td>
+					<td><form:checkbox path="illegalConstructionFlag"/></td>  
 				</tr>
 			</table>
 		</fieldset>

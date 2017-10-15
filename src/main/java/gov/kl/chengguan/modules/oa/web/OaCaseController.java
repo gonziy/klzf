@@ -3,7 +3,9 @@
  */
 package gov.kl.chengguan.modules.oa.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,6 +72,7 @@ public class OaCaseController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(OaCase oaCase, Model model) {
 		model.addAttribute("oaCase", oaCase);
+		// 案件申报
 		String view = "oaCase_Reg1_apply";
 
 		// 查看审批申请单
@@ -84,10 +87,6 @@ public class OaCaseController extends BaseController {
 			// 修改案件申报
 			else if ("modify".equals(taskDefKey)){
 				view = "oaCaseModify";
-			}
-			// 案件申报
-			else if ("utAnjianShenbao".equals(taskDefKey)){
-				view = "oaCase_Reg1_apply";
 			}
 			// 案件初审
 			else if ("utAnjianChushen".equals(taskDefKey)){
@@ -115,41 +114,41 @@ public class OaCaseController extends BaseController {
 			}
 			// 行政处罚——承办人意见
 			else if ("utXzhChf_CbrYj".equals(taskDefKey)){
-				view = "oaCase_Penal";
+				view = "oaCase_Penal1_Assignee";
 			}
 			// 行政处罚——承办机构审批
-			else if ("utXzhChf_CbJg".equals(taskDefKey)){
-				view = "oaCase_Penal";
+			else if ("utXzhChf_Cbjg".equals(taskDefKey)){
+				view = "oaCase_Penal2_Institution";
 			}
 			// 行政处罚——案件管理中心审批
 			else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
-				view = "oaCase_Penal";
+				view = "oaCase_Penal3_MgtCtr";
 			}
 			// 行政处罚——分管领导审批
 			else if ("utXzhChf_Fgld".equals(taskDefKey)){
-				view = "oaCase_Penal";
+				view = "oaCase_Penal4_DeptLdr";
 			}
 			// 行政处罚——主管领导审批
 			else if ("utXzhChf_Zgld".equals(taskDefKey)){
-				view = "oaCase_Penal";
+				view = "oaCase_Penal5_MainLdr";
 			}
 			
 			//
 			// 结案审批——承办人
-			else if ("utJaShp_Cbr".equals(taskDefKey)){
-				view = "oaCase_Close";
+			else if ("utJaShp_Chbr".equals(taskDefKey)){
+				view = "oaCase_Close1_Assignee";
 			}
 			// 结案审批——承办机构
 			else if ("utJaShp_Cbjg".equals(taskDefKey)){
-				view = "oaCase_Close";
+				view = "oaCase_Close2_Institution";
 			}
 			// 结案审批——案件管理中心
 			else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
-				view = "oaCase_Close";
+				view = "oaCase_Close3_MgtCtr";
 			}
 			// 结案审批——主管领导
 			else if ("utJaShp_Zgld".equals(taskDefKey)){
-				view = "oaCase_Close";
+				view = "oaCase_Close4_MainLdr";
 			}
 			// 都不是
 			else {
@@ -164,6 +163,7 @@ public class OaCaseController extends BaseController {
 	//@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = {"list/task",""})
 	public String taskList(HttpSession session, Model model) {
+
 		/*
 		String userId = UserUtils.getUser().getId();//ObjectUtils.toString(UserUtils.getUser().getId());
 		List<OaCase> results = oaCaseService.findTodoTasks(userId);
@@ -171,7 +171,7 @@ public class OaCaseController extends BaseController {
 		
 		return "modules/oa/oaCaseTask";
 		*/
-		// 已经可以返回结果，但是结果页面没有注册新的流程
+
 		return "redirect:" + adminPath + "/act/task/todo/"; 
 	}
 	
@@ -188,10 +188,12 @@ public class OaCaseController extends BaseController {
 		if (!beanValidator(model, oaCase)){
 			return form(oaCase, model);
 		}
-		oaCaseService.save(oaCase);
+		
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("applyer", "1");
+		
+		oaCaseService.save(oaCase, vars);
 		addMessage(redirectAttributes, "提交成功");
-		System.out.println("----call complete current task!");
-		oaCaseService.CompleteCurrentTask(oaCase);
 		return "redirect:" + adminPath + "/act/task/todo/";
 	}
 
@@ -204,9 +206,7 @@ public class OaCaseController extends BaseController {
 	@RequiresPermissions("oa:oaCase:edit")
 	@RequestMapping(value = "saveCase")
 	public String saveCase(OaCase oaCase, Model model) {
-		/*
-		 * xuyao jinyibuchul
-		 */
+
 		if (StringUtils.isBlank(oaCase.getAct().getFlag())) {
 			if("yes".equals(oaCase.getAct().getFlag()))
 				oaCase.getAct().setComment("passed");
@@ -216,7 +216,7 @@ public class OaCaseController extends BaseController {
 			addMessage(model, "请填写审核意见。");
 			return form(oaCase, model);
 		}
-		oaCaseService.SaveCaseStep(oaCase);
+		oaCaseService.saveStep(oaCase);
 		// 返回了待办任务列表
 		
 		return "redirect:" + adminPath + "/act/task/todo/";

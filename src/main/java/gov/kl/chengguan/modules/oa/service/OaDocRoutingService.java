@@ -2,6 +2,7 @@ package gov.kl.chengguan.modules.oa.service;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -218,5 +219,29 @@ public class OaDocRoutingService extends BaseService{
 		}
 		return page;
 	}
+	
+	/*
+	 * 完成任务
+	 */
+	public void  saveStep(OaDoc doc, String submitStr) {
+		if(submitStr =="yes" || submitStr == "no") {
+			Map<String, Object>variables = new HashMap<String, Object>();
+	
+			Task task = doc.getTask();
+			String taskDefKey = task.getTaskDefinitionKey();
+			if(taskDefKey == "utDocApprove")
+			{
+				// 是否需要代办
+				variables.put("bNeedCommission", submitStr);
+				taskService.complete(task.getId(), variables);
+			}
+			else if(taskDefKey == "utDocAssigneeApprove") {
+				// 代办人是否确认OK
+				variables.put("bAssigneeSayOk", submitStr);	
+				taskService.complete(task.getId(), variables);
+			}
+		}
+	}
+
 }
 

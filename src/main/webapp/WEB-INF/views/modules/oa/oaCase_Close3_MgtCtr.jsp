@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>立案</title>
+	<title>行政处罚审批</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -40,56 +40,65 @@
 		<form:hidden id="flag" path="act.flag"/>
 		<sys:message content="${message}"/>
 		<fieldset>
-			<legend>分管领导审核：${oaCase.title}</legend>
+			<legend>案件管理中心结案审批：${oaCase.title}</legend>
 			<table class="table-form">
-				<!-- 案件申报 -->
-				<tr><td class="tit" colspan=6><h4>立案审批</h4></td></tr>	
+				<!-- 案件简报 -->
+				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
 				<tr>
 					<td class="tit">当事人</td><td>${oaCase.caseParties}</td>
 					<td class="tit">法人</td><td>${oaCase.caseLegalAgent}</td>
 					<td class="tit">联系电话</td><td>${oaCase.phoneNumber}</td>
 				</tr>
 				<tr>
-					<td class="tit">地址</td><td>${oaCase.address}</td>					
+					<td class="tit" colspan="4">地址</td><td>${oaCase.address}</td>					
+				</tr>							
+				<tr>
+					<td class="tit" colspan="2">案件来源</td><td>${oaCase.caseSource}</td>
+					<td class="tit" colspan="2">承办人</td><td>${oaCase.assigneeIds}</td>
 				</tr>
 				<tr>
-					<td class="tit">案情简述</td>
-					<td colspan="5">${oaCase.caseDescription}</td>
-				</tr>	
-				<tr>
-					<td class="tit">案件申报材料</td>
-					<td colspan="4">${oaCase.caseAttachmentLinks}</td>
+					<td class="tit" rowspan="2">案情</td>
+					<td colspan=5>${oaCase.normCaseDesc}</td>
 				</tr>
 				<tr>
-					<td class="tit">初审结论</td>
-					<td colspan="4">${oaCase.caseCheckResult}</td>
+					<td colspan=5>${oaCase.normAssigneePenalOpt}</td>
 				</tr>
-				<tr>
-					<td class="tit">承办机构意见</td>
-					<td colspan="4">${institutionRegOption}</td>	
-					<td><!-- 直接同意 -->
-						<c:choose>
-						<c:when test="${oaCase.institutionRegApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
-						</c:choose>
-					</td>				
-				</tr>
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>				
-				<tr>
-					<td class="tit">分管领导意见</td>
-					<td colspan="4">
-						<form:textarea path="deptLeaderRegOption" class="required" rows="5" maxlength="300"/>
-					</td>					
-				</tr>				
-				<!-- 立案结束 -->	
+				<tr><td class="tit">案件文号</td><td class="tit" colspan="3">${oaCase.caseDocNo}</td></tr>
+				<!-- 案件简报 -->
+				<!-- 时间进展 -->
 				<tr>
 					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
 					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>				
+					<td class="tit">调查完成日期</td><td>${oaCase.caseSurveyEndDate}</td>	
+					<td class="tit">行政处罚开始日期</td><td>${oaCase.casePenalStartDate}</td>
+					<td class="tit">行政处罚办结日期</td><td>${oaCase.casePenalEndDate}</td>	
 				</tr>
+				<!-- 时间进展 -->
+				<tr>
+					<td>承办人意见</td>
+					<td colspan="5">${oaCase.assigneeCloseCaseOption}</td>	
+				</tr>
+				<tr>
+					<td>承办机构意见</td>
+					<td colspan="4">${oaCase.institutionCloseCaseOption}</td>
+					<td>
+						<c:choose>
+						<c:when test="${oaCase.institutionCloseCaseApproval==true}"><h4>同意</h4></c:when>
+						<c:otherwise><h4>不同意</h4></c:otherwise>
+						</c:choose>
+					</td>						
+				</tr>					
+				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>	
+				<tr>
+					<td>案件管理中心结案意见</td>
+					<td colspan="5">
+						<form:textarea path="caseMgtCenterCloseCaseOption" class="required" rows="3" maxlength="300"/>
+					</td>	
+				</tr>		
 			</table>
 		</fieldset>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="通过审核" onclick="$('#flag').val('yes')"/>&nbsp;		
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="同 意" onclick="$('#flag').val('yes')"/>&nbsp;
 			<input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('no')"/>&nbsp;
 		</div>
 	</form:form>

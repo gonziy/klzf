@@ -40,7 +40,7 @@
 		<form:hidden id="flag" path="act.flag"/>
 		<sys:message content="${message}"/>
 		<fieldset>
-			<legend>案件初审</legend>
+			<legend>案件初审：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件申报 -->
 				<tr>

@@ -17,94 +17,11 @@
 		JOIN sys_user u ON u.id = a.create_by
 		JOIN sys_office o ON o.id = u.office_id
     </sql>
-    
-    <select id="get" resultType="OaCase">
-		SELECT 
-			<include refid="caseColumns"/>
-		FROM oa_case a
-			<include refid="caseJoins"/>
-		WHERE a.id = #{id}
-	</select>
-	
-	<select id="findList" resultType="OaCase">
-		SELECT 
-			<include refid="caseColumns"/>
-		FROM oa_case a
-			<include refid="caseJoins"/>
-		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
-		<if test="caseQueryParty != null and caseQueryParty != ''" >
-			AND a.parties LIKE
-				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryParty}, '%')</if>
-				<if test="dbName == 'oracle'">'%'||#{caseQueryParty}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{caseQueryParty}+'%'</if>
-		</if>
-		<if test="caseQueryLegalAgent != null and caseQueryLegalAgent != ''">
-			AND a.legal_agent LIKE 
-				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryLegalAgent}, '%')</if>
-				<if test="dbName == 'oracle'">'%'||#{caseQueryLegalAgent}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{caseQueryLegalAgent}+'%'</if>
-		</if>
-		<if test="caseQueryAddress != null and caseQueryAddress != ''">
-			AND a.address LIKE
-				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAddress}, '%')</if>
-				<if test="dbName == 'oracle'">'%'||#{caseQueryAddress}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{caseQueryAddress}+'%'</if>
-		</if>	
-		<if test="caseQueryPhoneNumber != null and caseQueryPhoneNumber != ''">
-			AND a.phone_number LIKE
-				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryPhoneNumber}, '%')</if>
-				<if test="dbName == 'oracle'">'%'||#{caseQueryPhoneNumber}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{caseQueryPhoneNumber}+'%'</if>			
-		</if>
-		<if test="caseQueryAssignee != null">
-			AND a.assigneeIds LIKE
-				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAssignee.id}, '%')</if>
-				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee.id}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee.id}+'%'</if>	
-		</if>
-		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
-			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
-		</if>	
-		<if test="caseQueryPenal != null">
-			AND a.norm_penal_Part2 &gt;= #{caseQueryPenal}
-		</if>	
-		<if test="caseQueryRegStartDateStart != null">
-			AND a.caseRegStartDate &gt;= #{caseQueryRegStartDateStart}
-		</if>
-		<if test="caseQueryRegStartDateEnd != null">
-			AND a.caseRegStartDate &gt;= #{caseQueryRegStartDateEnd}
-		</if>
-		<if test="caseQueryRegEndDateStart != null">
-			AND a.caseRegEndDate &gt;= #{caseQueryRegEndDateStart}
-		</if>									
-		<if test="caseQueryRegEndDateEnd != null">
-			AND a.caseRegEndDate &gt;= #{caseQueryRegEndDateStart}
-		</if>
-		<if test="caseQueryCloseDateStart != null">
-			AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateStart}
-		</if>
-		<if test="caseQueryCloseDateEnd != null">
-			AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateEnd}
-		</if>
-		<if test="caseQueryStage != null">
-			AND a.case_stage = #{caseQueryStage}
-		</if>			
-		${sqlMap.dsf}
-		ORDER BY a.id DESC
-	</select>
-	
-	<select id="findAllList" resultType="OaCase">
-		SELECT 
-			<include refid="caseColumns"/>
-		FROM oa_case a
-			<include refid="caseJoins"/>
-		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
-		ORDER BY a.id DESC
-	</select>
 	
 	<insert id="insert">
 		INSERT INTO oa_case(
 			id,
+		title,
 			parties,
 			legal_agent,
 			address,
@@ -116,6 +33,7 @@
 			assigneeIds,
 			norm_desc_Part1,
 			norm_desc_Part2,
+		illegal_construct_flag,
 			institution_reg_opt,
 			institution_reg_flag,
 			deptLeader_reg_opt,
@@ -128,6 +46,7 @@
 			norm_penal_Part1,
 			norm_penal_Part2,
 			assignee_penal_opt,
+		doc_no,
 			institution_penal_opt,
 			institution_penal_flag,
 			caseMgtCenter_penal_opt,
@@ -138,7 +57,7 @@
 			mainLeader_penal_flag,
 			casePenalStartDate,
 			casePenalEndDate,
-			assignee__close_case_opt,
+			assignee_close_case_opt,
 			institution_close_opt,
 			institution_close_flag,
 			caseMgtCenter_close_opt,
@@ -157,6 +76,7 @@
 			del_flag			
 		) VALUES (
 			#{id}, 
+		#{title},
 			#{caseParties},
 			#{caseLegalAgent},
 			#{address},
@@ -168,6 +88,7 @@
 			#{assigneeIds},
 			#{normCaseDescPart1},
 			#{normCaseDescPart2},
+		#{illegalConstructionFlag},
 			#{institutionRegOption},
 			#{institutionRegApproval},
 			#{deptLeaderRegOption},
@@ -180,6 +101,7 @@
 			#{normAssigneePenalOptPart1},
 			#{normAssigneePenalOptPart2},
 			#{assigneePenalOption},
+		#{caseDocNo},
 			#{institutionPenalOption},
 			#{institutionPenalApproval},
 			#{caseMgtCenterPenalOption},
@@ -213,6 +135,7 @@
 	<update id="update">
 		UPDATE oa_case SET 
 			parties = #{caseParties},
+		title = #{title},
 			legal_agent = #{caseLegalAgent},
 			address = #{address},
 			phone_number = #{phoneNumber},
@@ -223,6 +146,7 @@
 			assigneeIds = #{assigneeIds},
 			norm_desc_Part1 = #{normCaseDescPart1},
 			norm_desc_Part2 = #{normCaseDescPart2},
+		illegal_construct_flag = #{illegalConstructionFlag},
 			institution_reg_opt = #{institutionRegOption},
 			institution_reg_flag = #{institutionRegApproval},
 			deptLeader_reg_opt = #{deptLeaderRegOption},
@@ -235,6 +159,7 @@
 			norm_penal_Part1 = #{normAssigneePenalOptPart1},
 			norm_penal_Part2 = #{normAssigneePenalOptPart2},
 			assignee_penal_opt = #{assigneePenalOption},
+		doc_no = #{caseDocNo},
 			institution_penal_opt = #{institutionPenalOption},
 			institution_penal_flag = #{institutionPenalApproval},
 			caseMgtCenter_penal_opt = #{caseMgtCenterPenalOption},
@@ -245,7 +170,7 @@
 			mainLeader_penal_flag = #{mainLeaderPenalApproval},
 			casePenalStartDate = #{casePenalStartDate},
 			casePenalEndDate = #{casePenalEndDate},
-			assignee__close_case_opt = #{assigneeCloseCaseOption},
+			assignee_close_case_opt = #{assigneeCloseCaseOption},
 			institution_close_opt = #{institutionCloseCaseOption},
 			institution_close_flag = #{institutionCloseCaseApproval},
 			caseMgtCenter_close_opt = #{caseMgtCenterCloseCaseOption},
@@ -267,6 +192,7 @@
 	<update id="updateCaseCheckResult">
 		UPDATE oa_case SET 
 			case_check_result = #{caseCheckResult},
+			case_stage = #{caseStage},
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -274,16 +200,18 @@
 	
 	<update id="updateCaseRecord">
 		UPDATE oa_case SET 
+		title = #{title},
 			case_attach_links = #{caseAttachmentLinks},
 			case_source = #{caseSource},
 			assigneeIds = #{assigneeIds}, 
 			norm_desc_Part1 = #{normCaseDescPart1},
 			norm_desc_Part2 = #{normCaseDescPart2},
+		illegal_construct_flag = #{illegalConstructionFlag},
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
-	
+			
 	<update id="updateInstitutionRegOption">
 		UPDATE oa_case SET 
 			institution_reg_opt = #{institutionRegOption},
@@ -306,15 +234,231 @@
 		UPDATE oa_case SET 
 			mainLeader_reg_opt = #{mainLeaderRegOption},
 			mainLeader_reg_flag = #{mainLeaderRegApproval},
+			caseRegEndDate = #{caseRegEndDate},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateCaseDesc">
+		UPDATE oa_case SET 
+			case_desc = #{caseDescription},
+			norm_desc_Part1 = #{normCaseDescPart1},
+			norm_desc_Part2 = #{normCaseDescPart2},
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
 	
+	<update id="updateCaseAttachmentLinks">
+		UPDATE oa_case SET 
+			case_attach_links = #{caseAttachmentLinks},
+			case_stage = #{caseStage},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+		
+	<update id="updateCasePenal">
+		UPDATE oa_case SET 
+			norm_penal_Part1 = #{normAssigneePenalOptPart1},
+			norm_penal_Part2 = #{normAssigneePenalOptPart2},
+			assignee_penal_opt = #{assigneePenalOption},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateAssigneePenalOption">
+		UPDATE oa_case SET 
+			assignee_penal_opt = #{assigneePenalOption},
+			case_stage = #{caseStage},			
+			update_by = #{updateBy.id}, 
+			doc_no = #{caseDocNo},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+		
+	<update id="updateInstitutionPenalOption">
+		UPDATE oa_case SET 
+			institution_penal_opt = #{institutionPenalOption},
+			institution_penal_flag = #{institutionPenalApproval},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateMgtCenterPenalOption">
+		UPDATE oa_case SET 
+			caseMgtCenter_penal_opt = #{caseMgtCenterPenalOption},
+			caseMgtCenter_penal_flag = #{caseMgtCenterPenalApproval},				
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateDeptLeaderPenalOption">
+		UPDATE oa_case SET 
+			deptLeader_penal_opt = #{deptLeaderPenalOption},
+			deptLeader_penal_flag = #{deptLeaderPenalApproval},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateMainLeaderPenalOption">
+		UPDATE oa_case SET 
+			mainLeader_penal_opt = #{mainLeaderPenalOption},
+			mainLeader_penal_flag = #{mainLeaderPenalApproval},
+			casePenalEndDate = #{casePenalEndDate},	
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateAssigneeCloseOption">
+		UPDATE oa_case SET 
+			assignee_close_case_opt = #{assigneeCloseCaseOption},
+			caseCloseUpStartDate = #{caseCloseUpStartDate},
+			case_stage = #{caseStage},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateInstitutionCloseOption">
+		UPDATE oa_case SET 
+			institution_close_opt = #{institutionCloseCaseOption},
+			institution_close_flag = #{institutionCloseCaseApproval},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateMgtCenterCloseOption">
+		UPDATE oa_case SET 
+			caseMgtCenter_close_opt = #{caseMgtCenterCloseCaseOption},
+			caseMgtCenter_close_flag = #{caseMgtCenterCloseCaseApproval},	
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateMainLeaderCloseOption">
+		UPDATE oa_case SET 
+			mainLeader_close_opt = #{mainLeaderCloseCaseOption},
+			mainLeader_close_flag = #{mainLeaderCloseCaseApproval},
+			caseCloseUpEndDate = #{caseCloseUpEndDate},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+
 	<update id="delete">
 		UPDATE oa_case SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+
+    
+    <select id="get" resultType="OaCase">
+		SELECT 
+			<include refid="caseColumns"/>
+		FROM oa_case a
+			<include refid="caseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaCase">
+		SELECT 
+			<include refid="caseColumns"/>
+		FROM oa_case a
+			<include refid="caseJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="caseQueryTitle != null and caseQueryTitle != ''" >
+			AND a.caseTitle LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryTitle}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryTitle}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryTitle}+'%'</if>
+		</if>
+		<if test="caseQueryDocNo != null and caseQueryDocNo != ''" >
+			AND a.caseDocNo LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryDocNo}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryDocNo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryDocNo}+'%'</if>
+		</if>
+		<if test="caseQueryParty != null and caseQueryParty != ''" >
+			AND a.parties LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryParty}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryParty}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryParty}+'%'</if>
+		</if>
+		<if test="caseQueryLegalAgent != null and caseQueryLegalAgent != ''">
+			AND a.legal_agent LIKE 
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryLegalAgent}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryLegalAgent}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryLegalAgent}+'%'</if>
+		</if>
+		<if test="caseQueryAddress != null and caseQueryAddress != ''">
+			AND a.address LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAddress}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryAddress}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryAddress}+'%'</if>
+		</if>	
+		<if test="caseQueryPhoneNumber != null and caseQueryPhoneNumber != ''">
+			AND a.phone_number LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryPhoneNumber}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryPhoneNumber}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryPhoneNumber}+'%'</if>			
+		</if>
+		<if test="caseQueryAssignee != null">
+			AND a.assigneeIds LIKE
+				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryAssignee.id}, '%')</if>
+				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee.id}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee.id}+'%'</if>	
+		</if>
+		<if test="caseQueryIllegalConstruct != null">
+			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
+		</if>
+		<if test="caseQueryStage != null">
+			AND a.case_stage = #{caseQueryStage}
+		</if>			
+		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
+			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
+		</if>	
+		<if test="caseQueryPenal != null">
+			AND a.norm_penal_Part2 &gt;= #{caseQueryPenal}
+		</if>	
+		<if test="caseQueryRegStartDateStart != null">
+			AND a.caseRegStartDate &gt;= #{caseQueryRegStartDateStart}
+		</if>
+		<if test="caseQueryRegStartDateEnd != null">
+			AND a.caseRegStartDate &gt;= #{caseQueryRegStartDateEnd}
+		</if>
+		<if test="caseQueryRegEndDateStart != null">
+			AND a.caseRegEndDate &gt;= #{caseQueryRegEndDateStart}
+		</if>									
+		<if test="caseQueryRegEndDateEnd != null">
+			AND a.caseRegEndDate &gt;= #{caseQueryRegEndDateStart}
+		</if>
+		<if test="caseQueryCloseDateStart != null">
+			AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateStart}
+		</if>
+		<if test="caseQueryCloseDateEnd != null">
+			AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateEnd}
+		</if>		
+		${sqlMap.dsf}
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="findAllList" resultType="OaCase">
+		SELECT 
+			<include refid="caseColumns"/>
+		FROM oa_case a
+			<include refid="caseJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.id DESC
+	</select>	
 	
 </mapper>

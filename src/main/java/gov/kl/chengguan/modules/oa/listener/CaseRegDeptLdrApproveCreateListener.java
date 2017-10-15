@@ -31,14 +31,18 @@ public class CaseRegDeptLdrApproveCreateListener implements TaskListener{
 		logger.debug(TAG, "case record create: Set Candidate according to bp variables");
 		/*
 		 * 计算工作日，设置超时（5个工作日）
-		 */
+
 		Date dtStart = (Date)delegateTask.getVariable("caseRegStartDate");
 		Date dtDue = (Date)delegateTask.getVariable("caseRegDueDate");
 		// 检查参数获取的情况
 		logger.debug(TAG, "reg start date: " + dtStart.toString() + "reg due date:" + dtDue.toString());	
-		Calendar ca = Calendar.getInstance();
 		// 超时检查
-		
+		// 超时检查
+		if(Calendar.getInstance().getTime().getTime() > dtDue.getTime())
+		{
+			logger.debug(TAG, "overdued");	
+		}		
+		 */		
 		// 在任务complete之前设置变量，在此处
 		//delegateTask.addCandidateUser("1");
 		delegateTask.setAssignee("1");

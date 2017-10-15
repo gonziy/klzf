@@ -27,7 +27,7 @@ public class CaseSurveyCompleteListener implements TaskListener{
 		Calendar ca = Calendar.getInstance();
 		Date dtSurvey = ca.getTime();		
 		logger.debug(TAG, "case survey create date: " + dtSurvey);	
-		delegateTask.setVariable("bRegSuc", true);
+		delegateTask.setVariable("regPass", 1);
 	}
 
 }

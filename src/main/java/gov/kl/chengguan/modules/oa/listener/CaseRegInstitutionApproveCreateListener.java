@@ -31,25 +31,35 @@ public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 		logger.debug(TAG, "case record create: Set Candidate according to bp variables");
 		/*
 		 * 计算工作日，设置超时（5个工作日）
+		 * 变量为null
 		 */
+		/*
 		Date dtStart = (Date)delegateTask.getVariable("caseRegStartDate");
 		Date dtDue = (Date)delegateTask.getVariable("caseRegDueDate");
 		// 检查参数获取的情况
+		System.out.println(TAG);
 		logger.debug(TAG, "reg start date: " + dtStart.toString() + "reg due date:" + dtDue.toString());	
 		Calendar ca = Calendar.getInstance();
 		// 超时检查
-		
+		if(Calendar.getInstance().getTime().getTime() > dtDue.getTime())
+		{
+			logger.debug(TAG, "case reg overdued");	
+		}
+		*/
 		// 在任务complete之前设置变量，在此处
 		String caseAssigneeIds = (String)delegateTask.getVariable("caseAssigneeIds");
-		logger.debug(TAG, "get assigneeIds from Complete: " + caseAssigneeIds);	
+		logger.debug(TAG, "get assigneeIds: " + caseAssigneeIds);	
 		if(caseAssigneeIds!=null && caseAssigneeIds.length() > 2)
 		{
 			String[] ss = caseAssigneeIds.split(";");
-			String assignee1 = ss[0];
-			// 根据该任务人得到其所属机构以及机构的管理人
-			// 设置其办理人为办理人
+			// 设置代办人
+			for(String s : ss) {
+				String userId = s.trim();
+				//
+				delegateTask.addCandidateUser(userId);
+				logger.debug(TAG, "added Candidate User:" + userId);	
+			}
 		}
-		delegateTask.addCandidateUser("1");
 	}
 
 }

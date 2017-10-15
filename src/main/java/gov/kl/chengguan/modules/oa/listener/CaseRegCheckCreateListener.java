@@ -32,7 +32,7 @@ public class CaseRegCheckCreateListener implements TaskListener{
 		/*
 		 * 测试：案件初审人员设置为 admin
 		 */
-
+		delegateTask.setVariable("regPass", 0);
 		delegateTask.setAssignee("1");
 	}
 }
