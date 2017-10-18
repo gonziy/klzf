@@ -47,6 +47,7 @@ import gov.kl.chengguan.modules.sys.entity.User;
 
 
 
+
 @RestController
 @RequestMapping(value = "/apiv1")
 public class ApiOaController  extends BaseController {
@@ -61,6 +62,8 @@ public class ApiOaController  extends BaseController {
 	
 	@Autowired
 	private ActTaskService actTaskService;
+	
+	
 	
 	@RequestMapping(value = {"oa/case/list"})
 	public void getCaseList(HttpServletRequest request, HttpServletResponse response) {
@@ -130,6 +133,23 @@ public class ApiOaController  extends BaseController {
 				java.util.List<ApiOaCase> results = new ArrayList<ApiOaCase>();
 				for (OaCase oaCase : list) {
 					ApiOaCase apiOaCase = new ApiOaCase();
+					
+					String _case_sourceString = oaCase.getCaseSource();
+					if(_case_sourceString=="1"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/1.jpg");
+					}else if(_case_sourceString=="2"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/2.jpg");
+					}else if(_case_sourceString=="3"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/3.jpg");
+					}else if(_case_sourceString=="4"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/4.jpg");
+					}else if(_case_sourceString=="5"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/5.jpg");
+					}else if(_case_sourceString=="6"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/6.jpg");
+					}else{
+						oaCase.setCaseThumbnails("http://www.baidu.com/0.jpg");
+					}
 					apiOaCase.setId(oaCase.getId());
 //					apiOaCase.setCaseParties (oaCase.getCaseParties());
 					apiOaCase.setCaseLegalAgent(oaCase.getCaseLegalAgent());
@@ -286,6 +306,22 @@ public class ApiOaController  extends BaseController {
 				if(oaCase != null){
 					ApiOaCase apiOaCase = new ApiOaCase();
 					
+					String _case_sourceString = oaCase.getCaseSource();
+					if(_case_sourceString=="1"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/1.jpg");
+					}else if(_case_sourceString=="2"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/2.jpg");
+					}else if(_case_sourceString=="3"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/3.jpg");
+					}else if(_case_sourceString=="4"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/4.jpg");
+					}else if(_case_sourceString=="5"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/5.jpg");
+					}else if(_case_sourceString=="6"){
+						oaCase.setCaseThumbnails("http://www.baidu.com/6.jpg");
+					}else{
+						oaCase.setCaseThumbnails("http://www.baidu.com/0.jpg");
+					}
 					apiOaCase.setId(oaCase.getId());
 //					apiOaCase.setCaseParties (oaCase.getCaseParties());
 					apiOaCase.setCaseLegalAgent(oaCase.getCaseLegalAgent());

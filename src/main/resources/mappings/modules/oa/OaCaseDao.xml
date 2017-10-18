@@ -4,6 +4,10 @@
 	
     <sql id="caseColumns">
 		a.*,
+		a.case_docs as "caseDocuments",
+		a.case_imgs as "caseImages",
+		a.case_videos as "caseVideos",
+		a.case_thumbnails as "caseThumbnails",
 		a.parties as "caseParties",
 		a.legal_agent as "caseLegalAgent",
 		a.case_desc as "caseDescription",
@@ -440,7 +444,7 @@
 		<if test="caseQueryIllegalConstruct != null">
 			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
 		</if>
-		<if test="caseQueryStage >= null">
+		<if test="caseQueryStage != null">
 			AND a.case_stage = #{caseQueryStage}
 		</if>			
 		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
