@@ -12,41 +12,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-=======
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
-<<<<<<< HEAD
-=======
 import com.google.zxing.Result;
 import com.sun.tools.javac.resources.javac;
 import com.sun.tools.javac.util.List;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 
 import gov.kl.chengguan.common.config.Global;
-<<<<<<< HEAD
-=======
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.supcan.common.Common;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 import gov.kl.chengguan.common.utils.FileUtils;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.act.entity.Act;
 import gov.kl.chengguan.modules.act.service.ActTaskService;
-<<<<<<< HEAD
-=======
 import gov.kl.chengguan.modules.cms.entity.Article;
 import gov.kl.chengguan.modules.cms.service.ArticleService;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
 import gov.kl.chengguan.modules.cms.utils.CmsUtils;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.dao.OaCaseFieldsDao;
 import gov.kl.chengguan.modules.oa.dao.OaFilesDao;
@@ -148,7 +136,10 @@ public class ApiOaController  extends BaseController {
 					apiOaCase.setAddress(oaCase.getAddress());
 					apiOaCase.setPhoneNumber(oaCase.getPhoneNumber());
 					apiOaCase.setCaseDescription(oaCase.getCaseDescription());
-					apiOaCase.setCaseAttachmentLinks(oaCase.getCaseAttachmentLinks());
+					apiOaCase.setCaseImages(oaCase.getCaseImages());
+					apiOaCase.setCaseVideos(oaCase.getCaseVideos());
+					apiOaCase.setCaseThumbnails(oaCase.getCaseThumbnails());
+					apiOaCase.setCaseDocuments(oaCase.getCaseDocuments());
 //					apiOaCase.setCaseCheckResult(oaCase.getCaseCheckResult());
 					apiOaCase.setCaseSource(oaCase.getCaseSource());
 					apiOaCase.setAssigneeIds(oaCase.getAssigneeIds());
@@ -296,65 +287,68 @@ public class ApiOaController  extends BaseController {
 					ApiOaCase apiOaCase = new ApiOaCase();
 					
 					apiOaCase.setId(oaCase.getId());
-					apiOaCase.setCaseParties (oaCase.getCaseParties ());
+//					apiOaCase.setCaseParties (oaCase.getCaseParties());
 					apiOaCase.setCaseLegalAgent(oaCase.getCaseLegalAgent());
 					apiOaCase.setAddress(oaCase.getAddress());
 					apiOaCase.setPhoneNumber(oaCase.getPhoneNumber());
 					apiOaCase.setCaseDescription(oaCase.getCaseDescription());
-					//apiOaCase.setCaseAttachmentLinks(oaCase.getCaseAttachmentLinks());
-					apiOaCase.setCaseCheckResult(oaCase.getCaseCheckResult());
+					apiOaCase.setCaseImages(oaCase.getCaseImages());
+					apiOaCase.setCaseVideos(oaCase.getCaseVideos());
+					apiOaCase.setCaseThumbnails(oaCase.getCaseThumbnails());
+					apiOaCase.setCaseDocuments(oaCase.getCaseDocuments());
+//					apiOaCase.setCaseCheckResult(oaCase.getCaseCheckResult());
 					apiOaCase.setCaseSource(oaCase.getCaseSource());
 					apiOaCase.setAssigneeIds(oaCase.getAssigneeIds());
-					apiOaCase.setNormCaseDescPart1(oaCase.getNormCaseDescPart1());
-					apiOaCase.setNormCaseDescPart2(oaCase.getNormCaseDescPart2());
-					apiOaCase.setInstitutionRegOption(oaCase.getInstitutionRegOption());
-					apiOaCase.setInstitutionRegApproval((Boolean)oaCase.isInstitutionRegApproval());
-					apiOaCase.setDeptLeaderRegOption(oaCase.getDeptLeaderRegOption());
-					apiOaCase.setDeptLeaderRegApproval(oaCase.isDeptLeaderRegApproval());
-					apiOaCase.setMainLeaderRegOption(oaCase.getMainLeaderRegOption());
-					apiOaCase.setMainLeaderRegApproval(oaCase.isMainLeaderRegApproval());
-					apiOaCase.setCaseRegStartDate(oaCase.getCaseRegStartDate());
-					apiOaCase.setCaseRegEndDate(oaCase.getCaseRegEndDate());
-					apiOaCase.setCaseSurveyEndDate(oaCase.getCaseSurveyEndDate());
-					apiOaCase.setNormAssigneePenalOptPart1(oaCase.getNormAssigneePenalOptPart1());
-					apiOaCase.setNormAssigneePenalOptPart2(oaCase.getNormAssigneePenalOptPart2());
-					apiOaCase.setAssigneePenalOption(oaCase.getAssigneePenalOption());
-					apiOaCase.setInstitutionPenalOption(oaCase.getInstitutionPenalOption());
-					apiOaCase.setInstitutionPenalApproval(oaCase.getInstitutionPenalApproval());
-					apiOaCase.setCaseMgtCenterPenalOption(oaCase.getCaseMgtCenterPenalOption());
-					apiOaCase.setCaseMgtCenterPenalApproval(oaCase.getCaseMgtCenterPenalApproval());
-					apiOaCase.setDeptLeaderPenalOption(oaCase.getDeptLeaderPenalOption());
-					apiOaCase.setDeptLeaderPenalApproval(oaCase.getDeptLeaderPenalApproval());
-					apiOaCase.setMainLeaderPenalOption(oaCase.getMainLeaderPenalOption());
-					apiOaCase.setMainLeaderPenalApproval(oaCase.getMainLeaderPenalApproval());
-					apiOaCase.setCasePenalStartDate(oaCase.getCasePenalStartDate());
-					apiOaCase.setCasePenalEndDate(oaCase.getCasePenalEndDate());
-					apiOaCase.setCaseStage(oaCase.getCaseStage());
-					apiOaCase.setAssigneeCloseCaseOption(oaCase.getAssigneeCloseCaseOption());
-					apiOaCase.setInstitutionCloseCaseOption(oaCase.getInstitutionCloseCaseOption());
-					apiOaCase.setInstitutionCloseCaseApproval(oaCase.getInstitutionCloseCaseApproval());
-					apiOaCase.setCaseMgtCenterCloseCaseOption(oaCase.getCaseMgtCenterCloseCaseOption());
-					apiOaCase.setCaseMgtCenterCloseCaseApproval(oaCase.getCaseMgtCenterCloseCaseApproval());
-					apiOaCase.setMainLeaderCloseCaseOption(oaCase.getMainLeaderCloseCaseOption());
-					apiOaCase.setMainLeaderCloseCaseApproval(oaCase.getMainLeaderCloseCaseApproval());
-					apiOaCase.setCaseCloseUpStartDate(oaCase.getCaseCloseUpStartDate());
-					apiOaCase.setCaseCloseUpEndDate(oaCase.getCaseCloseUpEndDate());
-					apiOaCase.setNormCaseDesc(oaCase.getNormCaseDesc());
-					apiOaCase.setNormAssigneePenalOpt(oaCase.getNormAssigneePenalOpt());
-					apiOaCase.setProcessInstanceId(oaCase.getProcessInstanceId());
-					apiOaCase.setCaseQueryParty(oaCase.getCaseQueryParty());
-					apiOaCase.setCaseQueryLegalAgent(oaCase.getCaseQueryLegalAgent());
-					apiOaCase.setCaseQueryAddress(oaCase.getCaseQueryAddress());
-					apiOaCase.setCaseQueryPhoneNumber(oaCase.getCaseQueryPhoneNumber());
-					apiOaCase.setCaseQueryBrokeLaw (oaCase.getCaseQueryBrokeLaw ());
-					apiOaCase.setCaseQueryPenal (oaCase.getCaseQueryPenal ());
-					apiOaCase.setCaseQueryRegStartDateStart(oaCase.getCaseQueryRegStartDateStart());
-					apiOaCase.setCaseQueryRegStartDateEnd(oaCase.getCaseQueryRegStartDateEnd());
-					apiOaCase.setCaseQueryRegEndDateStart(oaCase.getCaseQueryRegEndDateStart());
-					apiOaCase.setCaseQueryRegEndDateEnd(oaCase.getCaseQueryRegEndDateEnd());
-					apiOaCase.setCaseQueryCloseDateStart(oaCase.getCaseQueryCloseDateStart());
-					apiOaCase.setCaseQueryCloseDateEnd(oaCase.getCaseQueryCloseDateEnd());
-					apiOaCase.setCaseQueryStage(oaCase.getCaseQueryStage());
+//					apiOaCase.setNormCaseDescPart1(oaCase.getNormCaseDescPart1());
+//					apiOaCase.setNormCaseDescPart2(oaCase.getNormCaseDescPart2());
+//					apiOaCase.setInstitutionRegOption(oaCase.getInstitutionRegOption());
+//					apiOaCase.setInstitutionRegApproval((Boolean)oaCase.isInstitutionRegApproval());
+//					apiOaCase.setDeptLeaderRegOption(oaCase.getDeptLeaderRegOption());
+//					apiOaCase.setDeptLeaderRegApproval(oaCase.isDeptLeaderRegApproval());
+//					apiOaCase.setMainLeaderRegOption(oaCase.getMainLeaderRegOption());
+//					apiOaCase.setMainLeaderRegApproval(oaCase.isMainLeaderRegApproval());
+//					apiOaCase.setCaseRegStartDate(oaCase.getCaseRegStartDate());
+//					apiOaCase.setCaseRegEndDate(oaCase.getCaseRegEndDate());
+//					apiOaCase.setCaseSurveyEndDate(oaCase.getCaseSurveyEndDate());
+//					apiOaCase.setNormAssigneePenalOptPart1(oaCase.getNormAssigneePenalOptPart1());
+//					apiOaCase.setNormAssigneePenalOptPart2(oaCase.getNormAssigneePenalOptPart2());
+//					apiOaCase.setAssigneePenalOption(oaCase.getAssigneePenalOption());
+//					apiOaCase.setInstitutionPenalOption(oaCase.getInstitutionPenalOption());
+//					apiOaCase.setInstitutionPenalApproval(oaCase.getInstitutionPenalApproval());
+//					apiOaCase.setCaseMgtCenterPenalOption(oaCase.getCaseMgtCenterPenalOption());
+//					apiOaCase.setCaseMgtCenterPenalApproval(oaCase.getCaseMgtCenterPenalApproval());
+//					apiOaCase.setDeptLeaderPenalOption(oaCase.getDeptLeaderPenalOption());
+//					apiOaCase.setDeptLeaderPenalApproval(oaCase.getDeptLeaderPenalApproval());
+//					apiOaCase.setMainLeaderPenalOption(oaCase.getMainLeaderPenalOption());
+//					apiOaCase.setMainLeaderPenalApproval(oaCase.getMainLeaderPenalApproval());
+//					apiOaCase.setCasePenalStartDate(oaCase.getCasePenalStartDate());
+//					apiOaCase.setCasePenalEndDate(oaCase.getCasePenalEndDate());
+//					apiOaCase.setCaseStage(oaCase.getCaseStage());
+//					apiOaCase.setAssigneeCloseCaseOption(oaCase.getAssigneeCloseCaseOption());
+//					apiOaCase.setInstitutionCloseCaseOption(oaCase.getInstitutionCloseCaseOption());
+//					apiOaCase.setInstitutionCloseCaseApproval(oaCase.getInstitutionCloseCaseApproval());
+//					apiOaCase.setCaseMgtCenterCloseCaseOption(oaCase.getCaseMgtCenterCloseCaseOption());
+//					apiOaCase.setCaseMgtCenterCloseCaseApproval(oaCase.getCaseMgtCenterCloseCaseApproval());
+//					apiOaCase.setMainLeaderCloseCaseOption(oaCase.getMainLeaderCloseCaseOption());
+//					apiOaCase.setMainLeaderCloseCaseApproval(oaCase.getMainLeaderCloseCaseApproval());
+//					apiOaCase.setCaseCloseUpStartDate(oaCase.getCaseCloseUpStartDate());
+//					apiOaCase.setCaseCloseUpEndDate(oaCase.getCaseCloseUpEndDate());
+//					apiOaCase.setNormCaseDesc(oaCase.getNormCaseDesc());
+//					apiOaCase.setNormAssigneePenalOpt(oaCase.getNormAssigneePenalOpt());
+//					apiOaCase.setProcessInstanceId(oaCase.getProcessInstanceId());
+//					apiOaCase.setCaseQueryParty(oaCase.getCaseQueryParty());
+//					apiOaCase.setCaseQueryLegalAgent(oaCase.getCaseQueryLegalAgent());
+//					apiOaCase.setCaseQueryAddress(oaCase.getCaseQueryAddress());
+//					apiOaCase.setCaseQueryPhoneNumber(oaCase.getCaseQueryPhoneNumber());
+//					apiOaCase.setCaseQueryBrokeLaw (oaCase.getCaseQueryBrokeLaw ());
+//					apiOaCase.setCaseQueryPenal (oaCase.getCaseQueryPenal ());
+//					apiOaCase.setCaseQueryRegStartDateStart(oaCase.getCaseQueryRegStartDateStart());
+//					apiOaCase.setCaseQueryRegStartDateEnd(oaCase.getCaseQueryRegStartDateEnd());
+//					apiOaCase.setCaseQueryRegEndDateStart(oaCase.getCaseQueryRegEndDateStart());
+//					apiOaCase.setCaseQueryRegEndDateEnd(oaCase.getCaseQueryRegEndDateEnd());
+//					apiOaCase.setCaseQueryCloseDateStart(oaCase.getCaseQueryCloseDateStart());
+//					apiOaCase.setCaseQueryCloseDateEnd(oaCase.getCaseQueryCloseDateEnd());
+//					apiOaCase.setCaseQueryStage(oaCase.getCaseQueryStage());
 
 					String strAssigneeNames = "";
 					if(apiOaCase.getAssigneeIds()!=null && !apiOaCase.getAssigneeIds().isEmpty()){
@@ -1111,7 +1105,10 @@ public class ApiOaController  extends BaseController {
 		private String address;
 		private String  phoneNumber;
 		private String caseDescription;
-		private String caseAttachmentLinks;	
+		private String caseDocuments;	
+		private String caseImages;	
+		private String caseVideos;	
+		private String caseThumbnails;
 		private String caseCheckResult;
 		private String caseSource;
 		private String assigneeIds;
@@ -1173,6 +1170,30 @@ public class ApiOaController  extends BaseController {
 		public void setId(String id) {
 			this.id = id;
 		}
+		public String getCaseDocuments() {
+			return caseDocuments;
+		}
+		public void setCaseDocuments(String caseDocuments) {
+			this.caseDocuments = caseDocuments;
+		}
+		public String getCaseImages() {
+			return caseImages;
+		}
+		public void setCaseImages(String caseImages) {
+			this.caseImages = caseImages;
+		}
+		public String getCaseVideos() {
+			return caseVideos;
+		}
+		public void setCaseVideos(String caseVideos) {
+			this.caseVideos = caseVideos;
+		}
+		public String getCaseThumbnails() {
+			return caseThumbnails;
+		}
+		public void setCaseThumbnails(String caseThumbnails) {
+			this.caseThumbnails = caseThumbnails;
+		}
 		public String getCaseParties() {
 			return caseParties;
 		}
@@ -1202,12 +1223,6 @@ public class ApiOaController  extends BaseController {
 		}
 		public void setCaseDescription(String caseDescription) {
 			this.caseDescription = caseDescription;
-		}
-		public String getCaseAttachmentLinks() {
-			return caseAttachmentLinks;
-		}
-		public void setCaseAttachmentLinks(String caseAttachmentLinks) {
-			this.caseAttachmentLinks = caseAttachmentLinks;
 		}
 		public String getCaseCheckResult() {
 			return caseCheckResult;

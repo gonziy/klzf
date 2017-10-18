@@ -29,9 +29,5 @@ public class CaseSurveyCompleteListener implements TaskListener{
 		logger.debug(TAG, "case survey create date: " + dtSurvey);	
 		delegateTask.setVariable("bRegSuc", true);
 	}
+}
 
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/

@@ -31,13 +31,9 @@ public class OaCase extends ActEntity<OaCase> {
 	// 法定代理人
 	private String caseLegalAgent;
 	// 地址
-<<<<<<< HEAD
 	private String address;
 
 
-=======
-	private String address;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 电话
 	private String phoneNumber;
 	// 描述
@@ -58,13 +54,9 @@ public class OaCase extends ActEntity<OaCase> {
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
 
-<<<<<<< HEAD
 	private boolean illegalConstructionFlag; //17-1015违建标识
 	
 
-=======
-	private boolean illegalConstructionFlag; //17-1015违建标识
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 承办机构意见
 	private String institutionRegOption;
 	// 承办机构确认
@@ -120,7 +112,6 @@ public class OaCase extends ActEntity<OaCase> {
 	 * 3：处罚
 	 * 4：结案
 	 */
-	//private Integer 
 	private int caseStage;
 	
 	//++
@@ -155,23 +146,12 @@ public class OaCase extends ActEntity<OaCase> {
 	private Task task;
 	private Map<String, Object> variables;
 	// 历史的流程实例
-<<<<<<< HEAD
 	private HistoricProcessInstance historicProcessInstance;
 
-=======
-	private HistoricProcessInstance historicProcessInstance;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	
 	/*
 	 * 查询时使用的变量列表
 	 */
-<<<<<<< HEAD
-=======
-	private String caseQueryTitle;	 
-	private String caseQueryDocNo;	 
-	private String caseQueryIllegalConstruct;
-
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人
