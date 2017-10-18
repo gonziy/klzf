@@ -1,49 +1,29 @@
 package gov.kl.chengguan.modules.apiv1;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.jtds.jdbc.DateTime;
-
-import org.apache.commons.fileupload.DiskFileUpload;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.zxing.Result;
-import com.sun.tools.javac.util.List;
 
 import gov.kl.chengguan.common.config.Global;
-import gov.kl.chengguan.common.supcan.common.Common;
 import gov.kl.chengguan.common.utils.FileUtils;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.act.entity.Act;
 import gov.kl.chengguan.modules.act.service.ActTaskService;
-import gov.kl.chengguan.modules.cms.service.BaseArticleService;
-import gov.kl.chengguan.modules.cms.utils.CmsUtils;
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.dao.OaCaseFieldsDao;
 import gov.kl.chengguan.modules.oa.dao.OaFilesDao;
@@ -51,11 +31,7 @@ import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaCaseFields;
 import gov.kl.chengguan.modules.oa.entity.OaFiles;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
-import gov.kl.chengguan.modules.sys.entity.BaseUser;
-import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.User;
-import gov.kl.chengguan.modules.sys.service.SystemService;
-import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
 
 
@@ -357,8 +333,6 @@ public class ApiOaController  extends BaseController {
 			fields.setUpdateDate(new Date());
 			
 			int result = caseFieldsDao.insert(fields);
-			
-			
 			
 			if(result == 0)
 			{

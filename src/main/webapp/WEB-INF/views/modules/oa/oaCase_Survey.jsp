@@ -73,11 +73,17 @@
 				
 				<tr><td class="tit" colspan=6><h4>案件调查</h4></td></tr>	
 				<tr>
-					<td class="tit">案件调查材料提报</td>
-					<td colspan="3">
-						<form:textarea path="caseAttachmentLinks" rows="4"/>
-					</td>
-				</tr>
+					<td colspan="6">
+					<table>
+						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
+						<tr>
+							<td><form:textarea path="caseDocuments" rows="3"/></td>
+							<td><form:textarea path="caseImages" rows="3"/></td>
+							<td><form:textarea path="caseVideos" rows="3"/></td>
+						</tr>
+					</table>
+					</td>				
+				</tr>	
 				<tr>
 					<td>调查材料维护--更新</td>
 					<td>调查结束</td>

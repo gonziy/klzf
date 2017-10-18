@@ -62,9 +62,17 @@
 					<td colspan="4"><form:textarea path="caseDescription" class="required" rows="5" maxlength="500"/></td>
 				</tr>
 				<tr>
-					<td class="tit">案件申报材料</td>
-					<td colspan="4"><form:textarea path="caseAttachmentLinks" rows="4"/></td>
-				</tr>
+					<td colspan="6">
+					<table>
+						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
+						<tr>
+							<td><form:textarea path="caseDocuments" rows="3"/></td>
+							<td><form:textarea path="caseImages" rows="3"/></td>
+							<td><form:textarea path="caseVideos" rows="3"/></td>
+						</tr>
+					</table>
+					</td>				
+				</tr>					
 			</table>
 		</fieldset>
 		<div class="form-actions">

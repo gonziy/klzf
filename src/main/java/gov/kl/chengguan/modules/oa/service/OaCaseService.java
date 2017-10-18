@@ -120,6 +120,15 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			dao.update(oaCase);
 		}
 	}
+	
+	/*
+	 * 为移动端提交第一步，完成直接到承办机构审批的步骤
+	 */
+	@Transactional(readOnly = false)
+	public void mobileSaveStep1(OaCase oaCase) 
+	{
+		
+	}
 
 	/**
 	 * 审核审批保存
@@ -208,6 +217,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 
 		//
 		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
+			oaCase.setCaseStage(3);
 			if(iReturnState == 1) {
 				dao.updateAssigneePenalOption(oaCase);
 				// 提交流程任务
@@ -249,6 +259,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}	
 		//
 		else if ("utJaShp_Chbr".equals(taskDefKey)){
+			oaCase.setCaseStage(4);
 			if(iReturnState == 1) {
 				dao.updateAssigneeCloseOption(oaCase);
 				// 提交流程任务

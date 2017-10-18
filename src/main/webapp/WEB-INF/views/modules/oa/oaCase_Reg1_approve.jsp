@@ -58,9 +58,17 @@
 					<td colspan="5">${oaCase.caseDescription}</td>
 				</tr>	
 				<tr>
-					<td class="tit">案件申报材料</td>
-					<td colspan="4">${oaCase.caseAttachmentLinks}</td>
-				</tr>
+					<td colspan="6">
+					<table>
+						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
+						<tr>
+							<td class="tit">${caseDocuments}</td>
+							<td class="tit">${caseImages}</td>
+							<td class="tit">${caseVideos}</td>
+						</tr>
+					</table>
+					</td>				
+				</tr>	
 				<tr>
 					<td class="tit">初审结论</td>
 					<td colspan="4"><form:textarea path="caseCheckResult" rows="3" maxlength="500"/></td>

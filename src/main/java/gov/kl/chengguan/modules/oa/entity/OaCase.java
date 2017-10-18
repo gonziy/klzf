@@ -32,18 +32,20 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseLegalAgent;
 	// 地址
 	private String address;
-<<<<<<< HEAD
 
-=======
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
+
 	// 电话
-	private String  phoneNumber;
+	private String phoneNumber;
 	// 描述
 	private String caseDescription;
 	// 案件的链接，可能一次发布多个文件，用;分割
-	private String caseAttachmentLinks;	
+	private String caseDocuments;	
+	private String caseImages;	
+	private String caseVideos;	
+	private String caseThumbnails;
 	// 初步审核意见
 	private String caseCheckResult;
+	private Boolean caseCheckFlag;
 	// 案件来源，如果能列出应该时id值，
 	private String caseSource;
 	// 案件承办人,可以多个，用;隔开
@@ -51,12 +53,10 @@ public class OaCase extends ActEntity<OaCase> {
 	// 案件的规范描述：[某行为] 违反了 [某条例]
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
-<<<<<<< HEAD
+
 	private boolean illegalConstructionFlag; //17-1015违建标识
 	
-	// ---
-=======
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
+
 	// 承办机构意见
 	private String institutionRegOption;
 	// 承办机构确认
@@ -147,16 +147,11 @@ public class OaCase extends ActEntity<OaCase> {
 	private Map<String, Object> variables;
 	// 历史的流程实例
 	private HistoricProcessInstance historicProcessInstance;
-<<<<<<< HEAD
+
 	
 	/*
 	 * 查询时使用的变量列表
 	 */
-	private String caseQueryTitle;	 
-	private String caseQueryDocNo;	 
-	private String caseQueryIllegalConstruct;
-=======
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人
@@ -182,6 +177,10 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseQueryCloseDateEnd;
 	// 案件办理进度
 	private int caseQueryStage;
+	private String caseQueryTitle;	 
+	private String caseQueryDocNo;	 
+	private boolean caseQueryIllegalConstruct;
+	private boolean caseQueryCheckFlag;
 	
 	/*
 	 * 用于标识案件的名称
@@ -260,11 +259,45 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseDescription(String caseDescription) {
 		this.caseDescription = caseDescription;
 	}
-	public String getCaseAttachmentLinks() {
-		return caseAttachmentLinks;
+	
+	public String getCaseDocuments() {
+		return caseDocuments;
 	}
-	public void setCaseAttachmentLinks(String caseAttachmentLinks) {
-		this.caseAttachmentLinks = caseAttachmentLinks;
+
+	public void setCaseDocuments(String caseDocuments) {
+		this.caseDocuments = caseDocuments;
+	}
+
+	public String getCaseImages() {
+		return caseImages;
+	}
+
+	public void setCaseImages(String caseImages) {
+		this.caseImages = caseImages;
+	}
+
+	public String getCaseVideos() {
+		return caseVideos;
+	}
+
+	public void setCaseVideos(String caseVideos) {
+		this.caseVideos = caseVideos;
+	}
+
+	public String getCaseThumbnails() {
+		return caseThumbnails;
+	}
+
+	public void setCaseThumbnails(String caseThumbnails) {
+		this.caseThumbnails = caseThumbnails;
+	}
+
+	public Boolean getCaseCheckFlag() {
+		return caseCheckFlag;
+	}
+
+	public void setCaseCheckFlag(Boolean caseCheckFlag) {
+		this.caseCheckFlag = caseCheckFlag;
 	}
 	public String getCaseCheckResult() {
 		return caseCheckResult;
@@ -667,6 +700,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseDocNo(String caseDocNo) {
 		this.caseDocNo = caseDocNo;
 	}
+	
 	/*
 	 * 用于标识案件的名称
 	 */
@@ -689,17 +723,28 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseQueryDocNo(String caseQueryDocNo) {
 		this.caseQueryDocNo = caseQueryDocNo;
 	}
-	public String getCaseQueryIllegalConstruct() {
+
+	public boolean getCaseQueryIllegalConstruct() {
 		return caseQueryIllegalConstruct;
 	}
-	public void setCaseQueryIllegalConstruct(String caseQueryIllegalConstruct) {
+
+	public void setCaseQueryIllegalConstruct(boolean caseQueryIllegalConstruct) {
 		this.caseQueryIllegalConstruct = caseQueryIllegalConstruct;
 	}
+
+	public boolean getCaseQueryCheckFlag() {
+		return caseQueryCheckFlag;
+	}
+	
+	public void setCaseQueryCheckFlag(boolean caseQueryCheckFlag) {
+		this.caseQueryCheckFlag = caseQueryCheckFlag;
+	}
+
 	@Override
 	public String toString() {
 		return "OaCase [caseParties=" + caseParties + ", caseLegalAgent=" + caseLegalAgent + ", address=" + address
-				+ ", phoneNumber=" + phoneNumber + ", caseDescription=" + caseDescription + ", caseAttachmentLinks="
-				+ caseAttachmentLinks + ", caseCheckResult=" + caseCheckResult + ", caseSource=" + caseSource
+				+ ", phoneNumber=" + phoneNumber + ", caseDescription=" + caseDescription 
+				+ ", caseCheckResult=" + caseCheckResult + ", caseSource=" + caseSource
 				+ ", assigneeIds=" + assigneeIds + "]";
 	}
 	
