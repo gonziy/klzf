@@ -11,6 +11,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -120,9 +121,11 @@ public class ApiOaController  extends BaseController {
 			OaCase oaCaseWhere = new OaCase();
 			oaCaseWhere.setCaseQueryStage(Integer.parseInt(stage));
 			
-			Page<OaCase> page = oaCaseService.findPage(new Page<OaCase>(request, response), oaCaseWhere); 
-			page.setPageSize(2);
-			page.setPageNo(Integer.parseInt(pageIndex));
+			Page<OaCase> pageWhere = new Page<OaCase>(request, response);
+			pageWhere.setPageSize(10);
+			pageWhere.setPageNo(Integer.parseInt(pageIndex));
+			Page<OaCase> page = oaCaseService.findPage(pageWhere, oaCaseWhere); 
+			
 			
 			java.util.List<OaCase> list = page.getList();
 			if(list == null){
@@ -130,6 +133,10 @@ public class ApiOaController  extends BaseController {
 				jsonObject.put("code", 44004);
 			}
 			else {
+				com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+				
+				jsonData.put("pagesize", 10);
+				jsonData.put("pagecount", page.getLast());
 				java.util.List<ApiOaCase> results = new ArrayList<ApiOaCase>();
 				for (OaCase oaCase : list) {
 					ApiOaCase apiOaCase = new ApiOaCase();
@@ -236,13 +243,11 @@ public class ApiOaController  extends BaseController {
 					
 				}
 				
-				
-				
-				
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
-				
-				jsonObject.put("data",JSONObject.toJSON(results));
+
+				jsonData.put("data", results);
+				jsonObject.put("data", JSONObject.toJSON(jsonData));
 			}
 			
 			PrintWriter out = response.getWriter();
