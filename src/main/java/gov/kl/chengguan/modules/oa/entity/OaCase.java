@@ -54,23 +54,23 @@ public class OaCase extends ActEntity<OaCase> {
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
 
-	private boolean illegalConstructionFlag; //17-1015违建标识
+	private Boolean illegalConstructionFlag; //17-1015违建标识
 	
 
 	// 承办机构意见
 	private String institutionRegOption;
 	// 承办机构确认
-	private boolean institutionRegApproval;	
+	private Boolean institutionRegApproval;	
 	// ----
 	// 分管领导意见
 	private String deptLeaderRegOption;
 	// 分管领导确认
-	private boolean deptLeaderRegApproval;	
+	private Boolean deptLeaderRegApproval;	
 	// -----
 	// 主管领导意见
 	private String mainLeaderRegOption;
 	// 主管领导确认
-	private boolean mainLeaderRegApproval;
+	private Boolean mainLeaderRegApproval;
 	// 立案开始和完成时间
 	private Date caseRegStartDate;
 	private Date caseRegEndDate;
@@ -88,19 +88,19 @@ public class OaCase extends ActEntity<OaCase> {
 	//===
 	// 承办单位处罚意见：
 	private String institutionPenalOption;
-	private boolean institutionPenalApproval;
+	private Boolean institutionPenalApproval;
 	//====
 	// 案件管理中心处罚意见：
 	private String caseMgtCenterPenalOption;
-	private boolean caseMgtCenterPenalApproval;
+	private Boolean caseMgtCenterPenalApproval;
 	//=====
 	// 分管领导处罚意见：
 	private String deptLeaderPenalOption;
-	private boolean deptLeaderPenalApproval;
+	private Boolean deptLeaderPenalApproval;
 	//======
 	// 主管领导处罚意见：
 	private String mainLeaderPenalOption;
-	private boolean mainLeaderPenalApproval;
+	private Boolean mainLeaderPenalApproval;
 	// 处罚处理开始和完成时间
 	private Date casePenalStartDate;
 	private Date casePenalEndDate;
@@ -112,7 +112,7 @@ public class OaCase extends ActEntity<OaCase> {
 	 * 3：处罚
 	 * 4：结案
 	 */
-	private int caseStage;
+	private Integer caseStage;
 	
 	//++
 	// 承办人结案意见
@@ -120,15 +120,15 @@ public class OaCase extends ActEntity<OaCase> {
 	//+++
 	// 承办单位结案意见：
 	private String institutionCloseCaseOption;
-	private boolean institutionCloseCaseApproval;
+	private Boolean institutionCloseCaseApproval;
 	//++++
 	// 案件管理中心结案意见：
 	private String caseMgtCenterCloseCaseOption;
-	private boolean caseMgtCenterCloseCaseApproval;
+	private Boolean caseMgtCenterCloseCaseApproval;
 	//+++++
 	// 主管领导结案意见：
 	private String mainLeaderCloseCaseOption;
-	private boolean mainLeaderCloseCaseApproval;	
+	private Boolean mainLeaderCloseCaseApproval;	
 	// 结案开始和完成时间
 	private Date caseCloseUpStartDate;
 	private Date caseCloseUpEndDate;
@@ -176,11 +176,11 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseQueryCloseDateStart;  
 	private Date caseQueryCloseDateEnd;
 	// 案件办理进度
-	private int caseQueryStage;
+	private Integer caseQueryStage;
 	private String caseQueryTitle;	 
 	private String caseQueryDocNo;	 
-	private boolean caseQueryIllegalConstruct;
-	private boolean caseQueryCheckFlag;
+	private Boolean caseQueryIllegalConstruct;
+	private Boolean caseQueryCheckFlag;
 	
 	/*
 	 * 用于标识案件的名称
@@ -335,10 +335,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setInstitutionRegOption(String institutionRegOption) {
 		this.institutionRegOption = institutionRegOption;
 	}
-	public boolean isInstitutionRegApproval() {
+	public Boolean isInstitutionRegApproval() {
 		return institutionRegApproval;
 	}
-	public void setInstitutionRegApproval(boolean institutionRegApproval) {
+	public void setInstitutionRegApproval(Boolean institutionRegApproval) {
 		this.institutionRegApproval = institutionRegApproval;
 	}
 	public String getDeptLeaderRegOption() {
@@ -347,10 +347,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setDeptLeaderRegOption(String deptLeaderRegOption) {
 		this.deptLeaderRegOption = deptLeaderRegOption;
 	}
-	public boolean isDeptLeaderRegApproval() {
+	public Boolean isDeptLeaderRegApproval() {
 		return deptLeaderRegApproval;
 	}
-	public void setDeptLeaderRegApproval(boolean deptLeaderRegApproval) {
+	public void setDeptLeaderRegApproval(Boolean deptLeaderRegApproval) {
 		this.deptLeaderRegApproval = deptLeaderRegApproval;
 	}
 	public String getMainLeaderRegOption() {
@@ -359,10 +359,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setMainLeaderRegOption(String mainLeaderRegOption) {
 		this.mainLeaderRegOption = mainLeaderRegOption;
 	}
-	public boolean isMainLeaderRegApproval() {
+	public Boolean isMainLeaderRegApproval() {
 		return mainLeaderRegApproval;
 	}
-	public void setMainLeaderRegApproval(boolean mainLeaderRegApproval) {
+	public void setMainLeaderRegApproval(Boolean mainLeaderRegApproval) {
 		this.mainLeaderRegApproval = mainLeaderRegApproval;
 	}
 	public String getNormAssigneePenalOptPart1() {
@@ -389,10 +389,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setInstitutionPenalOption(String institutionPenalOption) {
 		this.institutionPenalOption = institutionPenalOption;
 	}
-	public boolean getInstitutionPenalApproval() {
+	public Boolean getInstitutionPenalApproval() {
 		return institutionPenalApproval;
 	}
-	public void setInstitutionPenalApproval(boolean institutionPenalApproval) {
+	public void setInstitutionPenalApproval(Boolean institutionPenalApproval) {
 		this.institutionPenalApproval = institutionPenalApproval;
 	}
 	
@@ -402,10 +402,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseMgtCenterPenalOption(String caseMgtCenterPenalOption) {
 		this.caseMgtCenterPenalOption = caseMgtCenterPenalOption;
 	}
-	public boolean getCaseMgtCenterPenalApproval() {
+	public Boolean getCaseMgtCenterPenalApproval() {
 		return caseMgtCenterPenalApproval;
 	}
-	public void setCaseMgtCenterPenalApproval(boolean caseMgtCenterPenalApproval) {
+	public void setCaseMgtCenterPenalApproval(Boolean caseMgtCenterPenalApproval) {
 		this.caseMgtCenterPenalApproval = caseMgtCenterPenalApproval;
 	}
 	
@@ -415,10 +415,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setDeptLeaderPenalOption(String deptLeaderPenalOption) {
 		this.deptLeaderPenalOption = deptLeaderPenalOption;
 	}
-	public boolean getDeptLeaderPenalApproval() {
+	public Boolean getDeptLeaderPenalApproval() {
 		return deptLeaderPenalApproval;
 	}
-	public void setDeptLeaderPenalApproval(boolean deptLeaderPenalApproval) {
+	public void setDeptLeaderPenalApproval(Boolean deptLeaderPenalApproval) {
 		this.deptLeaderPenalApproval = deptLeaderPenalApproval;
 	}
 	public String getMainLeaderPenalOption() {
@@ -427,10 +427,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setMainLeaderPenalOption(String mainLeaderPenalOption) {
 		this.mainLeaderPenalOption = mainLeaderPenalOption;
 	}
-	public boolean getMainLeaderPenalApproval() {
+	public Boolean getMainLeaderPenalApproval() {
 		return mainLeaderPenalApproval;
 	}
-	public void setMainLeaderPenalApproval(boolean mainLeaderPenalApproval) {
+	public void setMainLeaderPenalApproval(Boolean mainLeaderPenalApproval) {
 		this.mainLeaderPenalApproval = mainLeaderPenalApproval;
 	}
 	public String getAssigneeCloseCaseOption() {
@@ -445,10 +445,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setInstitutionCloseCaseOption(String institutionCloseCaseOption) {
 		this.institutionCloseCaseOption = institutionCloseCaseOption;
 	}
-	public boolean getInstitutionCloseCaseApproval() {
+	public Boolean getInstitutionCloseCaseApproval() {
 		return institutionCloseCaseApproval;
 	}
-	public void setInstitutionCloseCaseApproval(boolean institutionCloseCaseApproval) {
+	public void setInstitutionCloseCaseApproval(Boolean institutionCloseCaseApproval) {
 		this.institutionCloseCaseApproval = institutionCloseCaseApproval;
 	}
 	public String getCaseMgtCenterCloseCaseOption() {
@@ -457,10 +457,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseMgtCenterCloseCaseOption(String caseMgtCenterCloseCaseOption) {
 		this.caseMgtCenterCloseCaseOption = caseMgtCenterCloseCaseOption;
 	}
-	public boolean getCaseMgtCenterCloseCaseApproval() {
+	public Boolean getCaseMgtCenterCloseCaseApproval() {
 		return caseMgtCenterCloseCaseApproval;
 	}
-	public void setCaseMgtCenterCloseCaseApproval(boolean caseMgtCenterCloseCaseApproval) {
+	public void setCaseMgtCenterCloseCaseApproval(Boolean caseMgtCenterCloseCaseApproval) {
 		this.caseMgtCenterCloseCaseApproval = caseMgtCenterCloseCaseApproval;
 	}
 	public String getMainLeaderCloseCaseOption() {
@@ -469,10 +469,10 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setMainLeaderCloseCaseOption(String mainLeaderCloseCaseOption) {
 		this.mainLeaderCloseCaseOption = mainLeaderCloseCaseOption;
 	}
-	public boolean getMainLeaderCloseCaseApproval() {
+	public Boolean getMainLeaderCloseCaseApproval() {
 		return mainLeaderCloseCaseApproval;
 	}
-	public void setMainLeaderCloseCaseApproval(boolean mainLeaderCloseCaseApproval) {
+	public void setMainLeaderCloseCaseApproval(Boolean mainLeaderCloseCaseApproval) {
 		this.mainLeaderCloseCaseApproval = mainLeaderCloseCaseApproval;
 	}
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -666,17 +666,17 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	//
-	public int getCaseStage() {
+	public Integer getCaseStage() {
 		return caseStage;
 	}
-	public void setCaseStage(int caseStage) {
+	public void setCaseStage(Integer caseStage) {
 		this.caseStage = caseStage;
 	}
 	
-	public int getCaseQueryStage() {
+	public Integer getCaseQueryStage() {
 		return caseQueryStage;
 	}
-	public void setCaseQueryStage(int caseQueryStage) {
+	public void setCaseQueryStage(Integer caseQueryStage) {
 		this.caseQueryStage = caseQueryStage;
 	}
 	
@@ -688,10 +688,10 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	//	20171015
-	public boolean isIllegalConstructionFlag() {
+	public Boolean isIllegalConstructionFlag() {
 		return illegalConstructionFlag;
 	}
-	public void setIllegalConstructionFlag(boolean illegalConstructionFlag) {
+	public void setIllegalConstructionFlag(Boolean illegalConstructionFlag) {
 		this.illegalConstructionFlag = illegalConstructionFlag;
 	}
 	public String getCaseDocNo() {
@@ -724,19 +724,19 @@ public class OaCase extends ActEntity<OaCase> {
 		this.caseQueryDocNo = caseQueryDocNo;
 	}
 
-	public boolean getCaseQueryIllegalConstruct() {
+	public Boolean getCaseQueryIllegalConstruct() {
 		return caseQueryIllegalConstruct;
 	}
 
-	public void setCaseQueryIllegalConstruct(boolean caseQueryIllegalConstruct) {
+	public void setCaseQueryIllegalConstruct(Boolean caseQueryIllegalConstruct) {
 		this.caseQueryIllegalConstruct = caseQueryIllegalConstruct;
 	}
 
-	public boolean getCaseQueryCheckFlag() {
+	public Boolean getCaseQueryCheckFlag() {
 		return caseQueryCheckFlag;
 	}
 	
-	public void setCaseQueryCheckFlag(boolean caseQueryCheckFlag) {
+	public void setCaseQueryCheckFlag(Boolean caseQueryCheckFlag) {
 		this.caseQueryCheckFlag = caseQueryCheckFlag;
 	}
 
