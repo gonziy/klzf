@@ -30,4 +30,8 @@ public class CaseSurveyCompleteListener implements TaskListener{
 		delegateTask.setVariable("bRegSuc", true);
 	}
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
