@@ -441,9 +441,9 @@
 				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee.id}||'%'</if>
 				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee.id}+'%'</if>	
 		</if>
-		<if test="caseQueryIllegalConstruct != null">
+		<!-- <if test="caseQueryIllegalConstruct != null">
 			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
-		</if>
+		</if> -->
 		<if test="caseQueryStage != null">
 			AND a.case_stage = #{caseQueryStage}
 		</if>			

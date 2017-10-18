@@ -74,12 +74,12 @@
 				<tr>
 					<td class="tit">案件来源</td><td>
 						<form:select path ="caseSource" class="required">
-							<form:option value="1">上级交办</form:option>
-							<form:option value="2">有关部门移交</form:option>
-							<form:option value="3">调查发现</form:option>
-							<form:option value="4">新闻媒体曝光</form:option>	
-							<form:option value="5">举报投诉</form:option>
-							<form:option value="6">其他</form:option>																	
+							<form:option value="上级交办">上级交办</form:option>
+							<form:option value="有关部门移交">有关部门移交</form:option>
+							<form:option value="调查发现">调查发现</form:option>
+							<form:option value="新闻媒体曝光">新闻媒体曝光</form:option>	
+							<form:option value=">举报投诉">举报投诉</form:option>
+							<form:option value="其他">其他</form:option>																	
 						</form:select>
 					</td>
 				</tr>

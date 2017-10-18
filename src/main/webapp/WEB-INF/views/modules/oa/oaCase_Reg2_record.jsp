@@ -109,7 +109,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="tit">是否违法建设</td>
+					<td class="tit">是否违法建筑</td>
 					<td><form:checkbox path="illegalConstructionFlag"/></td>  
 				</tr>
 			</table>

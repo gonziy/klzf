@@ -75,10 +75,10 @@
 				<tr>
 					<td class="tit">承办机构意见</td>
 					<td colspan="4">${institutionRegOption}</td>	
-					<td><!-- 直接同意 -->
+					<td>
 						<c:choose>
 						<c:when test="${oaCase.institutionRegApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:otherwise><h4>不不同意</h4></c:otherwise>
 						</c:choose>
 					</td>				
 				</tr>
