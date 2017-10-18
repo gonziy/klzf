@@ -110,7 +110,7 @@ public class ApiOaController  extends BaseController {
 					apiOaCase.setAddress(oaCase.getAddress());
 					apiOaCase.setPhoneNumber(oaCase.getPhoneNumber());
 					apiOaCase.setCaseDescription(oaCase.getCaseDescription());
-					apiOaCase.setCaseAttachmentLinks(oaCase.getCaseAttachmentLinks());
+					//apiOaCase.setCaseAttachmentLinks(oaCase.getCaseAttachmentLinks());
 					apiOaCase.setCaseCheckResult(oaCase.getCaseCheckResult());
 					apiOaCase.setCaseSource(oaCase.getCaseSource());
 					apiOaCase.setAssigneeIds(oaCase.getAssigneeIds());
