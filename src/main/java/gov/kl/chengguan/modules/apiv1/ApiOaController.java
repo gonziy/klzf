@@ -280,6 +280,8 @@ public class ApiOaController  extends BaseController {
 							if(list.get(i+1)!=null){
 								txtString = list.get(i+1).getStage() + "-" + list.get(i+1).getName()+ ":审核中";
 							}
+						}else if(i+1==list.size()){
+							txtString = "案件结束";
 						}
 					}else if(apiStep.status.equals("reject")){
 						txtString = list.get(i-1).getStage() + "-" + list.get(i-1).getName() + ":重新提交";
