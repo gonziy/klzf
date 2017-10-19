@@ -382,20 +382,24 @@ public class ApiOaController  extends BaseController {
 		}
 		try {
 			OaCase oaCase = caseDao.get(id);
-			java.util.List<ApiStep> steps = getCaseProgress(oaCase);
-
 			
-			if(steps == null){
+			if(oaCase!=null){
+				java.util.List<ApiStep> steps = getCaseProgress(oaCase);		
+				if(steps == null){
+					jsonObject.put("msg", "data is null");
+					jsonObject.put("code", 44004);
+				}
+				else {
+						
+	
+					jsonObject.put("msg", "success");
+					jsonObject.put("code", 0);
+					
+					jsonObject.put("data", JSONObject.toJSON(steps));
+				}
+			}else {
 				jsonObject.put("msg", "data is null");
 				jsonObject.put("code", 44004);
-			}
-			else {
-					
-
-				jsonObject.put("msg", "success");
-				jsonObject.put("code", 0);
-				
-				jsonObject.put("data", JSONObject.toJSON(steps));
 			}
 			
 			PrintWriter out = response.getWriter();
