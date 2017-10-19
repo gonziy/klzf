@@ -13,8 +13,15 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -242,6 +249,61 @@ public class OaDocRoutingService extends BaseService{
 			}
 		}
 	}
+	
+	/*
+	 * 
+	 */
+	public Map<String, Object> getProcessProgress(String processInstanceId) 
+	{
+		Map<String, Object> results = new HashMap<String, Object>();
+
+		Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+		String activityId = execution.getActivityId();
+		
+		if(activityId != null)
+		{
+			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId)
+					.singleResult();
+			ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+					.getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
+			List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
+	
+			for (ActivityImpl activityImpl : activitiList) {
+	
+				String id = activityImpl.getId();
+	
+				// 当前节点
+				if (id.equals(activityId)) {
+					Map<String, Object> properties = activityImpl.getProperties();
+					results.put("节点名称", properties.get("name"));	
+					
+					ActivityBehavior activityBehavior = activityImpl.getActivityBehavior();
+					if (activityBehavior instanceof UserTaskActivityBehavior) {
+	
+						Task currentTask = null;
+						currentTask = taskService.createTaskQuery()
+								.executionId(execution.getId())
+								.taskDefinitionKey(execution.getActivityId()).singleResult();
+						if(currentTask == null) return results;
+						String assignee = currentTask.getAssignee();
+						if(assignee != null)
+						{
+							results.put("处理人id", assignee);
+							results.put("创建时间", currentTask.getCreateTime());
+						}
+						else {
+							results.put("任务状态", "未签收");						
+						}
+					}
+					break;
+				}
+			}
+		}
+		return results;
+	}
+	
+	
 
 }
 

@@ -57,33 +57,19 @@
 					<td colspan="5">${oaCase.caseDescription}</td>
 				</tr>	
 				<tr>
-					<td colspan="6">
-					<table>
-						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
-						<tr>
-							<td class="tit">${caseDocuments}</td>
-							<td class="tit">${caseImages}</td>
-							<td class="tit">${caseVideos}</td>
-						</tr>
-					</table>
-					</td>				
+					<td class="tit">案件申报日期</td>
+					<td class="tit"><fmt:formatDate value="${oaCase.caseRegStartDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>	
 				</tr>	
 				<tr>
 					<td class="tit">初审结论</td>
 					<td colspan="4">${oaCase.caseCheckResult}</td>
 				</tr>
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>				
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>				
 				<tr>
 					<td class="tit">承办机构意见</td>
-					<td colspan="4">
-						<form:textarea path="institutionRegOption" class="required" rows="5" maxlength="300"/>
-					</td>					
+					<td colspan="4"><form:textarea path="institutionRegOption" class="required" rows="5" maxlength="300"/></td>					
 				</tr>
 				<!-- 立案结束 -->	
-				<tr>
-					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
-					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>				
-				</tr>
 			</table>
 		</fieldset>
 		<div class="form-actions">

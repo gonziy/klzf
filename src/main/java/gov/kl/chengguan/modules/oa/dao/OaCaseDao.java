@@ -14,10 +14,14 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	//
 	public int updateCaseCheckResult(OaCase oaCase);
 	public int updateCaseRecord(OaCase oaCase);
+	public int updateCaseAttachmentLinks(OaCase oaCase);
 	public int updateInstitutionRegOption(OaCase oaCase);
 	public int updateDeptLeaderRegOption(OaCase oaCase);
 	public int updateMainLeaderRegOption(OaCase oaCase);
-	public int updateCaseAttachmentLinks(OaCase oaCase);
+	public int updateMainLeaderRegOption1(OaCase oaCase);
+
+	public int updateCaseSurveyEndData(OaCase oaCase);	
+	
 	
 	public int updateCaseDesc(OaCase oaCase);
 	public int updateCasePenal(OaCase oaCase);
@@ -26,10 +30,11 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	public int updateMgtCenterPenalOption(OaCase oaCase);	
 	public int updateDeptLeaderPenalOption(OaCase oaCase);
 	public int updateMainLeaderPenalOption(OaCase oaCase);
-
+	public int updateMainLeaderPenalOption1(OaCase oaCase);
+	
 	public int updateAssigneeCloseOption(OaCase oaCase);
 	public int updateInstitutionCloseOption(OaCase oaCase);
 	public int updateMgtCenterCloseOption(OaCase oaCase);
 	public int updateMainLeaderCloseOption(OaCase oaCase);
-
+	public int updateMainLeaderCloseOption1(OaCase oaCase);
 }

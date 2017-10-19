@@ -22,7 +22,8 @@ public class CaseSurveyCompleteListener implements TaskListener{
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Override
-	public void notify(DelegateTask delegateTask) {
+	public void notify(DelegateTask delegateTask) 
+	{
 		// TODO Auto-generated method stub
 		Calendar ca = Calendar.getInstance();
 		Date dtSurvey = ca.getTime();		
@@ -30,8 +31,4 @@ public class CaseSurveyCompleteListener implements TaskListener{
 		delegateTask.setVariable("bRegSuc", true);
 	}
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/

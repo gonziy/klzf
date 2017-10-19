@@ -63,7 +63,7 @@
 						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
 						<tr>
 							<td class="tit">${caseDocuments}</td>
-							<td class="tit">${caseImages}</td>
+							<td class="tit" >${caseImages}</td>
 							<td class="tit">${caseVideos}</td>
 						</tr>
 					</table>

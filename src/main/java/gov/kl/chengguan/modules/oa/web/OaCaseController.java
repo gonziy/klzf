@@ -71,7 +71,6 @@ public class OaCaseController extends BaseController {
 	@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = "form")
 	public String form(OaCase oaCase, Model model) {
-		model.addAttribute("oaCase", oaCase);
 		// 案件申报
 		String view = "oaCase_Reg1_apply";
 
@@ -190,9 +189,11 @@ public class OaCaseController extends BaseController {
 		}
 		
 		Map<String, Object> vars = new HashMap<String, Object>();
-		vars.put("applyer", "1");
-		
+		String initiator = UserUtils.getUser().getId();
+		System.out.println("process applyer:" + initiator);
+		vars.put("applyer", initiator);		
 		oaCaseService.save(oaCase, vars);
+		
 		addMessage(redirectAttributes, "提交成功");
 		return "redirect:" + adminPath + "/act/task/todo/";
 	}

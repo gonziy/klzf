@@ -36,7 +36,6 @@ public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 		Date dtDue = (Date)delegateTask.getVariable("caseRegDueDate");
 		// 检查参数获取的情况
 		logger.debug(TAG, "reg start date: " + dtStart.toString() + "reg due date:" + dtDue.toString());	
-		Calendar ca = Calendar.getInstance();
 		// 超时检查
 		
 		// 在任务complete之前设置变量，在此处
@@ -45,7 +44,10 @@ public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 		if(caseAssigneeIds!=null && caseAssigneeIds.length() > 2)
 		{
 			String[] ss = caseAssigneeIds.split(";");
-			String assignee1 = ss[0];
+			for(String s1 : ss)
+			{
+				System.out.println("---->><<<----Get Task Candidate User: " + s1);
+			}
 			// 根据该任务人得到其所属机构以及机构的管理人
 			// 设置其办理人为办理人
 		}

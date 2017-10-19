@@ -53,7 +53,7 @@
 				</tr>
 				<tr>
 					<td class="tit">地址</td>
-					<td colspan="4"><form:input path="address" class="required" maxlength="150"/></td>
+					<td colspan="5"><form:input path="address" class="required" maxlength="150"/></td>
 				</tr>
 				<tr>
 					<td class="tit">案情简述</td>
@@ -75,36 +75,37 @@
 					<td class="tit">案件来源</td>
 					<td colspan="3">
 						<form:select path ="caseSource" class="required" style="width:120px">
-							<form:option value="1">上级交办</form:option>
-							<form:option value="2">有关部门移交</form:option>
-							<form:option value="3">调查发现</form:option>
-							<form:option value="4">新闻媒体曝光</form:option>	
-							<form:option value="5">举报投诉</form:option>
-							<form:option value="6">其他</form:option>																	
+							<form:option value="上级交办">上级交办</form:option>
+							<form:option value="有关部门移交">有关部门移交</form:option>
+							<form:option value="调查发现">调查发现</form:option>
+							<form:option value="新闻媒体曝光">新闻媒体曝光</form:option>	
+							<form:option value="举报投诉">举报投诉</form:option>
+							<form:option value="其他">其他</form:option>																	
 						</form:select>
 					</td>
 				</tr>
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>
 				<tr>																			
 					<td class="tit">承办人：</td>
-					<td colspan="3">
+					<td colspan="2">
 						<form:input path="assigneeIds" class="required" maxlength="150"/>
 					</td>
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
-					<td colspan="3">
+					<td colspan="2">
 						<form:select path ="normCaseDescPart1" class="required">
-							<form:option value="1">行为1</form:option>
-							<form:option value="2">行为2</form:option>
-							<form:option value="3">行为3</form:option>																
+							<form:option value="行为1">行为1</form:option>
+							<form:option value="行为2">行为2</form:option>
+							<form:option value="行为3">行为3</form:option>																
 						</form:select>
 					</td>
-					<td class="tit">违反了</td><td>
-							<form:select path ="normCaseDescPart2" class="required">
-							<form:option value="1">条例1</form:option>
-							<form:option value="2">条例2</form:option>
-							<form:option value="3">条例3</form:option>																
+					<td class="tit">违反了</td>
+					<td colspan="2">
+						<form:select path ="normCaseDescPart2" class="required">
+							<form:option value="法条1">条例1</form:option>
+							<form:option value="法条2">条例2</form:option>
+							<form:option value="法条3">条例3</form:option>																
 						</form:select>
 					</td>
 				</tr>

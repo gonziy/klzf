@@ -31,13 +31,9 @@ public class OaCase extends ActEntity<OaCase> {
 	// 法定代理人
 	private String caseLegalAgent;
 	// 地址
-<<<<<<< HEAD
 	private String address;
 
 
-=======
-	private String address;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 电话
 	private String phoneNumber;
 	// 描述
@@ -49,7 +45,7 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseThumbnails;
 	// 初步审核意见
 	private String caseCheckResult;
-	private Boolean caseCheckFlag;
+	private boolean caseCheckFlag;
 	// 案件来源，如果能列出应该时id值，
 	private String caseSource;
 	// 案件承办人,可以多个，用;隔开
@@ -58,13 +54,9 @@ public class OaCase extends ActEntity<OaCase> {
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	
 
-<<<<<<< HEAD
 	private boolean illegalConstructionFlag; //17-1015违建标识
 	
 
-=======
-	private boolean illegalConstructionFlag; //17-1015违建标识
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 承办机构意见
 	private String institutionRegOption;
 	// 承办机构确认
@@ -120,7 +112,6 @@ public class OaCase extends ActEntity<OaCase> {
 	 * 3：处罚
 	 * 4：结案
 	 */
-	//private Integer 
 	private int caseStage;
 	
 	//++
@@ -155,23 +146,12 @@ public class OaCase extends ActEntity<OaCase> {
 	private Task task;
 	private Map<String, Object> variables;
 	// 历史的流程实例
-<<<<<<< HEAD
 	private HistoricProcessInstance historicProcessInstance;
 
-=======
-	private HistoricProcessInstance historicProcessInstance;
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	
 	/*
 	 * 查询时使用的变量列表
 	 */
-<<<<<<< HEAD
-=======
-	private String caseQueryTitle;	 
-	private String caseQueryDocNo;	 
-	private String caseQueryIllegalConstruct;
-
->>>>>>> branch 'oa_bps' of https://github.com/gonziy/klzf/
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人
@@ -196,11 +176,11 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseQueryCloseDateStart;  
 	private Date caseQueryCloseDateEnd;
 	// 案件办理进度
-	private int caseQueryStage;
+	private Integer caseQueryStage;
 	private String caseQueryTitle;	 
 	private String caseQueryDocNo;	 
-	private boolean caseQueryIllegalConstruct;
-	private boolean caseQueryCheckFlag;
+	private Boolean caseQueryIllegalConstruct;
+	private Boolean caseQueryCheckFlag;
 	
 	/*
 	 * 用于标识案件的名称
@@ -221,10 +201,10 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	public String getNormAssigneePenalOpt() {
-		if(normAssigneePenalOpt !=null && normAssigneePenalOptPart2!=null)
+		if(normCaseDescPart2 !=null && normAssigneePenalOptPart2!=null)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.append(" 建议依{据： ").append(normAssigneePenalOptPart1).append(" 给于处罚: ")
+			sb.append(" 建议依据： ").append(normCaseDescPart2).append(" 给予处罚: ")
 				.append(normAssigneePenalOptPart2);
 			normAssigneePenalOpt = sb.toString();
 			return normAssigneePenalOpt;
@@ -355,7 +335,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setInstitutionRegOption(String institutionRegOption) {
 		this.institutionRegOption = institutionRegOption;
 	}
-	public boolean isInstitutionRegApproval() {
+	public boolean getInstitutionRegApproval() {
 		return institutionRegApproval;
 	}
 	public void setInstitutionRegApproval(boolean institutionRegApproval) {
@@ -367,7 +347,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setDeptLeaderRegOption(String deptLeaderRegOption) {
 		this.deptLeaderRegOption = deptLeaderRegOption;
 	}
-	public boolean isDeptLeaderRegApproval() {
+	public boolean getDeptLeaderRegApproval() {
 		return deptLeaderRegApproval;
 	}
 	public void setDeptLeaderRegApproval(boolean deptLeaderRegApproval) {
@@ -379,7 +359,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setMainLeaderRegOption(String mainLeaderRegOption) {
 		this.mainLeaderRegOption = mainLeaderRegOption;
 	}
-	public boolean isMainLeaderRegApproval() {
+	public boolean getMainLeaderRegApproval() {
 		return mainLeaderRegApproval;
 	}
 	public void setMainLeaderRegApproval(boolean mainLeaderRegApproval) {
@@ -708,7 +688,7 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	//	20171015
-	public boolean isIllegalConstructionFlag() {
+	public boolean getIllegalConstructionFlag() {
 		return illegalConstructionFlag;
 	}
 	public void setIllegalConstructionFlag(boolean illegalConstructionFlag) {

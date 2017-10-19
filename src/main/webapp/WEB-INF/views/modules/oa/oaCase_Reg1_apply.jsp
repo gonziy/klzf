@@ -72,7 +72,7 @@
 						</tr>
 					</table>
 					</td>				
-				</tr>					
+				</tr>						
 			</table>
 		</fieldset>
 		<div class="form-actions">
