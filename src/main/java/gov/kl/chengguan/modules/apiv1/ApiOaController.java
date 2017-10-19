@@ -5,12 +5,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.Task;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricIdentityLink;
 import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.Result;
+import com.sun.javafx.collections.MappingChange.Map;
 import com.sun.tools.javac.resources.javac;
 import com.sun.tools.javac.util.List;
 
@@ -60,10 +70,16 @@ public class ApiOaController  extends BaseController {
 	
 	@Autowired
 	private OaCaseService oaCaseService;
-	
 	@Autowired
 	private ActTaskService actTaskService;
-	
+	@Autowired
+	private HistoryService historyService;
+	@Autowired
+	private RepositoryService repositoryService;
+	@Autowired
+	private IdentityService identityService;
+	@Autowired
+	private TaskService taskService;
 	
 	@RequestMapping(value = {"oa/case/get"})
 	public void getCaseInfo(HttpServletRequest request, HttpServletResponse response) {
@@ -223,6 +239,30 @@ public class ApiOaController  extends BaseController {
 		}
 	}
 	
+	/**
+	 * 获取案件步骤
+	 * @param oaCase
+	 * @return
+	 */
+	private java.util.List<ApiStep> getCaseProgress(OaCase oaCase){
+		java.util.List<ApiStep> list = new ArrayList<ApiStep>();
+		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult()));
+		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.isInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption()));
+		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.isDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption()));
+		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.isMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption()));
+		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", ""));
+		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption()));
+		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption()));
+		list.add(new ApiStep("处罚", "案管中心", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalOption()));
+		list.add(new ApiStep("处罚", "分管领导", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalApproval()==true?"pass":"reject", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalOption()));
+		list.add(new ApiStep("处罚", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderPenalApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption()));
+		list.add(new ApiStep("结案", "承办人", oaCase.getAssigneeCloseCaseOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneeCloseCaseOption()==null?"":oaCase.getAssigneeCloseCaseOption()));
+		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption()));
+		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption()));
+		list.add(new ApiStep("结案", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption()));
+		return list;
+	}
+	
 	@RequestMapping(value = {"oa/case/getstage"})
 	public void getCaseStage(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -251,54 +291,20 @@ public class ApiOaController  extends BaseController {
 		}
 		try {
 			OaCase oaCase = caseDao.get(id);
-			if(oaCase == null){
+			java.util.List<ApiStep> steps = getCaseProgress(oaCase);
+
+			
+			if(steps == null){
 				jsonObject.put("msg", "data is null");
 				jsonObject.put("code", 44004);
 			}
 			else {
 					
-				
+
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
 				
-				com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
-				
-				if(oaCase.getCaseDocuments()!=null && !oaCase.getCaseDocuments().isEmpty()){
-					String[] docs = oaCase.getCaseDocuments().split(";");
-					java.util.List<String> list = new ArrayList<String>();
-					for (String doc : docs) {
-						list.add(doc);
-					}
-					if(list != null &&!list.isEmpty()){
-						com.alibaba.fastjson.JSONObject jsonDocuments = new com.alibaba.fastjson.JSONObject();
-						jsonData.put("documents", list);
-					}
-				}
-				if(oaCase.getCaseImages()!=null && !oaCase.getCaseImages().isEmpty()){
-					String[] imgs = oaCase.getCaseImages().split(";");
-					java.util.List<String> list = new ArrayList<String>();
-					for (String img : imgs) {
-						list.add(img);
-					}
-					if(list != null &&!list.isEmpty()){
-						com.alibaba.fastjson.JSONObject jsonPhotos = new com.alibaba.fastjson.JSONObject();
-						jsonData.put("photos", list);
-					}
-				}
-				if(oaCase.getCaseVideos()!=null && !oaCase.getCaseVideos().isEmpty()){
-					String[] vdos = oaCase.getCaseVideos().split(";");
-					java.util.List<String> list = new ArrayList<String>();
-					for (String vdo : vdos) {
-						list.add(vdo);
-					}
-					if(list != null &&!list.isEmpty()){
-						com.alibaba.fastjson.JSONObject jsonVideos = new com.alibaba.fastjson.JSONObject();
-						jsonData.put("videos", list);
-					}
-				}
-				
-				
-				jsonObject.put("data", JSONObject.toJSON(jsonData));
+				jsonObject.put("data", JSONObject.toJSON(steps));
 			}
 			
 			PrintWriter out = response.getWriter();
@@ -496,6 +502,7 @@ public class ApiOaController  extends BaseController {
 				java.util.List<ApiOaCase> results = new ArrayList<ApiOaCase>();
 				for (OaCase oaCase : list) {
 					ApiOaCase apiOaCase = new ApiOaCase();
+					
 					
 					String _case_sourceString = oaCase.getCaseSource();
 					if(_case_sourceString=="1"){
@@ -1965,6 +1972,44 @@ public class ApiOaController  extends BaseController {
 		}
 		public void setCaseDocNo(String caseDocNo) {
 			this.caseDocNo = caseDocNo;
+		}
+	}
+	
+	public class ApiStep
+	{
+		public ApiStep(String stage, String name, String status,String remark){
+			this.stage = stage;
+			this.name = name;
+			this.status = status;
+			this.remark = remark;
+		}
+		private String stage;
+		private String name;
+		private String status;
+		private String remark;
+		public String getStage() {
+			return stage;
+		}
+		public void setStage(String stage) {
+			this.stage = stage;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		public String getRemark() {
+			return remark;
+		}
+		public void setRemark(String remark) {
+			this.remark = remark;
 		}
 	}
 	
