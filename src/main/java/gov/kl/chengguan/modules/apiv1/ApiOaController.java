@@ -263,8 +263,99 @@ public class ApiOaController  extends BaseController {
 		return list;
 	}
 	
+	/**
+	 * 获取案件正在办理状态
+	 * @param oacase
+	 * @return
+	 */
+	private String getCaseProgressNow(OaCase oacase){
+		String txtString = "";
+		java.util.List<ApiStep> list = getCaseProgress(oacase);
+		if(list!=null){
+			for(int i = 0 ; i < list.size(); i++){
+				ApiStep apiStep = list.get(i);
+				if(apiStep!=null){
+					if(apiStep.status.equals("pass")){
+						if(i+1<list.size()){
+							if(list.get(i+1)!=null){
+								txtString = list.get(i+1).getStage() + "-" + list.get(i+1).getName()+ ":审核中";
+							}
+						}
+					}else if(apiStep.status.equals("reject")){
+						txtString = list.get(i-1).getStage() + "-" + list.get(i-1).getName() + ":重新提交";
+					}else{
+						break;
+					}
+				}
+			}
+		}
+		
+		return txtString;
+	}
 	@RequestMapping(value = {"oa/case/getstage"})
 	public void getCaseStage(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+
+		String id = request.getParameter("id");
+		if(id==null || id.isEmpty())
+		{
+			jsonObject.put("msg", "missing url, id is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		try {
+			OaCase oaCase = caseDao.get(id);
+			if(oaCase != null){
+				String result = getCaseProgressNow(oaCase);
+				com.alibaba.fastjson.JSONObject jsonResult = new com.alibaba.fastjson.JSONObject();
+				if(result == null || result.isEmpty()){
+					jsonObject.put("msg", "data is null");
+					jsonObject.put("code", 44004);
+				}
+				else {
+					jsonObject.put("msg", "success");
+					jsonObject.put("code", 0);
+					jsonResult.put("result", result);
+					jsonObject.put("data",jsonResult);
+				}
+			}else{
+				jsonObject.put("msg", "data is null");
+				jsonObject.put("code", 44004);
+			}
+			PrintWriter out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+			
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+		}
+	}
+	@RequestMapping(value = {"oa/case/getstagelist"})
+	public void getCaseStagelist(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
