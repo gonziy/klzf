@@ -3,7 +3,7 @@
 <mapper namespace="gov.kl.chengguan.modules.oa.dao.OaCaseDao">
 	
     <sql id="caseColumns">
-		a.*,
+		a.id,
 		a.title AS "title",
 		a.parties AS "caseParties",
 		a.legal_agent AS "caseLegalAgent",
