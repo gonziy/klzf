@@ -246,20 +246,20 @@ public class ApiOaController  extends BaseController {
 	 */
 	private java.util.List<ApiStep> getCaseProgress(OaCase oaCase){
 		java.util.List<ApiStep> list = new ArrayList<ApiStep>();
-		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult()));
-		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.isInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption()));
-		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.isDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption()));
-		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.isMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption()));
-		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", ""));
-		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption()));
-		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption()));
-		list.add(new ApiStep("处罚", "案管中心", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalOption()));
-		list.add(new ApiStep("处罚", "分管领导", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalApproval()==true?"pass":"reject", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalOption()));
-		list.add(new ApiStep("处罚", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderPenalApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption()));
-		list.add(new ApiStep("结案", "承办人", oaCase.getAssigneeCloseCaseOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneeCloseCaseOption()==null?"":oaCase.getAssigneeCloseCaseOption()));
-		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption()));
-		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption()));
-		list.add(new ApiStep("结案", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption()));
+		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult(),1));
+		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.isInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption(),2));
+		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.isDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),3));
+		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.isMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),4));
+		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", "",5));
+		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption(),6));
+		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption(),7));
+		list.add(new ApiStep("处罚", "案管中心", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalOption(),8));
+		list.add(new ApiStep("处罚", "分管领导", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalApproval()==true?"pass":"reject", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalOption(),9));
+		list.add(new ApiStep("处罚", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderPenalApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),10));
+		list.add(new ApiStep("结案", "承办人", oaCase.getAssigneeCloseCaseOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneeCloseCaseOption()==null?"":oaCase.getAssigneeCloseCaseOption(),11));
+		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption(),12));
+		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption(),13));
+		list.add(new ApiStep("结案", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),14));
 		return list;
 	}
 	
@@ -268,28 +268,77 @@ public class ApiOaController  extends BaseController {
 	 * @param oacase
 	 * @return
 	 */
-	private String getCaseProgressNow(OaCase oacase){
+	private String getCaseProgressNow(OaCase oaCase){
 		String txtString = "";
-		java.util.List<ApiStep> list = getCaseProgress(oacase);
-		if(list!=null){
-			for(int i = 0 ; i < list.size(); i++){
-				ApiStep apiStep = list.get(i);
-				if(apiStep!=null){
-					if(apiStep.status.equals("pass")){
-						if(i+1<list.size()){
-							if(list.get(i+1)!=null){
-								txtString = list.get(i+1).getStage() + "-" + list.get(i+1).getName()+ ":审核中";
-							}
-						}else if(i+1==list.size()){
-							txtString = "案件结束";
-						}
-					}else if(apiStep.status.equals("reject")){
-						txtString = list.get(i-1).getStage() + "-" + list.get(i-1).getName() + ":重新提交";
-					}else{
-						break;
-					}
-				}
-			}
+		
+		String taskDefKey = oaCase.getAct().getTaskDefKey();
+		// 查看案件情况表
+		if(oaCase.getAct().isFinishTask()){
+			txtString ="15,结案,案件结束";
+		}
+		// 案件初审
+		else if ("utAnjianChushen".equals(taskDefKey)){
+			txtString ="1,立案,承办人";
+		}
+		// 案件信息录入
+		else if ("utAnjianLuru".equals(taskDefKey)){
+			txtString ="1,立案,承办人";
+		}
+		// 立案审批——承办机构
+		else if ("utLaShp_Cbjg".equals(taskDefKey)){
+			txtString ="2,立案,承办机构";
+		}
+		// 立案审批——分管领导
+		else if ("utLaShp_Fgld".equals(taskDefKey)){
+			txtString ="3,立案,分管领导";
+		}			
+		// 立案审批——主管领导
+		else if ("utLaShp_Zgld".equals(taskDefKey)){
+			txtString ="4,立案,主管领导";
+		}
+		// 开始案件调查
+		else if ("utAnjianDiaocha".equals(taskDefKey)){
+			txtString ="5,调查,案件调查";
+		}
+		// 行政处罚——承办人意见
+		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
+			txtString ="6,处罚,承办人";
+		}
+		// 行政处罚——承办机构审批
+		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
+			txtString ="7,处罚,承办机构";
+		}
+		// 行政处罚——案件管理中心审批
+		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
+			txtString ="8,处罚,案管中心";
+		}
+		// 行政处罚——分管领导审批
+		else if ("utXzhChf_Fgld".equals(taskDefKey)){
+			txtString ="9,处罚,分管领导";
+		}
+		// 行政处罚——主管领导审批
+		else if ("utXzhChf_Zgld".equals(taskDefKey)){
+			txtString ="10,处罚,主管领导";
+		}
+		// 结案审批——承办人
+		else if ("utJaShp_Chbr".equals(taskDefKey)){
+			txtString ="11,结案,承办人";
+		}
+		// 结案审批——承办机构
+		else if ("utJaShp_Cbjg".equals(taskDefKey)){
+			txtString ="12,结案,承办机构";
+		}
+		// 结案审批——案件管理中心
+		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
+			txtString ="13,结案,案管中心";
+		}
+		// 结案审批——主管领导
+		else if ("utJaShp_Zgld".equals(taskDefKey)){
+			txtString ="14,结案,主管领导";
+		}
+		// 都不是
+		else {
+			txtString ="-1,未知,未知";
 		}
 		
 		return txtString;
@@ -396,8 +445,15 @@ public class ApiOaController  extends BaseController {
 	
 					jsonObject.put("msg", "success");
 					jsonObject.put("code", 0);
+					com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+					jsonData.put("data", JSONObject.toJSON(steps));
+					jsonObject.put("data", jsonData);
+					String progressNow = getCaseProgressNow(oaCase);
+					String[] values = progressNow.split(",");
+					jsonObject.put("step", values[0]);
+					jsonObject.put("stage", values[1]);
+					jsonObject.put("name", values[2]);
 					
-					jsonObject.put("data", JSONObject.toJSON(steps));
 				}
 			}else {
 				jsonObject.put("msg", "data is null");
@@ -479,7 +535,12 @@ public class ApiOaController  extends BaseController {
 					if(list != null &&!list.isEmpty()){
 						com.alibaba.fastjson.JSONObject jsonDocuments = new com.alibaba.fastjson.JSONObject();
 						jsonData.put("documents", list);
+					}else {
+						
+						jsonData.put("documents",  new ArrayList<String>());
 					}
+				}else{
+					jsonData.put("documents",  new ArrayList<String>());
 				}
 				if(oaCase.getCaseImages()!=null && !oaCase.getCaseImages().isEmpty()){
 					String[] imgs = oaCase.getCaseImages().split(";");
@@ -490,7 +551,11 @@ public class ApiOaController  extends BaseController {
 					if(list != null &&!list.isEmpty()){
 						com.alibaba.fastjson.JSONObject jsonPhotos = new com.alibaba.fastjson.JSONObject();
 						jsonData.put("photos", list);
+					}else{
+						jsonData.put("photos",  new ArrayList<String>());
 					}
+				}else{
+					jsonData.put("photos",  new ArrayList<String>());
 				}
 				if(oaCase.getCaseVideos()!=null && !oaCase.getCaseVideos().isEmpty()){
 					String[] vdos = oaCase.getCaseVideos().split(";");
@@ -501,7 +566,11 @@ public class ApiOaController  extends BaseController {
 					if(list != null &&!list.isEmpty()){
 						com.alibaba.fastjson.JSONObject jsonVideos = new com.alibaba.fastjson.JSONObject();
 						jsonData.put("videos", list);
+					}else{
+						jsonData.put("videos", new ArrayList<String>());
 					}
+				}else{
+					jsonData.put("videos",  new ArrayList<String>());
 				}
 				
 				
@@ -2074,16 +2143,25 @@ public class ApiOaController  extends BaseController {
 	
 	public class ApiStep
 	{
-		public ApiStep(String stage, String name, String status,String remark){
+		public ApiStep(String stage, String name, String status,String remark, Integer step){
 			this.stage = stage;
 			this.name = name;
 			this.status = status;
 			this.remark = remark;
+			this.step = step;
 		}
 		private String stage;
 		private String name;
 		private String status;
 		private String remark;
+		private Integer step;
+		
+		public Integer getStep() {
+			return step;
+		}
+		public void setStep(Integer step) {
+			this.step = step;
+		}
 		public String getStage() {
 			return stage;
 		}
