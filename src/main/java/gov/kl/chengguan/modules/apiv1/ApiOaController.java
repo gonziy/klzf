@@ -1102,7 +1102,7 @@ public class ApiOaController  extends BaseController {
 			}else {
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
-				jsonObject.put("result", "success");
+				jsonObject.put("result", 1);
 			}
 			
 			PrintWriter out = response.getWriter();
@@ -1185,12 +1185,12 @@ public class ApiOaController  extends BaseController {
 			{
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
-				jsonObject.put("result", "failed");
+				jsonObject.put("result",0);
 				
 			}else {
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
-				jsonObject.put("result", "success");
+				jsonObject.put("result", 1);
 			}
 			
 			PrintWriter out = response.getWriter();
@@ -1385,12 +1385,12 @@ public class ApiOaController  extends BaseController {
 				{
 					jsonObject.put("msg", "success");
 					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");					
+					jsonObject.put("result", 1);					
 				}else 
 				{
 					jsonObject.put("msg", "success");
 					jsonObject.put("code", 0);
-					jsonObject.put("result", "failed");	
+					jsonObject.put("result", 0);	
 				}
 				
 				
@@ -1490,7 +1490,7 @@ public class ApiOaController  extends BaseController {
 				} catch (Exception e) {
 					jsonObject.put("msg", "success");
 					jsonObject.put("code", 0);
-					jsonObject.put("result", "failed");
+					jsonObject.put("result", 0);
 					jsonObject.put("remark", "save file failed");
 					PrintWriter out;
 					try {
@@ -1538,12 +1538,12 @@ public class ApiOaController  extends BaseController {
 					if (result > 0) {
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
-						jsonObject.put("result", "success");
+						jsonObject.put("result", 1);
 						jsonObject.put("path", httpPath);
 					} else {
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
-						jsonObject.put("result", "failed");
+						jsonObject.put("result", 0);
 						jsonObject.put("remark", "insert to database failed");
 					}
 					PrintWriter out;
