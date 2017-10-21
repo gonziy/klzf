@@ -43,6 +43,11 @@
 			<legend>分管领导审核：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件申报 -->
+				<c:if test="${oaCase.rejectFlag==true}">
+					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.mainLeaderRegOption}</td></tr>
+				</c:if>
+				<!-- 驳回提示 -->
 				<tr><td class="tit" colspan=6><h4>立案审批</h4></td></tr>	
 				<tr>
 					<td class="tit">当事人</td><td>${oaCase.caseParties}</td>

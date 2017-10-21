@@ -202,6 +202,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utLaShp_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regInstitutionPass", iReturnState);
@@ -209,6 +210,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utLaShp_Fgld".equals(taskDefKey)){
 			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regDeptLeaderPass", iReturnState);
@@ -216,6 +218,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utLaShp_Zgld".equals(taskDefKey)){
 			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
 				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
 				dao.updateMainLeaderRegOption1(oaCase);		
@@ -239,16 +242,19 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 				dao.updateCaseSurveyEndData(oaCase);
 			}
 		}
-		else if ("endevent_LaShp".equals(taskDefKey)){
-			// 立案审批结束，更新数据库
-		}	
-
+		// 立案审批结束
 		//
 		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(3);
+				// 只有不是拒绝的任务才能更新开始时间
 				oaCase.setCasePenalStartDate(Calendar.getInstance().getTime());
-				dao.updateAssigneePenalOption(oaCase);
+				if(oaCase.getRejectFlag()) {
+					// 是被驳回的流程，但作为基本的流程，除了不干，只能让iReturnState=1...
+					oaCase.setRejectFlag((iReturnState ==1)?false: true);
+					dao.updateAssigneePenalOption(oaCase);
+				}
+				else dao.updateAssigneePenalOption1(oaCase);
 				
 				// 提交流程任务
 				actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
@@ -256,6 +262,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalInstitutionPass", iReturnState);
@@ -263,6 +270,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
 			oaCase.setCaseMgtCenterPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalMgtCenterPass", iReturnState);
@@ -270,13 +278,15 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utXzhChf_Fgld".equals(taskDefKey)){
 			oaCase.setDeptLeaderPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalDeptLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
 		}	
 		else if ("utXzhChf_Zgld".equals(taskDefKey)){
-			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);// cuowu 忘记更新结束时间
+			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
 				oaCase.setCasePenalEndDate(Calendar.getInstance().getTime());
 				dao.updateMainLeaderPenalOption1(oaCase);
@@ -287,22 +297,25 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			vars.put("penalMainLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
 		}
-		else if ("endevent_XzhChf".equals(taskDefKey)){
-			// 行政处罚审批结束，更新数据库
-		}	
+		// 行政处罚审批结束
 		//
 		else if ("utJaShp_Chbr".equals(taskDefKey)){
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(4);
 				oaCase.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
-				
-				dao.updateAssigneeCloseOption(oaCase);
+				if(oaCase.getRejectFlag()){
+					oaCase.setRejectFlag((iReturnState ==1)?false: true);
+					dao.updateAssigneeCloseOption(oaCase);
+				}
+				else dao.updateAssigneeCloseOption1(oaCase);
+
 				// 提交流程任务
 				actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 			}
 		}
 		else if ("utJaShp_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionCloseOption(oaCase);
 			// 提交流程任务
 			vars.put("closeInstitutionPass", iReturnState);
@@ -310,6 +323,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
 			oaCase.setCaseMgtCenterCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterCloseOption(oaCase);
 			// 提交流程任务
 			vars.put("closeMgtCenterPass", iReturnState);
@@ -317,6 +331,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utJaShp_Zgld".equals(taskDefKey)){
 			oaCase.setMainLeaderCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState ==1) {
 				oaCase.setCaseCloseUpEndDate(Calendar.getInstance().getTime());
 				dao.updateMainLeaderCloseOption1(oaCase);
@@ -328,7 +343,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			vars.put("closeMainLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}	
-		else if ("endevent_JaShp".equals(taskDefKey)){
+		else if ("endevent_case".equals(taskDefKey)){
 			// 结案审批
 			
 		}		

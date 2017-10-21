@@ -61,6 +61,7 @@ input.btn:hover {*color:#333333}
 .form-horizontal .table-form{width:100%;border-color:#dddddd;}
 .form-horizontal .table-form, .form-horizontal .table-form td{border:1px solid #ddd;background-color:#fdfdfd;padding:4px;} 
 .form-horizontal .table-form td.tit{background:#fafafa;text-align:center;padding-right:8px;white-space:nowrap;}
+.form-horizontal .table-form td.redtit{background:#ff0000;text-align:center;padding-right:8px;white-space:nowrap;font-weight:bold}
 .form-horizontal .form-actions{margin-bottom:0;}
 
 .form-horizontal fieldset .row-fluid {margin-bottom:10px;}

@@ -77,7 +77,7 @@
 		</fieldset>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="初审通过" onclick="$('#flag').val('yes')"/>&nbsp;
-			<input id="btnCancel" class="btn" type="button" value="拒绝" onclick="$('#flag').val('no')"/>
+			<input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('no')"/>&nbsp;
 		</div>
 	</form:form>
 </body>

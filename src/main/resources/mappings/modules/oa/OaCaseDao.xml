@@ -49,6 +49,7 @@
 		a.institution_close_flag as "institutionCloseCaseApproval",
 		a.caseMgtCenter_close_opt as "caseMgtCenterCloseCaseOption",
 		a.caseMgtCenter_close_flag as "caseMgtCenterCloseCaseApproval",
+	deptLeader_close_flag as "rejectFlag",
 		a.mainLeader_close_opt as "mainLeaderCloseCaseOption",
 		a.mainLeader_close_flag as "mainLeaderCloseCaseApproval",
 		a.caseCloseUpStartDate as "caseCloseUpStartDate",
@@ -118,7 +119,8 @@
 			institution_close_opt,
 			institution_close_flag,
 			caseMgtCenter_close_opt,
-			caseMgtCenter_close_flag,		
+			caseMgtCenter_close_flag,
+		deptLeader_close_flag,	
 			mainLeader_close_opt,
 			mainLeader_close_flag,
 			caseCloseUpStartDate,
@@ -178,6 +180,7 @@
 			#{institutionCloseCaseApproval},
 			#{caseMgtCenterCloseCaseOption},
 			#{caseMgtCenterCloseCaseApproval},
+		#{rejectFlag},
 			#{mainLeaderCloseCaseOption},
 			#{mainLeaderCloseCaseApproval},
 			#{caseCloseUpStartDate},
@@ -240,6 +243,7 @@
 			institution_close_flag = #{institutionCloseCaseApproval},
 			caseMgtCenter_close_opt = #{caseMgtCenterCloseCaseOption},
 			caseMgtCenter_close_flag = #{caseMgtCenterCloseCaseApproval},	
+	deptLeader_close_flag = #{rejectFlag},
 			mainLeader_close_opt = #{mainLeaderCloseCaseOption},
 			mainLeader_close_flag = #{mainLeaderCloseCaseApproval},
 			caseCloseUpStartDate = #{caseCloseUpStartDate},
@@ -285,6 +289,7 @@
 		UPDATE oa_case SET 
 			institution_reg_opt = #{institutionRegOption},
 			institution_reg_flag = #{institutionRegApproval},
+			deptLeader_close_flag = #{rejectFlag},	
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -294,6 +299,7 @@
 		UPDATE oa_case SET 
 			deptLeader_reg_opt = #{deptLeaderRegOption},
 			deptLeader_reg_flag = #{deptLeaderRegApproval},
+			deptLeader_close_flag = #{rejectFlag},			
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -303,6 +309,7 @@
 		UPDATE oa_case SET 
 			mainLeader_reg_opt = #{mainLeaderRegOption},
 			mainLeader_reg_flag = #{mainLeaderRegApproval},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -311,7 +318,7 @@
 	<update id="updateMainLeaderRegOption1">
 		UPDATE oa_case SET 
 			mainLeader_reg_opt = #{mainLeaderRegOption},
-			mainLeader_reg_flag = #{mainLeaderRegApproval},
+			mainLeader_reg_flag = #{mainLeaderRegApproval},		
 			caseRegEndDate = #{caseRegEndDate},
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
@@ -350,8 +357,8 @@
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
-		
-	<update id="updateAssigneePenalOption">
+	
+	<update id="updateAssigneePenalOption1">
 		UPDATE oa_case SET 
 			norm_penal_Part1 = #{normAssigneePenalOptPart1},
 			norm_penal_Part2 = #{normAssigneePenalOptPart2},
@@ -364,10 +371,23 @@
 		WHERE id = #{id}
 	</update>
 		
+	<update id="updateAssigneePenalOption">
+		UPDATE oa_case SET 
+			norm_penal_Part1 = #{normAssigneePenalOptPart1},
+			norm_penal_Part2 = #{normAssigneePenalOptPart2},
+			assignee_penal_opt = #{assigneePenalOption},	
+			deptLeader_close_flag = #{rejectFlag},			
+			update_by = #{updateBy.id}, 
+			doc_no = #{caseDocNo},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+		
 	<update id="updateInstitutionPenalOption">
 		UPDATE oa_case SET 
 			institution_penal_opt = #{institutionPenalOption},
 			institution_penal_flag = #{institutionPenalApproval},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -376,7 +396,8 @@
 	<update id="updateMgtCenterPenalOption">
 		UPDATE oa_case SET 
 			caseMgtCenter_penal_opt = #{caseMgtCenterPenalOption},
-			caseMgtCenter_penal_flag = #{caseMgtCenterPenalApproval},				
+			caseMgtCenter_penal_flag = #{caseMgtCenterPenalApproval},
+			deptLeader_close_flag = #{rejectFlag},								
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -386,6 +407,7 @@
 		UPDATE oa_case SET 
 			deptLeader_penal_opt = #{deptLeaderPenalOption},
 			deptLeader_penal_flag = #{deptLeaderPenalApproval},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -395,6 +417,7 @@
 		UPDATE oa_case SET 
 			mainLeader_penal_opt = #{mainLeaderPenalOption},
 			mainLeader_penal_flag = #{mainLeaderPenalApproval},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -409,11 +432,21 @@
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>	
-	<update id="updateAssigneeCloseOption">
+
+	<update id="updateAssigneeCloseOption1">
 		UPDATE oa_case SET 
 			assignee_close_case_opt = #{assigneeCloseCaseOption},
 			caseCloseUpStartDate = #{caseCloseUpStartDate},
-			case_stage = #{caseStage},
+			case_stage = #{caseStage},			
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+		
+	<update id="updateAssigneeCloseOption">
+		UPDATE oa_case SET 
+			assignee_close_case_opt = #{assigneeCloseCaseOption},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -423,6 +456,7 @@
 		UPDATE oa_case SET 
 			institution_close_opt = #{institutionCloseCaseOption},
 			institution_close_flag = #{institutionCloseCaseApproval},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -431,7 +465,8 @@
 	<update id="updateMgtCenterCloseOption">
 		UPDATE oa_case SET 
 			caseMgtCenter_close_opt = #{caseMgtCenterCloseCaseOption},
-			caseMgtCenter_close_flag = #{caseMgtCenterCloseCaseApproval},	
+			caseMgtCenter_close_flag = #{caseMgtCenterCloseCaseApproval},
+			deptLeader_close_flag = #{rejectFlag},					
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -441,6 +476,7 @@
 		UPDATE oa_case SET 
 			mainLeader_close_opt = #{mainLeaderCloseCaseOption},
 			mainLeader_close_flag = #{mainLeaderCloseCaseApproval},
+			deptLeader_close_flag = #{rejectFlag},				
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}

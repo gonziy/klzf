@@ -104,16 +104,7 @@ public class OaCase extends ActEntity<OaCase> {
 	// 处罚处理开始和完成时间
 	private Date casePenalStartDate;
 	private Date casePenalEndDate;
-	/*
-	 * 案件办理阶段
-	 * 0：申报
-	 * 1：立案
-	 * 2：调查
-	 * 3：处罚
-	 * 4：结案
-	 */
-	private int caseStage;
-	
+
 	//++
 	// 承办人结案意见
 	private String assigneeCloseCaseOption;
@@ -134,6 +125,25 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseCloseUpEndDate;
 	private String normCaseDesc;
 	private String normAssigneePenalOpt;	
+	
+	
+	/*
+	 * 案件办理阶段
+	 * 0：申报
+	 * 1：立案
+	 * 2：调查
+	 * 3：处罚
+	 * 4：结案
+	 */
+	private int caseStage;
+	
+	/*
+	 * 驳回标志
+	 * 注意：使用数据库deptLeaderCloseCaseApproval作为存放字段
+	 */
+	private boolean rejectFlag;
+	
+	
 	// 与Case实例相关的流程定义，
 	// 所在的流程实例、所在任务，其中的流程变量，
 	// 流程历史实例
@@ -216,6 +226,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public OaCase() {
 		super();
 		caseStage = 0;
+		rejectFlag = false;
 		// TODO Auto-generated constructor stub
 	}
 	public OaCase(String id) {
@@ -227,6 +238,7 @@ public class OaCase extends ActEntity<OaCase> {
 			caseLegalAgent = ss[0];
 		}
 		caseStage = 0;
+		rejectFlag = false;
 		// TODO Auto-generated constructor stub
 	}
 	public String getCaseParties() {
@@ -740,6 +752,15 @@ public class OaCase extends ActEntity<OaCase> {
 		this.caseQueryCheckFlag = caseQueryCheckFlag;
 	}
 
+	// 增加驳回标志
+	public boolean getRejectFlag() {
+		return rejectFlag;
+	}
+
+	public void setRejectFlag(boolean rejectFlag) {
+		this.rejectFlag = rejectFlag;
+	}	
+	
 	@Override
 	public String toString() {
 		return "OaCase [caseParties=" + caseParties + ", caseLegalAgent=" + caseLegalAgent + ", address=" + address
@@ -747,5 +768,5 @@ public class OaCase extends ActEntity<OaCase> {
 				+ ", caseCheckResult=" + caseCheckResult + ", caseSource=" + caseSource
 				+ ", assigneeIds=" + assigneeIds + "]";
 	}
-	
+
 }

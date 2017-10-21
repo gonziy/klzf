@@ -43,6 +43,10 @@
 			<legend>案件管理中心结案审批：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件简报 -->
+				<c:if test="${oaCase.rejectFlag==true}">
+					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.mainLeaderCloseCaseOption}</td></tr>
+				</c:if>				
 				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
 				<tr>
 					<td class="tit">当事人</td><td>${oaCase.caseParties}</td>
