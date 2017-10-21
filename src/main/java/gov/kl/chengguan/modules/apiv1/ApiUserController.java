@@ -99,7 +99,7 @@ public class ApiUserController  extends BaseController {
 			if(!result)
 			{
 				jsonObject.put("remark", "login failed");
-				jsonObject.put("result", "failed");
+				jsonObject.put("result", "failure");
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
 				
