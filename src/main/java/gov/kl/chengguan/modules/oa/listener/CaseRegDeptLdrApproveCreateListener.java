@@ -40,8 +40,6 @@ public class CaseRegDeptLdrApproveCreateListener implements TaskListener{
 		// 超时检查
 		
 		// 在任务complete之前设置变量，在此处
-		//delegateTask.addCandidateUser("1");
-		delegateTask.setAssignee("1");
 	}
 
 }

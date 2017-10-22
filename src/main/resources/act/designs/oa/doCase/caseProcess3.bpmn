@@ -2,7 +2,11 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="gov.kl.chengguan.modules.oa.caseProcess3">
   <process id="CaseProcess" name="CaseProcess" isExecutable="true">
     <startEvent id="startevent_case" name="Start" activiti:initiator="applyer" activiti:formKey="/oa/oaCase/form"></startEvent>
-    <userTask id="utAnjianChushen" name="案件初审" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utAnjianChushen" name="案件初审" activiti:assignee="${applyer}">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseRegApplyCompleteListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow1" sourceRef="startevent_case" targetRef="utAnjianChushen"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow2" sourceRef="utAnjianChushen" targetRef="exclusivegateway1"></sequenceFlow>
@@ -10,7 +14,11 @@
     <sequenceFlow id="flow3" sourceRef="exclusivegateway1" targetRef="utAnjianLuru">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${regCheckPass==1}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="utLaShp_Cbjg" name="承办机构立案审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utLaShp_Cbjg" name="承办机构立案审批" activiti:assignee="${applyer}">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseRegInstitutionApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow4" sourceRef="utAnjianLuru" targetRef="utLaShp_Cbjg"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow5" sourceRef="utLaShp_Cbjg" targetRef="exclusivegateway2"></sequenceFlow>

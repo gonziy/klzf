@@ -1,7 +1,5 @@
 package gov.kl.chengguan.modules.oa.dao;
 
-import java.util.Date;
-
 import gov.kl.chengguan.common.persistence.CrudDao;
 import gov.kl.chengguan.common.persistence.annotation.MyBatisDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
@@ -19,7 +17,7 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	public int updateDeptLeaderRegOption(OaCase oaCase);
 	public int updateMainLeaderRegOption(OaCase oaCase);
 	public int updateMainLeaderRegOption1(OaCase oaCase);
-
+	
 	public int updateCaseSurveyEndData(OaCase oaCase);	
 	
 	

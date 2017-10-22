@@ -29,8 +29,6 @@ public class CaseRegRecordCompleteListener implements TaskListener{
 	public void notify(DelegateTask delegateTask) {
 		// TODO Auto-generated method stub
 		logger.debug(TAG, "case reg record end");	
-		// 设置两位经办任务的人员		
-
 	}
 
 }

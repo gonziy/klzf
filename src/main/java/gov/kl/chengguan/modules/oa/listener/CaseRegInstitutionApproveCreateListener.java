@@ -10,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gov.kl.chengguan.modules.oa.utils.WorkDayUtil;
+import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
 /*
  * 经办机构确认
  * 用于根据承办人选择承办机构负责人，将其添加到备选用户表中
+ * 由于手机端更新后直接提报到此流程节点，因此在此节点中设置相应的参数
  */
 public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 	
@@ -51,6 +53,14 @@ public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 			// 根据该任务人得到其所属机构以及机构的管理人
 			// 设置其办理人为办理人
 		}
+		
+		/*
+		 * 查询获取用户所在的部门，
+		 * 得到部门的领导，再Institute审核中设置candidateUser，用setVariable方法设置{instituteleader}
+		 * 查询对应的deptLeader
+		 * 设置caseManagementCenter管理人
+		 * 设置相应的mainLeader
+		 */
 		delegateTask.addCandidateUser("1");
 	}
 

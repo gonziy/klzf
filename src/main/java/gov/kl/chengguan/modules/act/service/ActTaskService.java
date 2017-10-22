@@ -183,8 +183,10 @@ public class ActTaskService extends BaseService {
 	 * @return
 	 */
 	public Page<Act> historicList(Page<Act> page, Act act){
-		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
-
+		//String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
+		// 20171022修改
+		String userId = UserUtils.getUser().getId();
+		
 		HistoricTaskInstanceQuery histTaskQuery = historyService.createHistoricTaskInstanceQuery().taskAssignee(userId).finished()
 				.includeProcessVariables().orderByHistoricTaskInstanceEndTime().desc();
 		

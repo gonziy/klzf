@@ -162,7 +162,6 @@ public class OaCaseController extends BaseController {
 	//@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = {"list/task",""})
 	public String taskList(HttpSession session, Model model) {
-
 		/*
 		String userId = UserUtils.getUser().getId();//ObjectUtils.toString(UserUtils.getUser().getId());
 		List<OaCase> results = oaCaseService.findTodoTasks(userId);
@@ -187,13 +186,30 @@ public class OaCaseController extends BaseController {
 		if (!beanValidator(model, oaCase)){
 			return form(oaCase, model);
 		}
+
+		String initiator = UserUtils.getUser().getId();	
 		
+		/*
+		 * 测试手机端，从流程开始直接提交到承办机构审批阶段
+		oaCase.setTitle("手机案件测试1");
+		oaCase.setCaseParties("张三；王五；赵六");
+		oaCase.setAddress("垦利垦东社区");
+		oaCase.setCaseLegalAgent("张三");
+		oaCase.setPhoneNumber("13312341234");
+		oaCase.setCaseSource("上级交办");
+		oaCase.setNormCaseDescPart1("城市中的建筑物和设施，应当符合国家规定的城市容貌标准");
+		oaCase.setNormCaseDescPart2("对应法条1");
+		oaCase.setCaseDescription("违法搭建");
+		oaCase.setAssigneeIds("1;2");
+		oaCaseService.mobileSave(initiator, oaCase);
+		*/
+		
+		///* 测试使用
 		Map<String, Object> vars = new HashMap<String, Object>();
-		String initiator = UserUtils.getUser().getId();
 		System.out.println("process applyer:" + initiator);
 		vars.put("applyer", initiator);		
 		oaCaseService.save(oaCase, vars);
-		
+		//*/
 		addMessage(redirectAttributes, "提交成功");
 		return "redirect:" + adminPath + "/act/task/todo/";
 	}
