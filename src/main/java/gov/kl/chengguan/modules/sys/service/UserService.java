@@ -28,10 +28,12 @@ import gov.kl.chengguan.common.utils.CacheUtils;
 import gov.kl.chengguan.common.utils.Encodes;
 import gov.kl.chengguan.common.utils.StringUtils;
 import gov.kl.chengguan.common.web.Servlets;
+import gov.kl.chengguan.modules.sys.dao.BaseUserDao;
 import gov.kl.chengguan.modules.sys.dao.MenuDao;
 import gov.kl.chengguan.modules.sys.dao.OfficeDao;
 import gov.kl.chengguan.modules.sys.dao.RoleDao;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
+import gov.kl.chengguan.modules.sys.entity.BaseUser;
 import gov.kl.chengguan.modules.sys.entity.Menu;
 import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.Role;
@@ -49,28 +51,30 @@ public class UserService extends BaseService{
 	@Autowired
 	private UserDao userDao;
 	@Autowired
+	private BaseUserDao baseUserDao;
+	@Autowired
 	private OfficeDao officeDao;
 
 	
-	public List<User> getdeptLeaderUser(String user_id) {
-		List<User> deptUsers = new ArrayList<User>();
-		User userWhere = new User();
+	public List<BaseUser> getdeptLeaderUser(String user_id) {
+		List<BaseUser> deptUsers = new ArrayList<BaseUser>();
+		BaseUser userWhere = new BaseUser();
 		Office officeWhere = new Office();
 		officeWhere.setId("882b7895d2214c0f96fc4622f6f32147");
 		userWhere.setOffice(officeWhere);
-	    List<User> fujuList = userDao.findUserByOfficeId(userWhere);
-	    for (User u : fujuList) {
+	    List<BaseUser> fujuList = UserUtils.getBaseAllList(userWhere);
+	    for (BaseUser u : fujuList) {
 			deptUsers.add(u);
 		}
 	    
-	    User user = userDao.get(user_id);
-	    User userWhere2 = new User();
+	    BaseUser user = baseUserDao.get(user_id);
+	    BaseUser userWhere2 = new BaseUser();
 		Office officeWhere2 = new Office();
 		String officeidString = officeDao.get(user.getOffice().getId()).getParentId();
 		officeWhere2.setId("officeidString");
 		userWhere2.setOffice(officeWhere2);
-		List<User> tmpList = userDao.findUserByOfficeId(userWhere2);
-		for (User u : tmpList) {
+		List<BaseUser> tmpList = baseUserDao.findUserByOfficeId(userWhere2);
+		for (BaseUser u : tmpList) {
 			if(u.getOffice().getName().equals("队长"))
 			{
 				deptUsers.add(u);

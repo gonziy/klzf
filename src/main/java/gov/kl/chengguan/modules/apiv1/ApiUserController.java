@@ -46,11 +46,11 @@ public class ApiUserController  extends BaseController {
 	
 	@RequestMapping(value = {"user/info/test"})
 	public void test(HttpServletRequest request, HttpServletResponse response) {
-		UserService userService = new UserService();
-		List<User> users = userService.getdeptLeaderUser("1");
-		for (User user : users) {
-			System.out.println(user.getName());
-		}
+//		UserService userService = new UserService();
+//		List<User> users = userService.getdeptLeaderUser("1");
+//		for (User user : users) {
+//			System.out.println(user.getName());
+//		}
 		
 	}
 	@RequestMapping(value = {"user/info/login"})

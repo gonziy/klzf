@@ -148,7 +148,10 @@ public class ApiOaController  extends BaseController {
 			oaCase.setNormCaseDescPart2(caseJson.getString("provision"));
 			oaCase.setCaseDescription(caseJson.getString("caseDescription"));
 			oaCase.setAssigneeIds(caseJson.getString("assigneeIds"));
-			//User user = userDao.get(userJson.getString("id"));
+			User user = userDao.get(userJson.getString("id"));
+
+			oaCase.setCreateBy(user);
+			oaCase.setCreateDate(new Date());
 			oaCaseService.mobileSave(userJson.getString("id"), oaCase);
 			jsonObject.put("msg", "success");
 			jsonObject.put("code", 0);

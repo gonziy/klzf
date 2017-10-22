@@ -588,7 +588,7 @@
 			AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateEnd}
 		</if>		
 		${sqlMap.dsf}
-		ORDER BY a.id DESC
+		ORDER BY a.create_date DESC
 	</select>
 	
 	<select id="findAllList" resultType="OaCase">
