@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.Result;
 import com.sun.javafx.collections.MappingChange.Map;
@@ -81,6 +82,99 @@ public class ApiOaController  extends BaseController {
 	@Autowired
 	private TaskService taskService;
 	
+	
+	@RequestMapping(value = {"oa/case/create"})
+	public void createCaseInfo(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String dataString = request.getParameter("data");
+		PrintWriter out;
+		if(dataString!=null)
+		{
+			JSONObject json = JSONObject.parseObject(dataString);
+			JSONObject userJson = json.getJSONObject("user");
+			JSONObject caseJson = json.getJSONObject("legalCase");
+//			String documents = "";
+//			String photo = "";
+//			String videos = "";
+//			JSONArray documentsJson = caseJson.getJSONArray("documents");
+//			JSONArray photosJson = caseJson.getJSONArray("photos");
+//			JSONArray videosJson = caseJson.getJSONArray("videos");
+//			if(documentsJson.size()>0){
+//				for (Object object : documentsJson) {
+//					documents += object.toString() + ";";
+//				}
+//				if(documents.endsWith(";")){
+//					documents = documents.substring(0, documents.length()-1);
+//				}
+//			}
+//			if(photosJson.size()>0){
+//				for (Object object : photosJson) {
+//					photo += object.toString() + ";";
+//				}
+//				if(documents.endsWith(";")){
+//					photo = photo.substring(0, photo.length()-1);
+//				}
+//			}
+//			if(videosJson.size()>0){
+//				for (Object object : videosJson) {
+//					videos += object.toString() + ";";
+//				}
+//				if(videos.endsWith(";")){
+//					videos = videos.substring(0, videos.length()-1);
+//				}
+//			}
+			OaCase oaCase = new OaCase();
+			oaCase.setTitle(caseJson.getString("title"));
+			oaCase.setCaseParties(caseJson.getString("caseParties"));
+			oaCase.setAddress(caseJson.getString("address"));
+			oaCase.setCaseLegalAgent(caseJson.getString("caseLegalAgent"));
+			oaCase.setIllegalConstructionFlag(caseJson.getBooleanValue("illegalConstructionFlag"));
+			oaCase.setPhoneNumber(caseJson.getString("phoneNumber"));
+			//来源
+			oaCase.setCaseSource(caseJson.getString("kind"));
+			//行为
+			oaCase.setNormCaseDescPart1(caseJson.getString("behavior"));
+			//法条
+			oaCase.setNormCaseDescPart2(caseJson.getString("provision"));
+			oaCase.setCaseDescription(caseJson.getString("caseDescription"));
+			oaCase.setAssigneeIds(caseJson.getString("assigneeIds"));
+			//User user = userDao.get(userJson.getString("id"));
+			oaCaseService.mobileSave(userJson.getString("id"), oaCase);
+			jsonObject.put("msg", "success");
+			jsonObject.put("code", 0);
+			jsonObject.put("result", "success");
+			jsonObject.put("remark", "");
+			com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+			jsonData.put("id", "");
+			jsonObject.put("data", jsonData);
+			
+		}else {
+			jsonObject.put("msg", "data is null");
+			jsonObject.put("code", 44004);
+		}
+		try {
+			out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+		}
+		
+	}
 	@RequestMapping(value = {"oa/case/get"})
 	public void getCaseInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");

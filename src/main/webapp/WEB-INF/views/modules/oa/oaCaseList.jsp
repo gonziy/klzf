@@ -51,8 +51,7 @@
 				<td>结案状态</td>
 				<td><fmt:formatDate value="${oaCase.caseSurveyEndDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>								
 				<shiro:hasPermission name="oa:oaCase:edit"><td>
-    				<a href="${ctx}/oa/oaCase/form?id=${oaCase.id}">详情</a>
-					<a href="${ctx}/oa/oaCase/delete?id=${oaCase.id}" onclick="return confirmx('确认要删除该审批吗？', this.href)">删除</a>
+    				<a href="${ctx}/oa/oaCase/form?id=${oaCase.id}">查询</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

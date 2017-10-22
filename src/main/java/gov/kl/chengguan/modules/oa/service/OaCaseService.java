@@ -135,17 +135,35 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	 * 为移动端提交第一步，完成直接到承办机构审批的步骤
 	 */
 	@Transactional(readOnly = false)
-	public void mobileSaveStep1(OaCase oaCase) 
+	public void mobileSave(String userId, OaCase oaCase)
 	{
 		// 需要将oaCase的setCaseStage设置为1，setCaseCheckFlag(1)
-		oaCase.setCaseStage(1);
 		Map<String, Object> vars = Maps.newHashMap();
-		vars.put("regCheckPass", 1);
-		actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
-		//
+		if (StringUtils.isBlank(oaCase.getId())){
+			oaCase.preInsert();
+			// 申请开始时间
+			oaCase.setCaseRegStartDate(Calendar.getInstance().getTime());
+			oaCase.setCaseStage(1);
+			// 补充需要完成的字段一次性全部更新到库里
+			oaCase.setCaseCheckFlag(true);
+			oaCase.setCaseCheckResult("手机端，自动通过初审认证");
+			dao.insert(oaCase);
 		
-		vars.put("caseAssigneeIds", oaCase.getAssigneeIds());			
-		actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
+			vars.put("applyer", userId);
+			// 启动流程
+			String procInsId =actTaskService.startProcess(ActUtils.PD_CASE[0], ActUtils.PD_CASE[1], 
+					oaCase.getId(), oaCase.getTitle(),
+					vars);	
+			
+			// 等待流程启动完成
+			//try {Thread.sleep(2000);	}catch(Exception ex)	{ex.printStackTrace();}
+			
+			// 设置vars
+			vars.put("regCheckPass", 1);
+			vars.put("caseAssigneeIds", oaCase.getAssigneeIds());	
+			String task13DefKey = "utLaShp_Cbjg";
+			actTaskService.jumpTask(procInsId, task13DefKey, vars);
+		}
 	}
 
 	/**
@@ -188,8 +206,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			vars.put("regCheckPass", iReturnState);
 		    
 			 //Map<String, Object> progress = actTaskService.getProcessProgress(oaCase.getAct().getProcInsId());
-			Map<String, Object> progress = actTaskService.getProcessProgress(oaCase.getProcessInstanceId(), taskDefKey);
-			System.out.println("progress:" + progress.get("节点名称"));
+//			Map<String, Object> progress = actTaskService.getProcessProgress(oaCase.getProcessInstanceId(), taskDefKey);
+//			System.out.println("progress:" + progress.get("节点名称"));
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
 		}
 		else if ("utAnjianLuru".equals(taskDefKey)){
