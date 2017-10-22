@@ -1490,7 +1490,7 @@ public class ApiOaController  extends BaseController {
 				} catch (Exception e) {
 					jsonObject.put("msg", "success");
 					jsonObject.put("code", 0);
-					jsonObject.put("result",  "success");
+					jsonObject.put("result",  "failure");
 					jsonObject.put("remark", "save file failed");
 					PrintWriter out;
 					try {
@@ -1539,7 +1539,9 @@ public class ApiOaController  extends BaseController {
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
 						jsonObject.put("result",  "success");
-						jsonObject.put("path", httpPath);
+						com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+						jsonData.put("path", httpPath);
+						jsonObject.put("data", jsonData);
 					} else {
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
