@@ -50,60 +50,49 @@
 					<td class="tit">联系电话</td><td>${oaCase.phoneNumber}</td>
 				</tr>
 				<tr>
-					<td class="tit">地址</td><td>${oaCase.address}</td>					
+					<td class="tit">地址</td>
+					<td colspan="5">${oaCase.address}</td>					
 				</tr>
 				<tr>
 					<td class="tit">案情简述</td>
 					<td colspan="5">${oaCase.caseDescription}</td>
 				</tr>	
 				<tr>
-					<td colspan="6">
-					<table>
-						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
-						<tr>
-							<td class="tit">${caseDocuments}</td>
-							<td class="tit">${caseImages}</td>
-							<td class="tit">${caseVideos}</td>
-						</tr>
-					</table>
-					</td>				
-				</tr>	
+					<td class="tit">案件申报日期</td>
+					<td colspan="5"><fmt:formatDate value="${oaCase.caseRegStartDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>	
+				</tr>					
 				<tr>
 					<td class="tit">初审结论</td>
-					<td colspan="4">${oaCase.caseCheckResult}</td>
+					<td colspan="5">${oaCase.caseCheckResult}</td>
 				</tr>
 				<tr>
 					<td class="tit">承办机构意见</td>
-					<td colspan="4">${institutionRegOption}</td>	
+					<td colspan="4">${oaCase.institutionRegOption}</td>	
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.institutionRegApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.institutionRegApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>				
 				</tr>
 				<tr>
 					<td class="tit">分管领导意见</td>
-					<td colspan="4">${deptLeaderRegOption}</td>
+					<td colspan="4">${oaCase.deptLeaderRegOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.deptLeaderRegApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.deptLeaderRegApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>				
 				</tr>				
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>				
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>				
 				<tr>
 					<td class="tit">主管领导意见</td>
-					<td colspan="4">
+					<td colspan="5">
 						<form:textarea path="mainLeaderRegOption" class="required" rows="5" maxlength="300"/>
 					</td>					
 				</tr>
 				<!-- 立案结束 -->	
-				<tr>
-					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
-					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>				
-				</tr>
 			</table>
 		</fieldset>
 		<div class="form-actions">

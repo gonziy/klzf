@@ -42,6 +42,10 @@
 		<fieldset>
 			<legend>承办人行政处罚意见：${oaCase.title}</legend>
 			<table class="table-form">
+				<c:if test="${oaCase.rejectFlag==true}">
+					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.institutionPenalOption}</td></tr>
+				</c:if>
 				<!-- 案件简报 -->
 				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
 				<tr>
@@ -50,42 +54,40 @@
 					<td class="tit">联系电话</td><td>${oaCase.phoneNumber}</td>
 				</tr>
 				<tr>
-					<td class="tit" colspan="4">地址</td><td>${oaCase.address}</td>					
+					<td class="tit">地址</td>
+					<td colspan="5">${oaCase.address}</td>					
 				</tr>							
 				<tr>
-					<td class="tit" colspan="2">案件来源</td><td>${oaCase.caseSource}</td>
-					<td class="tit" colspan="2">承办人</td><td>${oaCase.assigneeIds}</td>
+					<td class="tit">案件来源</td>
+					<td colspan="2">${oaCase.caseSource}</td>
+					<td class="tit">承办人</td>
+					<td colspan="2">${oaCase.assigneeIds}</td>
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
-					<td colspan=5>${oaCase.getNormCaseDesc()}</td>
+					<td colspan="5">${oaCase.getNormCaseDesc()}</td>
 				</tr>
+				<tr><td class="tit">案件文号</td>
+				<td colspan="5">${oaCase.caseDocNo}</td></tr>	
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
-					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
-					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>				
-					<td class="tit">调查完成日期</td><td>${oaCase.caseSurveyEndDate}</td>	
+					<td class="tit">案件申报日期</td><td><fmt:formatDate value="${oaCase.caseRegStartDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+					<td class="tit">立案日期</td><td><fmt:formatDate value="${oaCase.caseRegEndDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>				
+					<td class="tit">调查完成日期</td><td><fmt:formatDate value="${oaCase.caseSurveyEndDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>	
 				</tr>
-				<!-- 时间进展 -->
-				
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>	
+				<!-- 时间进展 -->				
+				<tr><td class="tit" colspan="6"><h4>承办人填写处罚意见</h4></td></tr>	
 				<tr>
 					<td class="tit">依据：</td>
-					<td colspan="2">
-						<form:select path ="normAssigneePenalOptPart1" class="required">
-							<form:option value="1">法条1</form:option>
-							<form:option value="2">法条2</form:option>
-							<form:option value="3">法条3</form:option>																
-						</form:select>
-					</td>
+					<td colspan="2">${oaCase.normCaseDescPart2 }</td>
 					<td class="tit">给出处罚：</td>
 					<td colspan="2">
 							<form:select path ="normAssigneePenalOptPart2" class="required">
-							<form:option value="1">处罚1</form:option>
-							<form:option value="2">处罚2</form:option>
-							<form:option value="3">处罚3</form:option>
-							<form:option value="4">处罚4</form:option>																									
+							<form:option value="处罚1">处罚1</form:option>
+							<form:option value="处罚2">处罚2</form:option>
+							<form:option value="处罚3">处罚3</form:option>
+							<form:option value="处罚4">处罚4</form:option>																									
 						</form:select>
 					</td>
 				</tr>
@@ -97,12 +99,12 @@
 				</tr>
 				<tr>
 					<td class="tit">案件文号</td>
-					<td colspan="3"><form:input path="caseDocNo" class="required" maxlength="50"/></td>
+					<td colspan="5"><form:input path="caseDocNo" class="required" maxlength="50"/></td>
 				</tr>				
 			</table>
 		</fieldset>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="同 意" onclick="$('#flag').val('yes')"/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交申请" onclick="$('#flag').val('yes')"/>&nbsp;
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>			
 		</div>
 	</form:form>

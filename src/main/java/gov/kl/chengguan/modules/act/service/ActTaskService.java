@@ -4,6 +4,7 @@
 package gov.kl.chengguan.modules.act.service;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.activiti.engine.impl.interceptor.CommandExecutor;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
+import org.activiti.engine.impl.pvm.delegate.SubProcessActivityBehavior;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.Deployment;
@@ -45,6 +47,7 @@ import org.activiti.engine.task.TaskQuery;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hamcrest.core.IsInstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1054,5 +1057,54 @@ public class ActTaskService extends BaseService {
 		
 		return results;
 	}
+	
+	public Map<String, Object> getProcessProgress(String processInstanceId, String taskDefKey) 
+	{
+		Map<String, Object> results = new HashMap<String, Object>();		
+		String activityId = taskDefKey;
+
+		if (activityId != null) {			
+			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId)
+					.singleResult();
+			ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+					.getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
+			List<ActivityImpl> activityImplList = processDefinition.getActivities();//获得当前任务的所有节点
+			
+			for (ActivityImpl activityImpl : activityImplList) 
+			{	
+				ActivityBehavior activityBehavior = activityImpl.getActivityBehavior();
+				System.out.println("type of  activityBehavior:" + activityBehavior.getClass().toString());
+				if(activityBehavior instanceof org.activiti.engine.impl.bpmn.behavior.SubProcessActivityBehavior)
+				{
+					for (ActivityImpl subpActImpl : activityImpl.getActivities())
+					{
+						String subpId = subpActImpl.getId();
+						if (subpId.equals(activityId)) {
+							Map<String, Object> properties = activityImpl.getProperties();
+							results.put("子流程", properties.get("name"));
+							Map<String, Object> subpProperties = subpActImpl.getProperties();
+							results.put("节点名称", subpProperties.get("name"));
+							//
+							return results;
+						}						
+					}	
+				}
+				else
+				{
+					String id= activityImpl.getId();
+					if(id.equals(activityId))
+					{
+						Map<String, Object> properties = activityImpl.getProperties();
+						results.put("节点名称", properties.get("name"));
+						//
+						return results;
+					}					
+				}
+			}
+		}
+		
+		return results;
+	}	
 	
 }

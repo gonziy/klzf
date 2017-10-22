@@ -63,7 +63,7 @@
 				<tr>
 					<!-- 此处并不清楚最终的处罚意见会不会更新上 -->
 					<td class="tit" rowspan=2>处罚意见</td>
-					<td colspan=5>${oaCase.getNormAssigneePenalOpt()}</td>
+					<td colspan=5>${oaCase.normAssigneePenalOpt}</td>
 				</tr>
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->

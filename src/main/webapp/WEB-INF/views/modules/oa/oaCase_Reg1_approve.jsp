@@ -63,7 +63,7 @@
 						<tr><th>文书材料上传</th><th>图片材料上传</th><th>视频材料上传</th></tr>
 						<tr>
 							<td class="tit">${caseDocuments}</td>
-							<td class="tit">${caseImages}</td>
+							<td class="tit" >${caseImages}</td>
 							<td class="tit">${caseVideos}</td>
 						</tr>
 					</table>
@@ -71,13 +71,13 @@
 				</tr>	
 				<tr>
 					<td class="tit">初审结论</td>
-					<td colspan="4"><form:textarea path="caseCheckResult" rows="3" maxlength="500"/></td>
+					<td colspan="5"><form:textarea path="caseCheckResult" rows="3" maxlength="500"/></td>
 				</tr>
 			</table>
 		</fieldset>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="初审通过" onclick="$('#flag').val('yes')"/>&nbsp;
-			<input id="btnCancel" class="btn" type="button" value="拒绝" onclick="$('#flag').val('no')"/>
+			<input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('no')"/>&nbsp;
 		</div>
 	</form:form>
 </body>

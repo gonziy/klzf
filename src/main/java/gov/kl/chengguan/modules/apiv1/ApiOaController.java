@@ -247,9 +247,9 @@ public class ApiOaController  extends BaseController {
 	private java.util.List<ApiStep> getCaseProgress(OaCase oaCase){
 		java.util.List<ApiStep> list = new ArrayList<ApiStep>();
 		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult(),1));
-		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.isInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption(),2));
-		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.isDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),3));
-		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.isMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),4));
+		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption(),2));
+		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),3));
+		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),4));
 		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", "",5));
 		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption(),6));
 		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption(),7));
@@ -704,11 +704,11 @@ public class ApiOaController  extends BaseController {
 					apiOaCase.setNormCaseDescPart1(oaCase.getNormCaseDescPart1());
 					apiOaCase.setNormCaseDescPart2(oaCase.getNormCaseDescPart2());
 					apiOaCase.setInstitutionRegOption(oaCase.getInstitutionRegOption());
-					apiOaCase.setInstitutionRegApproval((Boolean)oaCase.isInstitutionRegApproval());
+					apiOaCase.setInstitutionRegApproval((Boolean)oaCase.getInstitutionRegApproval());
 					apiOaCase.setDeptLeaderRegOption(oaCase.getDeptLeaderRegOption());
-					apiOaCase.setDeptLeaderRegApproval(oaCase.isDeptLeaderRegApproval());
+					apiOaCase.setDeptLeaderRegApproval(oaCase.getDeptLeaderRegApproval());
 					apiOaCase.setMainLeaderRegOption(oaCase.getMainLeaderRegOption());
-					apiOaCase.setMainLeaderRegApproval(oaCase.isMainLeaderRegApproval());
+					apiOaCase.setMainLeaderRegApproval(oaCase.getMainLeaderRegApproval());
 					apiOaCase.setCaseRegStartDate(oaCase.getCaseRegStartDate());
 					apiOaCase.setCaseRegEndDate(oaCase.getCaseRegEndDate());
 					apiOaCase.setCaseSurveyEndDate(oaCase.getCaseSurveyEndDate());

@@ -104,16 +104,7 @@ public class OaCase extends ActEntity<OaCase> {
 	// 处罚处理开始和完成时间
 	private Date casePenalStartDate;
 	private Date casePenalEndDate;
-	/*
-	 * 案件办理阶段
-	 * 0：申报
-	 * 1：立案
-	 * 2：调查
-	 * 3：处罚
-	 * 4：结案
-	 */
-	private Integer caseStage;
-	
+
 	//++
 	// 承办人结案意见
 	private String assigneeCloseCaseOption;
@@ -134,6 +125,25 @@ public class OaCase extends ActEntity<OaCase> {
 	private Date caseCloseUpEndDate;
 	private String normCaseDesc;
 	private String normAssigneePenalOpt;	
+	
+	
+	/*
+	 * 案件办理阶段
+	 * 0：申报
+	 * 1：立案
+	 * 2：调查
+	 * 3：处罚
+	 * 4：结案
+	 */
+	private int caseStage;
+	
+	/*
+	 * 驳回标志
+	 * 注意：使用数据库deptLeaderCloseCaseApproval作为存放字段
+	 */
+	private boolean rejectFlag;
+	
+	
 	// 与Case实例相关的流程定义，
 	// 所在的流程实例、所在任务，其中的流程变量，
 	// 流程历史实例
@@ -179,8 +189,8 @@ public class OaCase extends ActEntity<OaCase> {
 	private Integer caseQueryStage;
 	private String caseQueryTitle;	 
 	private String caseQueryDocNo;	 
-	private boolean caseQueryIllegalConstruct;
-	private boolean caseQueryCheckFlag;
+	private Boolean caseQueryIllegalConstruct;
+	private Boolean caseQueryCheckFlag;
 	
 	/*
 	 * 用于标识案件的名称
@@ -201,10 +211,10 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	public String getNormAssigneePenalOpt() {
-		if(normAssigneePenalOpt !=null && normAssigneePenalOptPart2!=null)
+		if(normCaseDescPart2 !=null && normAssigneePenalOptPart2!=null)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.append(" 建议依{据： ").append(normAssigneePenalOptPart1).append(" 给于处罚: ")
+			sb.append(" 建议依据： ").append(normCaseDescPart2).append(" 给予处罚: ")
 				.append(normAssigneePenalOptPart2);
 			normAssigneePenalOpt = sb.toString();
 			return normAssigneePenalOpt;
@@ -216,6 +226,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public OaCase() {
 		super();
 		caseStage = 0;
+		rejectFlag = false;
 		// TODO Auto-generated constructor stub
 	}
 	public OaCase(String id) {
@@ -227,6 +238,7 @@ public class OaCase extends ActEntity<OaCase> {
 			caseLegalAgent = ss[0];
 		}
 		caseStage = 0;
+		rejectFlag = false;
 		// TODO Auto-generated constructor stub
 	}
 	public String getCaseParties() {
@@ -292,11 +304,11 @@ public class OaCase extends ActEntity<OaCase> {
 		this.caseThumbnails = caseThumbnails;
 	}
 
-	public boolean getCaseCheckFlag() {
+	public Boolean getCaseCheckFlag() {
 		return caseCheckFlag;
 	}
 
-	public void setCaseCheckFlag(boolean caseCheckFlag) {
+	public void setCaseCheckFlag(Boolean caseCheckFlag) {
 		this.caseCheckFlag = caseCheckFlag;
 	}
 	public String getCaseCheckResult() {
@@ -335,7 +347,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setInstitutionRegOption(String institutionRegOption) {
 		this.institutionRegOption = institutionRegOption;
 	}
-	public boolean isInstitutionRegApproval() {
+	public boolean getInstitutionRegApproval() {
 		return institutionRegApproval;
 	}
 	public void setInstitutionRegApproval(boolean institutionRegApproval) {
@@ -347,7 +359,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setDeptLeaderRegOption(String deptLeaderRegOption) {
 		this.deptLeaderRegOption = deptLeaderRegOption;
 	}
-	public boolean isDeptLeaderRegApproval() {
+	public boolean getDeptLeaderRegApproval() {
 		return deptLeaderRegApproval;
 	}
 	public void setDeptLeaderRegApproval(boolean deptLeaderRegApproval) {
@@ -359,7 +371,7 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setMainLeaderRegOption(String mainLeaderRegOption) {
 		this.mainLeaderRegOption = mainLeaderRegOption;
 	}
-	public boolean isMainLeaderRegApproval() {
+	public boolean getMainLeaderRegApproval() {
 		return mainLeaderRegApproval;
 	}
 	public void setMainLeaderRegApproval(boolean mainLeaderRegApproval) {
@@ -666,17 +678,17 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	//
-	public Integer getCaseStage() {
+	public int getCaseStage() {
 		return caseStage;
 	}
-	public void setCaseStage(Integer caseStage) {
+	public void setCaseStage(int caseStage) {
 		this.caseStage = caseStage;
 	}
 	
-	public Integer getCaseQueryStage() {
+	public int getCaseQueryStage() {
 		return caseQueryStage;
 	}
-	public void setCaseQueryStage(Integer caseQueryStage) {
+	public void setCaseQueryStage(int caseQueryStage) {
 		this.caseQueryStage = caseQueryStage;
 	}
 	
@@ -688,7 +700,7 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	//	20171015
-	public boolean isIllegalConstructionFlag() {
+	public boolean getIllegalConstructionFlag() {
 		return illegalConstructionFlag;
 	}
 	public void setIllegalConstructionFlag(boolean illegalConstructionFlag) {
@@ -740,6 +752,15 @@ public class OaCase extends ActEntity<OaCase> {
 		this.caseQueryCheckFlag = caseQueryCheckFlag;
 	}
 
+	// 增加驳回标志
+	public boolean getRejectFlag() {
+		return rejectFlag;
+	}
+
+	public void setRejectFlag(boolean rejectFlag) {
+		this.rejectFlag = rejectFlag;
+	}	
+	
 	@Override
 	public String toString() {
 		return "OaCase [caseParties=" + caseParties + ", caseLegalAgent=" + caseLegalAgent + ", address=" + address
@@ -747,5 +768,5 @@ public class OaCase extends ActEntity<OaCase> {
 				+ ", caseCheckResult=" + caseCheckResult + ", caseSource=" + caseSource
 				+ ", assigneeIds=" + assigneeIds + "]";
 	}
-	
+
 }

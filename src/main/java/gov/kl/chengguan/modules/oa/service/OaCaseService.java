@@ -10,14 +10,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.calendar.BusinessCalendar;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.shiro.realm.ldap.DefaultLdapContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Maps;
+import com.sun.org.apache.xml.internal.resolver.readers.OASISXMLCatalogReader;
+
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.service.CrudService;
 import gov.kl.chengguan.common.utils.StringUtils;
@@ -127,7 +137,15 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	@Transactional(readOnly = false)
 	public void mobileSaveStep1(OaCase oaCase) 
 	{
+		// 需要将oaCase的setCaseStage设置为1，setCaseCheckFlag(1)
+		oaCase.setCaseStage(1);
+		Map<String, Object> vars = Maps.newHashMap();
+		vars.put("regCheckPass", 1);
+		actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
+		//
 		
+		vars.put("caseAssigneeIds", oaCase.getAssigneeIds());			
+		actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
 	}
 
 	/**
@@ -161,11 +179,18 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		String taskDefKey = oaCase.getAct().getTaskDefKey();
 		Map<String, Object> vars = Maps.newHashMap();
 		if ("utAnjianChushen".equals(taskDefKey)){
+			//
 			oaCase.setCaseStage(1);
+			if(iReturnState == 1) oaCase.setCaseCheckFlag(true);
+			else oaCase.setCaseCheckFlag(false);
 			dao.updateCaseCheckResult(oaCase);
 			//${pass==1}
 			vars.put("regCheckPass", iReturnState);
-			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		    
+			 //Map<String, Object> progress = actTaskService.getProcessProgress(oaCase.getAct().getProcInsId());
+			Map<String, Object> progress = actTaskService.getProcessProgress(oaCase.getProcessInstanceId(), taskDefKey);
+			System.out.println("progress:" + progress.get("节点名称"));
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
 		}
 		else if ("utAnjianLuru".equals(taskDefKey)){
 			if(iReturnState == 1) {
@@ -177,6 +202,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utLaShp_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regInstitutionPass", iReturnState);
@@ -184,16 +210,21 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utLaShp_Fgld".equals(taskDefKey)){
 			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regDeptLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utLaShp_Zgld".equals(taskDefKey)){
-			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
-			if(iReturnState == 1)
+			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			if(iReturnState == 1) {
 				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
-			dao.updateMainLeaderRegOption(oaCase);			
+				dao.updateMainLeaderRegOption1(oaCase);		
+			}
+			else
+				dao.updateMainLeaderRegOption(oaCase);		
 			// 提交流程任务
 			vars.put("regMainLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
@@ -203,29 +234,35 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			if(iReturnState >= 0)
 			{
 				if(iReturnState == 1) {
+					// 设置案件调查结束时间
 					oaCase.setCaseSurveyEndDate(Calendar.getInstance().getTime());
 					vars.put("regPass", 1);
 					actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 				}
-				dao.updateCaseAttachmentLinks(oaCase);
+				dao.updateCaseSurveyEndData(oaCase);
 			}
 		}
-		else if ("endevent_LaShp".equals(taskDefKey)){
-			// 立案审批结束，更新数据库
-			oaCase.setCaseStage(3);
-		}	
-
+		// 立案审批结束
 		//
 		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
-			oaCase.setCaseStage(3);
 			if(iReturnState == 1) {
-				dao.updateAssigneePenalOption(oaCase);
+				oaCase.setCaseStage(3);
+				// 只有不是拒绝的任务才能更新开始时间
+				oaCase.setCasePenalStartDate(Calendar.getInstance().getTime());
+				if(oaCase.getRejectFlag()) {
+					// 是被驳回的流程，但作为基本的流程，除了不干，只能让iReturnState=1...
+					oaCase.setRejectFlag((iReturnState ==1)?false: true);
+					dao.updateAssigneePenalOption(oaCase);
+				}
+				else dao.updateAssigneePenalOption1(oaCase);
+				
 				// 提交流程任务
 				actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 			}
 		}
 		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalInstitutionPass", iReturnState);
@@ -233,6 +270,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
 			oaCase.setCaseMgtCenterPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalMgtCenterPass", iReturnState);
@@ -240,6 +278,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utXzhChf_Fgld".equals(taskDefKey)){
 			oaCase.setDeptLeaderPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalDeptLeaderPass", iReturnState);
@@ -247,27 +286,36 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}	
 		else if ("utXzhChf_Zgld".equals(taskDefKey)){
 			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);
-			dao.updateMainLeaderPenalOption(oaCase);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			if(iReturnState == 1) {
+				oaCase.setCasePenalEndDate(Calendar.getInstance().getTime());
+				dao.updateMainLeaderPenalOption1(oaCase);
+			}
+			else 
+				dao.updateMainLeaderPenalOption(oaCase);
 			// 提交流程任务
 			vars.put("penalMainLeaderPass", iReturnState);
-			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
-			
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
 		}
-		else if ("endevent_XzhChf".equals(taskDefKey)){
-			// 行政处罚审批结束，更新数据库
-			oaCase.setCaseStage(4);
-		}	
+		// 行政处罚审批结束
 		//
 		else if ("utJaShp_Chbr".equals(taskDefKey)){
-			oaCase.setCaseStage(4);
 			if(iReturnState == 1) {
-				dao.updateAssigneeCloseOption(oaCase);
+				oaCase.setCaseStage(4);
+				oaCase.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
+				if(oaCase.getRejectFlag()){
+					oaCase.setRejectFlag((iReturnState ==1)?false: true);
+					dao.updateAssigneeCloseOption(oaCase);
+				}
+				else dao.updateAssigneeCloseOption1(oaCase);
+
 				// 提交流程任务
 				actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 			}
 		}
 		else if ("utJaShp_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionCloseOption(oaCase);
 			// 提交流程任务
 			vars.put("closeInstitutionPass", iReturnState);
@@ -275,21 +323,27 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
 			oaCase.setCaseMgtCenterCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterCloseOption(oaCase);
 			// 提交流程任务
 			vars.put("closeMgtCenterPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
-
 		}
 		else if ("utJaShp_Zgld".equals(taskDefKey)){
 			oaCase.setMainLeaderCloseCaseApproval((iReturnState ==1)?true: false);
-			dao.updateMainLeaderCloseOption(oaCase);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			if(iReturnState ==1) {
+				oaCase.setCaseCloseUpEndDate(Calendar.getInstance().getTime());
+				dao.updateMainLeaderCloseOption1(oaCase);
+			}
+			else 
+				dao.updateMainLeaderCloseOption(oaCase);
+				
 			// 提交流程任务
 			vars.put("closeMainLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
-			
 		}	
-		else if ("endevent_JaShp".equals(taskDefKey)){
+		else if ("endevent_case".equals(taskDefKey)){
 			// 结案审批
 			
 		}		
@@ -307,4 +361,5 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		vars.put("pass", "yes".equals(oaCase.getAct().getFlag())? "1" : "0");
 		actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 	}
+	
 }

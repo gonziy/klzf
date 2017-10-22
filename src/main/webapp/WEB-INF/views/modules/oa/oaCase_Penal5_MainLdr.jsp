@@ -43,73 +43,73 @@
 			<legend>主管领导行政处罚审批：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件简报 -->
-				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
+				<tr><td class="tit" colspan="6"><h4>案情</h4></td></tr>	
 				<tr>
 					<td class="tit">当事人</td><td>${oaCase.caseParties}</td>
 					<td class="tit">法人</td><td>${oaCase.caseLegalAgent}</td>
 					<td class="tit">联系电话</td><td>${oaCase.phoneNumber}</td>
 				</tr>
 				<tr>
-					<td class="tit" colspan="4">地址</td><td>${oaCase.address}</td>					
+					<td class="tit" >地址</td><td colspan="4">${oaCase.address}</td>					
 				</tr>							
 				<tr>
-					<td class="tit" colspan="2">案件来源</td><td>${oaCase.caseSource}</td>
-					<td class="tit" colspan="2">承办人</td><td>${oaCase.assigneeIds}</td>
+					<td class="tit">案件来源</td><td colspan="2">${oaCase.caseSource}</td>
+					<td class="tit">承办人</td><td colspan="2">${oaCase.assigneeIds}</td>
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
-					<td colspan=5>${oaCase.getNormCaseDesc()}</td>
+					<td colspan="5">${oaCase.getNormCaseDesc()}</td>
 				</tr>
+				<tr><td class="tit">案件文号</td>
+				<td colspan="5">${oaCase.caseDocNo}</td></tr>	
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
-					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
-					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>				
-					<td class="tit">调查完成日期</td><td>${oaCase.caseSurveyEndDate}</td>	
-				</tr>
-				<!-- 时间进展 -->				
-				<tr><td class="tit" colspan="5"><h4>行政处罚审批</h4></td></tr>	
-				<tr><td class="tit" colspan="5">承办机构审批</td></tr>
 				<tr>
-					<td class="tit" rowspan="2">承办人意见：</td>
-					<td class="tit" colspan="2">${oaCase.normAssigneePenalOpt}</td>
+					<td class="tit">案件申报日期</td><td><fmt:formatDate value="${oaCase.caseRegStartDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+					<td class="tit">立案日期</td><td><fmt:formatDate value="${oaCase.caseRegEndDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+					<td class="tit">调查完成日期</td><td><fmt:formatDate value="${oaCase.caseSurveyEndDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>				
+				</tr>	
+				<!-- 时间进展 -->		
+				<tr><td class="tit" colspan="6"><h4>主管领导审批</h4></td></tr>	
+				<tr>
+					<td class="tit">承办人意见：</td>
+					<td colspan="5">${oaCase.normAssigneePenalOpt}</td>
 				</tr>
-				<tr><td class="tit" colspan="6">${oaCase.assigneePenalOption}</td></tr>
 				<tr>
 					<td class="tit">承办机构意见：</td>
-					<td class="tit" colspan="4">${oaCase.institutionPenalOption}</td>
+					<td colspan="4">${oaCase.institutionPenalOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.institutionPenalApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.institutionPenalApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>					
 				</tr>
 				<tr>
-					<td>主管领导意见</td>
-					<td class="tit" colspan="4">${oaCase.caseMgtCenterPenalOption}</td>
+					<td class="tit" >案件管理中心意见</td>
+					<td colspan="4">${oaCase.caseMgtCenterPenalOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.caseMgtCenterPenalApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.caseMgtCenterPenalApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>	
 				</tr>
 				<tr>
-					<td>分管领导意见</td>
-					<td class="tit" colspan="4">${oaCase.deptLeaderPenalOption}</td>
+					<td class="tit" >分管领导意见</td>
+					<td colspan="4">${oaCase.deptLeaderPenalOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.deptLeaderPenalApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.deptLeaderPenalApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>	
-				</tr>
-				<tr><td class="tit">案件文号</td><td class="tit" colspan="3">${oaCase.caseDocNo}</td></tr>					
+				</tr>				
 				<!--  -->
-				<tr><td class="tit" colspan=6><h4>填写</h4></td></tr>	
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>	
 				<tr>
-					<td>主管领导意见</td>
+					<td class="tit" >主管领导意见</td>
 					<td colspan="5">
 						<form:textarea path="mainLeaderPenalOption" class="required" rows="3" maxlength="300"/>
 					</td>	

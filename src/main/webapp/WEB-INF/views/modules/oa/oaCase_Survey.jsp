@@ -66,8 +66,8 @@
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
-					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
-					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>			
+					<td class="tit">案件申报日期</td><td><fmt:formatDate value="${oaCase.caseRegStartDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+					<td class="tit">立案日期</td><td><fmt:formatDate value="${oaCase.caseRegEndDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>			
 				</tr>
 				<!-- 时间进展 -->
 				
@@ -85,8 +85,6 @@
 					</td>				
 				</tr>	
 				<tr>
-					<td>调查材料维护--更新</td>
-					<td>调查结束</td>
 				</tr>
 				<!-- 调查结束 -->		
 			</table>
