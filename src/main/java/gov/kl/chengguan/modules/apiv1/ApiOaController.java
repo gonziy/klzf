@@ -24,6 +24,7 @@ import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,6 +57,7 @@ import gov.kl.chengguan.modules.oa.entity.OaFiles;
 import gov.kl.chengguan.modules.oa.service.OaCaseService;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.entity.User;
+import gov.kl.chengguan.modules.sys.service.UserService;
 
 
 
@@ -81,10 +83,12 @@ public class ApiOaController  extends BaseController {
 	private IdentityService identityService;
 	@Autowired
 	private TaskService taskService;
+	@Autowired
+	private UserService userService;
 	
 	
 	@RequestMapping(value = {"oa/case/create"})
-	public void createCaseInfo(HttpServletRequest request, HttpServletResponse response) {
+	public void createCaseInfo(HttpServletRequest request, HttpServletResponse response,@RequestBody String reqData) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -92,7 +96,7 @@ public class ApiOaController  extends BaseController {
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		String dataString = request.getParameter("data");
+		String dataString = reqData;
 		PrintWriter out;
 		if(dataString!=null)
 		{
@@ -832,19 +836,6 @@ public class ApiOaController  extends BaseController {
 					apiOaCase.setNormCaseDesc(oaCase.getNormCaseDesc());
 					apiOaCase.setNormAssigneePenalOpt(oaCase.getNormAssigneePenalOpt());
 					apiOaCase.setProcessInstanceId(oaCase.getProcessInstanceId());
-					apiOaCase.setCaseQueryParty(oaCase.getCaseQueryParty());
-					apiOaCase.setCaseQueryLegalAgent(oaCase.getCaseQueryLegalAgent());
-					apiOaCase.setCaseQueryAddress(oaCase.getCaseQueryAddress());
-					apiOaCase.setCaseQueryPhoneNumber(oaCase.getCaseQueryPhoneNumber());
-					apiOaCase.setCaseQueryBrokeLaw (oaCase.getCaseQueryBrokeLaw ());
-					apiOaCase.setCaseQueryPenal (oaCase.getCaseQueryPenal ());
-					apiOaCase.setCaseQueryRegStartDateStart(oaCase.getCaseQueryRegStartDateStart());
-					apiOaCase.setCaseQueryRegStartDateEnd(oaCase.getCaseQueryRegStartDateEnd());
-					apiOaCase.setCaseQueryRegEndDateStart(oaCase.getCaseQueryRegEndDateStart());
-					apiOaCase.setCaseQueryRegEndDateEnd(oaCase.getCaseQueryRegEndDateEnd());
-					apiOaCase.setCaseQueryCloseDateStart(oaCase.getCaseQueryCloseDateStart());
-					apiOaCase.setCaseQueryCloseDateEnd(oaCase.getCaseQueryCloseDateEnd());
-					apiOaCase.setCaseQueryStage(oaCase.getCaseQueryStage());
 
 					String strAssigneeNames = "";
 					if(apiOaCase.getAssigneeIds()!=null && !apiOaCase.getAssigneeIds().isEmpty()){

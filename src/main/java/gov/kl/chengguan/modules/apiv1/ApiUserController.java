@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.security.SystemAuthorizingRealm.Principal;
 import gov.kl.chengguan.modules.sys.service.SystemService;
+import gov.kl.chengguan.modules.sys.service.UserService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
 
@@ -42,6 +44,15 @@ public class ApiUserController  extends BaseController {
 	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
 	private static BaseUserDao baseUserDao = SpringContextHolder.getBean(BaseUserDao.class);
 	
+	@RequestMapping(value = {"user/info/test"})
+	public void test(HttpServletRequest request, HttpServletResponse response) {
+		UserService userService = new UserService();
+		List<User> users = userService.getdeptLeaderUser("1");
+		for (User user : users) {
+			System.out.println(user.getName());
+		}
+		
+	}
 	@RequestMapping(value = {"user/info/login"})
 	public void login(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");

@@ -49,7 +49,7 @@
 		a.institution_close_flag as "institutionCloseCaseApproval",
 		a.caseMgtCenter_close_opt as "caseMgtCenterCloseCaseOption",
 		a.caseMgtCenter_close_flag as "caseMgtCenterCloseCaseApproval",
-		a.deptLeader_close_flag as "rejectFlag",
+	a.deptLeader_close_flag as "rejectFlag",
 		a.mainLeader_close_opt as "mainLeaderCloseCaseOption",
 		a.mainLeader_close_flag as "mainLeaderCloseCaseApproval",
 		a.caseCloseUpStartDate as "caseCloseUpStartDate",
@@ -555,17 +555,19 @@
 				<if test="dbName == 'oracle'">'%'||#{caseQueryAssignee.id}||'%'</if>
 				<if test="dbName == 'mssql'">'%'+#{caseQueryAssignee.id}+'%'</if>	
 		</if>
+		
+		
 		<if test="caseQueryIllegalConstruct != null">
 			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
 		</if>
-		<if test="caseQueryStage >= null">
+		<if test="caseQueryStage != null">
 			AND a.case_stage = #{caseQueryStage}
 		</if>			
 		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
 			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
 		</if>	
-		<if test="caseQueryPenal != null">
-			AND a.norm_penal_Part2 &gt;= #{caseQueryPenal}
+		<if test="caseQueryPenal != null and caseQueryPenal != ''">
+			AND a.norm_penal_Part2 = #{caseQueryPenal}
 		</if>	
 		<if test="caseQueryRegStartDateStart != null">
 			AND a.caseRegStartDate &gt;= #{caseQueryRegStartDateStart}
