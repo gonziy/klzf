@@ -43,7 +43,7 @@
 			<legend>承办人结案意见：${oaCase.title}</legend>
 			<table class="table-form">
 				<c:if test="${oaCase.rejectFlag==true}">
-					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="redtit" colspan="6"><b style="color:white">该流程被驳回</b></td></tr>
 					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.institutionCloseCaseOption}</td></tr>
 				</c:if>			
 				<!-- 案件简报 -->
