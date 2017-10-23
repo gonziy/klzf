@@ -44,7 +44,7 @@
 			<table class="table-form">
 				<!-- 案件简报 -->
 				<c:if test="${oaCase.rejectFlag==true}">
-					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="redtit" colspan="6"><b style="color:white">该流程被驳回</b></td></tr>
 					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.mainLeaderCloseCaseOption}</td></tr>
 				</c:if>				
 				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
@@ -68,7 +68,8 @@
 					<td class="tit">行政处罚</td>
 					<td colspan=5>${oaCase.normAssigneePenalOpt}</td>
 				</tr>
-				<tr><td class="tit">案件文号</td><td class="tit" colspan="5">${oaCase.caseDocNo}</td></tr>	
+				<tr><td class="tit">案件文号</td>
+				<td colspan="5">${oaCase.caseDocNo}</td></tr>	
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
@@ -85,19 +86,19 @@
 				<tr><td class="tit" colspan="6"><h4>案件管理中心结案审批</h4></td></tr>		
 				<tr>
 					<td class="tit" >承办人意见</td>
-					<td colspan="4">${oaCase.assigneeCloseCaseOption}</td>	
+					<td colspan="5">${oaCase.assigneeCloseCaseOption}</td>	
 				</tr>
 				<tr>
 					<td class="tit" >承办机构意见</td>
 					<td colspan="4">${oaCase.institutionCloseCaseOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.institutionCloseCaseApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.institutionCloseCaseApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>						
 				</tr>					
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>	
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>	
 				<tr>
 					<td class="tit" >案件管理中心结案意见</td>
 					<td colspan="5">

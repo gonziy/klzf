@@ -43,7 +43,7 @@
 			<legend>主管领导行政处罚审批：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件简报 -->
-				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
+				<tr><td class="tit" colspan="6"><h4>案情</h4></td></tr>	
 				<tr>
 					<td class="tit">当事人</td><td>${oaCase.caseParties}</td>
 					<td class="tit">法人</td><td>${oaCase.caseLegalAgent}</td>
@@ -58,9 +58,10 @@
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
-					<td colspan=5>${oaCase.getNormCaseDesc()}</td>
+					<td colspan="5">${oaCase.getNormCaseDesc()}</td>
 				</tr>
-				<tr><td class="tit">案件文号</td><td class="tit" colspan="5">${oaCase.caseDocNo}</td></tr>	
+				<tr><td class="tit">案件文号</td>
+				<td colspan="5">${oaCase.caseDocNo}</td></tr>	
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
@@ -72,17 +73,16 @@
 				<!-- 时间进展 -->		
 				<tr><td class="tit" colspan="6"><h4>主管领导审批</h4></td></tr>	
 				<tr>
-					<td class="tit" rowspan="2">承办人意见：</td>
-					<td colspan="2">${oaCase.normAssigneePenalOpt}</td>
+					<td class="tit">承办人意见：</td>
+					<td colspan="5">${oaCase.normAssigneePenalOpt}</td>
 				</tr>
-				<tr><td colspan="6">${oaCase.assigneePenalOption}</td></tr>
 				<tr>
 					<td class="tit">承办机构意见：</td>
 					<td colspan="4">${oaCase.institutionPenalOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.institutionPenalApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.institutionPenalApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>					
 				</tr>
@@ -91,8 +91,8 @@
 					<td colspan="4">${oaCase.caseMgtCenterPenalOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.caseMgtCenterPenalApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.caseMgtCenterPenalApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>	
 				</tr>
@@ -101,13 +101,13 @@
 					<td colspan="4">${oaCase.deptLeaderPenalOption}</td>
 					<td>
 						<c:choose>
-						<c:when test="${oaCase.deptLeaderPenalApproval==true}"><h4>同意</h4></c:when>
-						<c:otherwise><h4>不同意</h4></c:otherwise>
+						<c:when test="${oaCase.deptLeaderPenalApproval==true}"><b>已同意</b></c:when>
+						<c:otherwise><b style="color:red">已驳回</b></c:otherwise>
 						</c:choose>
 					</td>	
 				</tr>				
 				<!--  -->
-				<tr><td class="tit" colspan=6><h4>填写</h4></td></tr>	
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>	
 				<tr>
 					<td class="tit" >主管领导意见</td>
 					<td colspan="5">

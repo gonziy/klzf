@@ -71,7 +71,7 @@
 				</tr>	
 				<tr>
 					<td class="tit">初审结论</td>
-					<td colspan="4"><form:textarea path="caseCheckResult" rows="3" maxlength="500"/></td>
+					<td colspan="5"><form:textarea path="caseCheckResult" rows="3" maxlength="500"/></td>
 				</tr>
 			</table>
 		</fieldset>

@@ -43,7 +43,7 @@
 			<legend>承办人结案意见：${oaCase.title}</legend>
 			<table class="table-form">
 				<c:if test="${oaCase.rejectFlag==true}">
-					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="redtit" colspan="6"><b style="color:white">该流程被驳回</b></td></tr>
 					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.institutionCloseCaseOption}</td></tr>
 				</c:if>			
 				<!-- 案件简报 -->
@@ -68,7 +68,8 @@
 					<td class="tit">行政处罚</td>
 					<td colspan=5>${oaCase.normAssigneePenalOpt}</td>
 				</tr>
-				<tr><td class="tit">案件文号</td><td class="tit" colspan="5">${oaCase.caseDocNo}</td></tr>	
+				<tr><td class="tit">案件文号</td>
+				<td colspan="5">${oaCase.caseDocNo}</td></tr>	
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
@@ -92,7 +93,7 @@
 			</table>
 		</fieldset>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="同 意" onclick="$('#flag').val('yes')"/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交申请" onclick="$('#flag').val('yes')"/>&nbsp;
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>			
 		</div>
 	</form:form>

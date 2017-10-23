@@ -43,7 +43,7 @@
 			<legend>承办机构结案审批：${oaCase.title}</legend>
 			<table class="table-form">
 				<c:if test="${oaCase.rejectFlag==true}">
-					<tr><td class ="redtit" colspan="6"><h4>该流程被驳回</h4></td></tr>
+					<tr><td class ="redtit" colspan="6"><b style="color:white">该流程被驳回</b></td></tr>
 					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.caseMgtCenterCloseCaseOption}</td></tr>
 				</c:if>			
 				<!-- 案件简报 -->
@@ -68,7 +68,8 @@
 					<td class="tit">行政处罚</td>
 					<td colspan=5>${oaCase.normAssigneePenalOpt}</td>
 				</tr>
-				<tr><td class="tit">案件文号</td><td class="tit" colspan="5">${oaCase.caseDocNo}</td></tr>	
+				<tr><td class="tit">案件文号</td>
+				<td colspan="5">${oaCase.caseDocNo}</td></tr>	
 				<!-- 案件简报 -->
 				<!-- 时间进展 -->
 				<tr>
@@ -87,7 +88,7 @@
 					<td class="tit">承办人意见</td>
 					<td colspan="5">${oaCase.assigneeCloseCaseOption}</td>	
 				</tr>					
-				<tr><td class="tit" colspan="5"><h4>填写</h4></td></tr>	
+				<tr><td class="tit" colspan="6"><h4>填写</h4></td></tr>	
 				<tr>
 					<td class="tit">承办机构意见</td>
 					<td colspan="5">

@@ -156,7 +156,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 					vars);	
 			
 			// 等待流程启动完成
-			try {Thread.sleep(2000);	}catch(Exception ex)	{ex.printStackTrace();}
+			//try {Thread.sleep(2000);	}catch(Exception ex)	{ex.printStackTrace();}
 			
 			// 设置vars
 			vars.put("regCheckPass", 1);
@@ -198,9 +198,16 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		Map<String, Object> vars = Maps.newHashMap();
 		if ("utAnjianChushen".equals(taskDefKey)){
 			//
-			oaCase.setCaseStage(1);
-			if(iReturnState == 1) oaCase.setCaseCheckFlag(true);
-			else oaCase.setCaseCheckFlag(false);
+
+			if(iReturnState == 1) {
+				oaCase.setCaseStage(1);
+				oaCase.setCaseCheckFlag(true);
+			}
+			else {
+				// 设置为案件完结状态
+				oaCase.setCaseStage(5);
+				oaCase.setCaseCheckFlag(false);
+			}
 			dao.updateCaseCheckResult(oaCase);
 			//${pass==1}
 			vars.put("regCheckPass", iReturnState);
@@ -221,6 +228,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		else if ("utLaShp_Cbjg".equals(taskDefKey)){
 			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			oaCase.setCaseStage((iReturnState ==1) ? 1: 5);
 			dao.updateInstitutionRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regInstitutionPass", iReturnState);
@@ -352,6 +360,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState ==1) {
 				oaCase.setCaseCloseUpEndDate(Calendar.getInstance().getTime());
+				// 设置为完结状态
+				oaCase.setCaseStage(5);
 				dao.updateMainLeaderCloseOption1(oaCase);
 			}
 			else 

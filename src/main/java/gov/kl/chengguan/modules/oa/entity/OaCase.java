@@ -134,6 +134,7 @@ public class OaCase extends ActEntity<OaCase> {
 	 * 2：调查
 	 * 3：处罚
 	 * 4：结案
+	 * 5: 案件完结：因为案件结束可能在stage1和stage4之后，为了区分这两种情况，增加此状态
 	 */
 	private int caseStage;
 	

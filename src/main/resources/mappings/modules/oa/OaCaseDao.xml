@@ -290,6 +290,7 @@
 			institution_reg_opt = #{institutionRegOption},
 			institution_reg_flag = #{institutionRegApproval},
 			deptLeader_close_flag = #{rejectFlag},	
+			case_stage = #{caseStage},		
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}
 		WHERE id = #{id}
@@ -558,14 +559,14 @@
 		<if test="caseQueryIllegalConstruct != null">
 			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
 		</if>
-		<if test="caseQueryStage >= null">
+		<if test="caseQueryStage != null">
 			AND a.case_stage = #{caseQueryStage}
 		</if>			
 		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
 			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
 		</if>	
-		<if test="caseQueryPenal != null">
-			AND a.norm_penal_Part2 &gt;= #{caseQueryPenal}
+		<if test="caseQueryPenal != null and caseQueryPenal != ''" >
+			AND a.norm_penal_Part2 = #{caseQueryPenal}
 		</if>	
 		<if test="caseQueryRegStartDateStart != null">
 			AND a.caseRegStartDate &gt;= #{caseQueryRegStartDateStart}
