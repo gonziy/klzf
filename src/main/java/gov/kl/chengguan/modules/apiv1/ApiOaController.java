@@ -1681,51 +1681,17 @@ public class ApiOaController  extends BaseController {
 					return;
 				}
 
-				// 如果不自定义文件名，则为上传的文件名
-				if (file_name == null || file_name.isEmpty()) {
-					file_name = filename
-							.substring(0, filename.lastIndexOf("."));
-				}
-				if (group_id == null || group_id.isEmpty()) {
-					jsonObject.put("msg", "missing url, group_id is null");
-					jsonObject.put("code", 41010);
-					PrintWriter out;
-					try {
-						out = response.getWriter();
-						out.print(jsonObject.toJSONString());
-						out.flush();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return;
-				}
 				String httpPath = "http://localhost:9090/day5"
 						+ Global.USERFILES_BASE_URL + fileType + "/"
 						+ folderName + "/" + newFileName;
 				try {
-					OaFiles oaFiles = new OaFiles();
-					oaFiles.setCreateBy(new User());
-					oaFiles.setCreateDate(new Date());
-					oaFiles.setFileName(file_name);
-					oaFiles.setFilePath(httpPath);
-					oaFiles.setGroupId(group_id);
-					oaFiles.setType(fileType);
-
-					int result = filesDao.insert(oaFiles);
-					if (result > 0) {
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
 						jsonObject.put("result",  "success");
 						com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
 						jsonData.put("path", httpPath);
 						jsonObject.put("data", jsonData);
-					} else {
-						jsonObject.put("msg", "success");
-						jsonObject.put("code", 0);
-						jsonObject.put("result","failure");
-						jsonObject.put("remark", "insert to database failed");
-					}
+					
 					PrintWriter out;
 					out = response.getWriter();
 					out.print(jsonObject.toJSONString());
