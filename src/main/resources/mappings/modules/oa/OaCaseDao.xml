@@ -560,7 +560,7 @@
 		<if test="caseQueryIllegalConstruct != null">
 			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
 		</if>
-		<if test="caseQueryStage != null">
+		<if test="caseQueryStage > 0">
 			AND a.case_stage = #{caseQueryStage}
 		</if>			
 		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">

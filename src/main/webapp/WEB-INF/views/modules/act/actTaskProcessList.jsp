@@ -17,6 +17,7 @@
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/act/task/todo/">待办任务</a></li>
 		<li><a href="${ctx}/act/task/historic/">已办任务</a></li>
+		<li><a href="${ctx}/oa/oaCase/list">任务列表</a></li>
 		<li class="active"><a href="${ctx}/act/task/process/">新建任务</a></li>
 	</ul>
 	<form id="searchForm" action="${ctx}/act/task/process/" method="post" class="breadcrumb form-search">

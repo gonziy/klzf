@@ -56,7 +56,10 @@ public class OaCaseController extends BaseController {
 	@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = {"list"})
 	public String list(OaCase oaCase, HttpServletRequest request, HttpServletResponse response, Model model) {
-        Page<OaCase> page = oaCaseService.findPage(new Page<OaCase>(request, response), oaCase); 
+		oaCase.setCaseQueryStage(0);
+		Page<OaCase> pageWhere = new Page<OaCase>(request, response);
+		pageWhere.setPageSize(10);
+        Page<OaCase> page = oaCaseService.findPage(pageWhere, oaCase); 
         model.addAttribute("page", page);        
 		return "modules/oa/oaCaseList";
 	}

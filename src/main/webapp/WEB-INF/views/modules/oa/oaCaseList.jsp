@@ -18,9 +18,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/oa/oaCase/list/task">待办任务</a></li>
+		<li><a href="${ctx}/act/task/todo">待办任务</a></li>
+		<li><a href="${ctx}/act//task/historic">已办任务</a></li>
 		<li class="active"><a href="${ctx}/oa/oaCase/">案件列表</a></li>
-		<shiro:hasPermission name="oa:oaCase:edit"><li><a href="${ctx}/oa/oaCase/form">开始执法流程</a></li></shiro:hasPermission>
+		<li><a href="${ctx}/act/task/process">新建任务</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

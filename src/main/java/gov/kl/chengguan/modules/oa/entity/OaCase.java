@@ -135,7 +135,7 @@ public class OaCase extends ActEntity<OaCase> {
 	 * 3：处罚
 	 * 4：结案
 	 */
-	private int caseStage;
+	private Integer caseStage;
 	
 	/*
 	 * 驳回标志
@@ -678,17 +678,17 @@ public class OaCase extends ActEntity<OaCase> {
 	}
 	
 	//
-	public int getCaseStage() {
+	public Integer getCaseStage() {
 		return caseStage;
 	}
-	public void setCaseStage(int caseStage) {
+	public void setCaseStage(Integer caseStage) {
 		this.caseStage = caseStage;
 	}
 	
-	public int getCaseQueryStage() {
+	public Integer getCaseQueryStage() {
 		return caseQueryStage;
 	}
-	public void setCaseQueryStage(int caseQueryStage) {
+	public void setCaseQueryStage(Integer caseQueryStage) {
 		this.caseQueryStage = caseQueryStage;
 	}
 	
