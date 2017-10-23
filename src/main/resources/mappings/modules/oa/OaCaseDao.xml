@@ -258,6 +258,14 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="updateFiles">
+		UPDATE oa_case SET 
+			case_docs = #{caseDocuments},
+			case_imgs = #{caseImages},
+			case_videos = #{caseVideos}
+		WHERE id = #{id}
+	</update>
+	
 	<update id="updateCaseCheckResult">
 		UPDATE oa_case SET 
 			case_check_flag = #{caseCheckFlag},

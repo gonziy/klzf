@@ -8,6 +8,7 @@ import gov.kl.chengguan.modules.oa.entity.OaCase;
 public interface OaCaseDao extends CrudDao<OaCase>{
 	public OaCase getByProcInsId(String procInsId);
 	public int updateInsId(OaCase testAudit);
+	public int updateFiles(OaCase oaCase);
 	
 	//
 	public int updateCaseCheckResult(OaCase oaCase);

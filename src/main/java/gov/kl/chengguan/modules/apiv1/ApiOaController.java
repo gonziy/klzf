@@ -141,12 +141,8 @@ public class ApiOaController  extends BaseController {
 			oaCase.setCaseImages(photos);
 			oaCase.setCaseVideos(videos);
 			User user = userDao.get(userJson.getString("id"));
-
-			Date nowDate = new Date();
-			oaCase.setUpdateBy(user);
-			oaCase.setUpdateDate(nowDate);
 			
-			caseDao.update(oaCase);
+			caseDao.updateFiles(oaCase);
 
 			jsonObject.put("msg", "success");
 			jsonObject.put("code", 0);
