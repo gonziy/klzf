@@ -514,6 +514,9 @@
 		FROM oa_case a
 			<include refid="caseJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="caseQueryStage != null">
+			AND a.case_stage = #{caseQueryStage}
+		</if>	
 		<if test="caseQueryTitle != null and caseQueryTitle != ''" >
 			AND a.caseTitle LIKE
 				<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryTitle}, '%')</if>
@@ -558,10 +561,7 @@
 		</if>
 		<if test="caseQueryIllegalConstruct != null">
 			AND a.illegal_construct_flag = #{caseQueryIllegalConstruct}
-		</if>
-		<if test="caseQueryStage != null">
-			AND a.case_stage = #{caseQueryStage}
-		</if>			
+		</if>		
 		<if test="caseQueryBrokeLaw != null and caseQueryBrokeLaw != ''">
 			AND a.norm_desc_Part2 = #{caseQueryBrokeLaw}
 		</if>	
