@@ -26,8 +26,10 @@ import gov.kl.chengguan.common.service.BaseService;
 import gov.kl.chengguan.common.service.ServiceException;
 import gov.kl.chengguan.common.utils.CacheUtils;
 import gov.kl.chengguan.common.utils.Encodes;
+import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.utils.StringUtils;
 import gov.kl.chengguan.common.web.Servlets;
+import gov.kl.chengguan.modules.sys.dao.AreaDao;
 import gov.kl.chengguan.modules.sys.dao.BaseUserDao;
 import gov.kl.chengguan.modules.sys.dao.MenuDao;
 import gov.kl.chengguan.modules.sys.dao.OfficeDao;
@@ -48,52 +50,98 @@ import gov.kl.chengguan.modules.sys.utils.UserUtils;
 public class UserService extends BaseService{
 	
 
-	@Autowired
-	private UserDao userDao;
-	@Autowired
-	private BaseUserDao baseUserDao;
-	@Autowired
-	private OfficeDao officeDao;
+	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
+	private static BaseUserDao baseUserDao = SpringContextHolder.getBean(BaseUserDao.class);
+	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
 
-	
-	public List<BaseUser> getdeptLeaderUser(String user_id) {
+	/**
+	 * 副局长
+	 * @return
+	 */
+	public List<BaseUser> getDeptLeaderUser() {
 		List<BaseUser> deptUsers = new ArrayList<BaseUser>();
 		BaseUser userWhere = new BaseUser();
 		Office officeWhere = new Office();
 		officeWhere.setId("882b7895d2214c0f96fc4622f6f32147");
 		userWhere.setOffice(officeWhere);
-	    List<BaseUser> fujuList = UserUtils.getBaseAllList(userWhere);
-	    for (BaseUser u : fujuList) {
-			deptUsers.add(u);
-		}
-	    
-	    BaseUser user = baseUserDao.get(user_id);
-	    BaseUser userWhere2 = new BaseUser();
-		Office officeWhere2 = new Office();
-		String officeidString = officeDao.get(user.getOffice().getId()).getParentId();
-		officeWhere2.setId("officeidString");
-		userWhere2.setOffice(officeWhere2);
-		List<BaseUser> tmpList = baseUserDao.findUserByOfficeId(userWhere2);
-		for (BaseUser u : tmpList) {
-			if(u.getOffice().getName().equals("队长"))
-			{
-				deptUsers.add(u);
+		deptUsers =  UserUtils.getBaseAllList(userWhere);
+	    return deptUsers;		
+	}
+	/**
+	 * 局长
+	 * @return
+	 */
+	public List<BaseUser> getMainLeaderUser() {
+		List<BaseUser> mainUsers = new ArrayList<BaseUser>();
+		BaseUser userWhere = new BaseUser();
+		Office officeWhere = new Office();
+		officeWhere.setId("102");
+		userWhere.setOffice(officeWhere);
+		mainUsers =  UserUtils.getBaseAllList(userWhere);
+	    return mainUsers;
+	}
+	/**
+	 * 根据本人id获取本队 中队长/队长 列表
+	 * @param id  本人id
+	 * @param officeName  填写：中队长/队长
+	 * @return
+	 */
+	public List<BaseUser> getInstitutionUser(String id, String officeName) {
+		List<BaseUser> instUsers = new ArrayList<BaseUser>();
+		BaseUser mine = UserUtils.getBaseById(id);
+		if(mine != null){
+			
+			Office officeWhere = new Office();
+			officeWhere.setId(mine.getOffice().getId());
+			Office myOffice = officeDao.get(officeWhere);
+			Office parentOffice = myOffice.getParent();
+			if(parentOffice!=null){
+				BaseUser userWhere2 = new BaseUser();
+				userWhere2.setOffice(parentOffice);
+				List<BaseUser> tmpUsers  = baseUserDao.findAllList(userWhere2);
+				for (BaseUser baseUser : tmpUsers) {
+					if(baseUser.getOffice().getName().equals(officeName)){
+						instUsers.add(baseUser);
+					}
+				}
 			}
 		}
-	    return deptUsers;
+		return instUsers;
 		
 	}
-	public User getMainLeaderUser(String id) {
-		return UserUtils.get(id);
+	/**
+	 * 案管中心
+	 * @return
+	 */
+	public List<BaseUser> getMgtCenterUser() {
+		List<BaseUser> mgtUsers = new ArrayList<BaseUser>();
+		BaseUser userWhere = new BaseUser();
+		Office officeWhere = new Office();
+		officeWhere.setId("1432d48eadd246258160d6fa6e36eb2a");
+		userWhere.setOffice(officeWhere);
+		mgtUsers =  UserUtils.getBaseAllList(userWhere);
+	    return mgtUsers;
 	}
-	public User getInstitutionUser(String id) {
-		return UserUtils.get(id);
-	}
-	public User getMgtCenterUser(String id) {
-		return UserUtils.get(id);
-	}
-	public List<User> getAssigneeUsers(String id) {
-		return null;
+	/**
+	 * 获取本队其他队员
+	 * @param id 本人的id
+	 * @return
+	 */
+	public List<BaseUser> getAssigneeUsers(String id) {
+		BaseUser mine = UserUtils.getBaseById(id);
+		List<BaseUser> tmpAssigneeUsers = new ArrayList<BaseUser>();
+		List<BaseUser> assigneeUsers = new ArrayList<BaseUser>();
+		if(mine!=null){
+			BaseUser userWhere = new BaseUser();
+			userWhere.setOffice(mine.getOffice());
+			tmpAssigneeUsers = UserUtils.getBaseAllList(userWhere);
+			for (BaseUser baseUser : tmpAssigneeUsers) {
+				if(!baseUser.getId().equals(id))
+					assigneeUsers.add(baseUser);
+			}
+		}
+		
+		return assigneeUsers;
 	}
 	
 

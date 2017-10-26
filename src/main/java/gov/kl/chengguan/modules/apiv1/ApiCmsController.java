@@ -98,13 +98,20 @@ public class ApiCmsController  extends BaseController {
 			return;
 		}
 		try {
+			/* ##############################↓↓↓↓↓↓↓↓↓↓↓↓↓↓读取字段看这一段↓↓↓↓↓↓↓↓↓↓########################### */
+			/*
+			 * categoryid 的值
+			 * 案件来源：0cbf63e927174b94bcbe19b6d541a19e
+			 * 行为：3
+			 * 处罚办法：4
+			 * 法律条文：5
+			 */
 			BaseArticle whereArticle = new BaseArticle();
 			Category whereCategory = new Category();
 			whereCategory.setId(categoryid);
 			whereArticle.setCategory(whereCategory);
-						
-			
 			java.util.List<BaseArticle> list = baseArticleDao.findList(whereArticle) ;
+			/* ##############################↑↑↑↑↑↑↑↑↑↑↑↑↑↑读取字段看这一段↑↑↑↑↑↑↑↑↑########################### */
 			if(list!=null)
 			{
 				jsonObject.put("msg", "success");

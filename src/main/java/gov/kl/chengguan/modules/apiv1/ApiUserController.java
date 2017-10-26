@@ -46,11 +46,19 @@ public class ApiUserController  extends BaseController {
 	
 	@RequestMapping(value = {"user/info/test"})
 	public void test(HttpServletRequest request, HttpServletResponse response) {
-//		UserService userService = new UserService();
-//		List<User> users = userService.getdeptLeaderUser("1");
-//		for (User user : users) {
-//			System.out.println(user.getName());
-//		}
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		UserService userService = new UserService();
+		List<BaseUser> users = new ArrayList<BaseUser>();
+		//users = userService.getAssigneeUsers("0dc9ddf2fdf44f5295dd65665c380247");
+		users = userService.getInstitutionUser("0dc9ddf2fdf44f5295dd65665c380247", "队长");
+		for (BaseUser user : users) {
+			System.out.println(user.getName());
+		}
 		
 	}
 	@RequestMapping(value = {"user/info/login"})

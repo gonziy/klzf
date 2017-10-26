@@ -1677,7 +1677,7 @@ public class ApiOaController  extends BaseController {
 					return;
 				}
 
-				String httpPath = "http://localhost:9090/day5"
+				String httpPath = "http://47.93.52.62:8080/klzf2"
 						+ Global.USERFILES_BASE_URL + fileType + "/"
 						+ folderName + "/" + newFileName;
 				try {

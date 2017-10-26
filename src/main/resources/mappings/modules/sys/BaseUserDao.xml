@@ -70,7 +70,12 @@
 			a.id, a.name, a.login_name
 		FROM sys_user a
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
-			AND a.office_id = #{office.id}
+		<if test="office != null and office.id != null and office.id != ''">
+			AND (o.id = #{office.id} OR o.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{office.id}||',%')</if>
+					<if test="dbName == 'mssql'">'%,'+#{office.id}+',%')</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{office.id}, ',%'))</if>
+		</if>
 		ORDER BY a.name
 	</select>
 	
