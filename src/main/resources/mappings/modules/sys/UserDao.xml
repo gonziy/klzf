@@ -125,13 +125,13 @@
     	ou.id AS "office.primaryPerson.id",
     	ou.name AS "office.primaryPerson.name",
     	ou2.id AS "office.deputyPerson.id",
-    	ou2.name AS "office.deputyPerson.name",
+    	ou2.name AS "office.deputyPerson.name"<!-- ,
         r.id AS "roleList.id",
         r.office_id AS "roleList.office.id",
         r.name AS "roleList.name",
         r.enname AS "roleList.enname",
         r.role_type AS "roleList.roleType",
-        r.data_scope AS "roleList.dataScope"
+        r.data_scope AS "roleList.dataScope" -->
     </sql>
     
     <sql id="userJoins">
@@ -144,7 +144,7 @@
 		LEFT JOIN sys_user ou ON ou.id = o.primary_person
 		LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person 
 		LEFT JOIN sys_user_role ur ON ur.user_id = a.id
-        LEFT JOIN sys_role r ON r.id = ur.role_id
+        <!-- LEFT JOIN sys_role r ON r.id = ur.role_id -->
     </sql>
 	
 	<!-- 根据编号获得用户 -->
@@ -155,7 +155,7 @@
 		FROM sys_user a
 		<include refid="userJoins"/><!-- 
 		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
-		WHERE a.id = #{id}
+		WHERE a.id = #{id} limit 1
 	</select>
 	
 	<!-- 根据登录名查询用户 -->
