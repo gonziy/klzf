@@ -88,9 +88,14 @@ public class ApiOaController  extends BaseController {
 	@Autowired
 	private UserService userService;
 	
+	/**
+	 * 案件审批
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = { "oa/case/approve" })
 	public void updateCaseToNextStep(HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response, @RequestBody String reqData) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -99,8 +104,8 @@ public class ApiOaController  extends BaseController {
 				"Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		String dataString = "";
-		dataString = request.getParameter("data");
+		String dataString = reqData;
+		//dataString = request.getParameter("data");
 		PrintWriter out;
 		if (dataString != null) {
 			JSONObject json = JSONObject.parseObject(dataString);
@@ -450,7 +455,12 @@ public class ApiOaController  extends BaseController {
 			}
 		}
 	}
-	
+	/**
+	 * 更新文件
+	 * @param request
+	 * @param response
+	 * @param reqData
+	 */
 	@RequestMapping(value = {"oa/case/updatefiles"})
 	public void updateCaseFiles(HttpServletRequest request, HttpServletResponse response, @RequestBody String reqData) {
 		response.setContentType("application/json");
@@ -535,7 +545,12 @@ public class ApiOaController  extends BaseController {
 		}
 		
 	}
-	
+	/**
+	 * 立案
+	 * @param request
+	 * @param response
+	 * @param reqData
+	 */
 	@RequestMapping(value = {"oa/case/create"})
 	public void createCaseInfo(HttpServletRequest request, HttpServletResponse response,@RequestBody String reqData) {
 		response.setContentType("application/json");
@@ -634,6 +649,11 @@ public class ApiOaController  extends BaseController {
 		}
 		
 	}
+	/**
+	 * 案件查询
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/case/get"})
 	public void getCaseInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -827,59 +847,59 @@ public class ApiOaController  extends BaseController {
 		String taskDefKey = oaCase.getAct().getTaskDefKey();
 		// 查看案件情况表
 		if(oaCase.getAct().isFinishTask()){
-			txtString ="15,结案,案件结束";
+			txtString ="4,5,结案,案件结束";
 		}
 		// 案件初审
 		else if ("utAnjianChushen".equals(taskDefKey)){
-			txtString ="1,立案,承办人";
+			txtString ="1,1,立案,承办人";
 		}
 		// 案件信息录入
 		else if ("utAnjianLuru".equals(taskDefKey)){
-			txtString ="1,立案,承办人";
+			txtString ="1,1,立案,承办人";
 		}
 		// 立案审批——承办机构
 		else if ("utLaShp_Cbjg".equals(taskDefKey)){
-			txtString ="2,立案,承办机构";
+			txtString ="1,2,立案,承办机构";
 		}
 		// 立案审批——分管领导
 		else if ("utLaShp_Fgld".equals(taskDefKey)){
-			txtString ="3,立案,分管领导";
+			txtString ="1,3,立案,分管领导";
 		}			
 		// 立案审批——主管领导
 		else if ("utLaShp_Zgld".equals(taskDefKey)){
-			txtString ="4,立案,主管领导";
+			txtString ="1,4,立案,主管领导";
 		}
 		// 开始案件调查
 		else if ("utAnjianDiaocha".equals(taskDefKey)){
-			txtString ="5,调查,案件调查";
+			txtString ="2,1,调查,案件调查";
 		}
 		// 行政处罚——承办人意见
 		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
-			txtString ="6,处罚,承办人";
+			txtString ="3,1,处罚,承办人";
 		}
 		// 行政处罚——承办机构审批
 		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
-			txtString ="7,处罚,承办机构";
+			txtString ="3,2,处罚,承办机构";
 		}
 		// 行政处罚——案件管理中心审批
 		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
-			txtString ="8,处罚,案管中心";
+			txtString ="3,3,处罚,案管中心";
 		}
 		// 行政处罚——分管领导审批
 		else if ("utXzhChf_Fgld".equals(taskDefKey)){
-			txtString ="9,处罚,分管领导";
+			txtString ="3,4,处罚,分管领导";
 		}
 		// 行政处罚——主管领导审批
 		else if ("utXzhChf_Zgld".equals(taskDefKey)){
-			txtString ="10,处罚,主管领导";
+			txtString ="3,5,处罚,主管领导";
 		}
 		// 结案审批——承办人
 		else if ("utJaShp_Chbr".equals(taskDefKey)){
-			txtString ="11,结案,承办人";
+			txtString ="4,1,结案,承办人";
 		}
 		// 结案审批——承办机构
 		else if ("utJaShp_Cbjg".equals(taskDefKey)){
-			txtString ="12,结案,承办机构";
+			txtString ="4,2,结案,承办机构";
 		}
 		// 结案审批——案件管理中心
 		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
@@ -887,15 +907,20 @@ public class ApiOaController  extends BaseController {
 		}
 		// 结案审批——主管领导
 		else if ("utJaShp_Zgld".equals(taskDefKey)){
-			txtString ="14,结案,主管领导";
+			txtString ="4,4,结案,主管领导";
 		}
 		// 都不是
 		else {
-			txtString ="-1,未知,未知";
+			txtString ="0,0,未知,未知";
 		}
 		
 		return txtString;
 	}
+	/**
+	 * 获取案件进度名称
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/case/getstage"})
 	public void getCaseStage(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -958,6 +983,11 @@ public class ApiOaController  extends BaseController {
 			}
 		}
 	}
+	/**
+	 * 案件进度列表
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/case/getstagelist"})
 	public void getCaseStagelist(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
