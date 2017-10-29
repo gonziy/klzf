@@ -799,20 +799,20 @@ public class ApiOaController  extends BaseController {
 	 */
 	private java.util.List<ApiStep> getCaseProgress(OaCase oaCase){
 		java.util.List<ApiStep> list = new ArrayList<ApiStep>();
-		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult(),1));
-		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption(),2));
-		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),3));
-		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),4));
-		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", "",5));
-		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption(),6));
-		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption(),7));
-		list.add(new ApiStep("处罚", "案管中心", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalOption(),8));
-		list.add(new ApiStep("处罚", "分管领导", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalApproval()==true?"pass":"reject", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalOption(),9));
-		list.add(new ApiStep("处罚", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderPenalApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),10));
-		list.add(new ApiStep("结案", "承办人", oaCase.getAssigneeCloseCaseOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneeCloseCaseOption()==null?"":oaCase.getAssigneeCloseCaseOption(),11));
-		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption(),12));
-		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption(),13));
-		list.add(new ApiStep("结案", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),14));
+		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult(),"1,1"));
+		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption(),"1,2"));
+		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),"1,3"));
+		list.add(new ApiStep("立案", "主管领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),"1,4"));
+		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", "","2,1"));
+		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption(),"3,1"));
+		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption(),"3,2"));
+		list.add(new ApiStep("处罚", "案管中心", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterPenalOption()==null?"":oaCase.getCaseMgtCenterPenalOption(),"3,3"));
+		list.add(new ApiStep("处罚", "分管领导", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalApproval()==true?"pass":"reject", oaCase.getDeptLeaderPenalOption()==null?"":oaCase.getDeptLeaderPenalOption(),"3,4"));
+		list.add(new ApiStep("处罚", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderPenalApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),"3,5"));
+		list.add(new ApiStep("结案", "承办人", oaCase.getAssigneeCloseCaseOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneeCloseCaseOption()==null?"":oaCase.getAssigneeCloseCaseOption(),"4,1"));
+		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption(),"4,2"));
+		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption(),"4,3"));
+		list.add(new ApiStep("结案", "主管领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),"4,4"));
 		return list;
 	}
 	
@@ -2647,7 +2647,7 @@ public class ApiOaController  extends BaseController {
 	
 	public class ApiStep
 	{
-		public ApiStep(String stage, String name, String status,String remark, Integer step){
+		public ApiStep(String stage, String name, String status,String remark, String step){
 			this.stage = stage;
 			this.name = name;
 			this.status = status;
@@ -2658,12 +2658,12 @@ public class ApiOaController  extends BaseController {
 		private String name;
 		private String status;
 		private String remark;
-		private Integer step;
+		private String step;
 		
-		public Integer getStep() {
+		public String getStep() {
 			return step;
 		}
-		public void setStep(Integer step) {
+		public void setStep(String step) {
 			this.step = step;
 		}
 		public String getStage() {
