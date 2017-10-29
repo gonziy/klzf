@@ -1492,7 +1492,7 @@ public class ApiOaController  extends BaseController {
 //					apiOaCase.setCaseQueryCloseDateStart(oaCase.getCaseQueryCloseDateStart());
 //					apiOaCase.setCaseQueryCloseDateEnd(oaCase.getCaseQueryCloseDateEnd());
 //					apiOaCase.setCaseQueryStage(oaCase.getCaseQueryStage());
-
+					apiOaCase.setStep(getCaseProgressNow(oaCase));
 					String strAssigneeNames = "";
 					if(apiOaCase.getAssigneeIds()!=null && !apiOaCase.getAssigneeIds().isEmpty()){
 						String[] assigneeIdsList = apiOaCase.getAssigneeIds().split(";");
@@ -2212,10 +2212,11 @@ public class ApiOaController  extends BaseController {
 
 		private String title; //17-1015案件名
 		private String caseDocNo; //17-1015案件文号
+		private String step;
 		private String caseParties; 
 		private String caseLegalAgent;
 		private String address;
-		private String  phoneNumber;
+		private String phoneNumber;
 		private String caseDescription;
 		private String caseDocuments;	
 		private String caseImages;	
@@ -2672,6 +2673,13 @@ public class ApiOaController  extends BaseController {
 		}
 		public void setCaseDocNo(String caseDocNo) {
 			this.caseDocNo = caseDocNo;
+		}
+
+		public String getStep() {
+			return step;
+		}
+		public void setStep(String step) {
+			this.step = step;
 		}
 	}
 	
