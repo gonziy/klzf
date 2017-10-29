@@ -105,6 +105,7 @@ public class ApiOaController  extends BaseController {
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
 		String dataString = reqData;
+		
 		//dataString = request.getParameter("data");
 		PrintWriter out;
 		if (dataString != null) {
@@ -146,11 +147,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setInstitutionRegApproval(approve.equals("pass")?true:false);
 					model.setInstitutionRegOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utLaShp_Cbjg"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 
 				} else if (step.equals("3")) {
 					// 立案 - 分管领导
@@ -169,11 +178,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setDeptLeaderRegApproval(approve.equals("pass")?true:false);
 					model.setDeptLeaderRegOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utLaShp_Fgld"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				} else if (step.equals("4")) {
 					//立案 - 主管领导
 					OaCase model = new OaCase();
@@ -191,11 +208,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setMainLeaderRegApproval(approve.equals("pass")?true:false);
 					model.setMainLeaderRegOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utLaShp_Zgld"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				}
 
 			} else if (table.equals("2")) {
@@ -215,11 +240,19 @@ public class ApiOaController  extends BaseController {
 						}
 					}
 			
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utAnjianDiaocha"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 
 				} 
 
@@ -244,11 +277,19 @@ public class ApiOaController  extends BaseController {
 					model.setCaseDocNo(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 					
 					model.setAssigneePenalOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, 1);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utXzhChf_CbrYj"))
+					{
+						oaCaseService.mobileSaveStep(model, 1);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				}else if (step.equals("2")) {
 					// 处罚-承办机构
 					OaCase model = new OaCase();
@@ -266,11 +307,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setInstitutionPenalApproval(approve.equals("pass")?true:false);
 					model.setInstitutionPenalOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utXzhChf_Cbjg"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 
 				} else if (step.equals("3")) {
 					// 处罚 - 案管中心
@@ -289,11 +338,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setCaseMgtCenterPenalApproval(approve.equals("pass")?true:false);
 					model.setCaseMgtCenterPenalOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utXzhChf_AjGlZhx"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				} else if (step.equals("4")) {
 					// 处罚-分管领导
 					OaCase model = new OaCase();
@@ -311,11 +368,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setDeptLeaderPenalApproval(approve.equals("pass")?true:false);
 					model.setDeptLeaderPenalOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utXzhChf_Fgld"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				} else if (step.equals("5")) {
 					// 处罚-主管领导
 					OaCase model = new OaCase();
@@ -333,11 +398,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setMainLeaderPenalApproval(approve.equals("pass")?true:false);
 					model.setMainLeaderPenalOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utXzhChf_Zgld"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				}
 
 			} else if (table.equals("4")) {
@@ -358,11 +431,19 @@ public class ApiOaController  extends BaseController {
 					}
 										
 					model.setAssigneeCloseCaseOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, 1);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utJaShp_Chbr"))
+					{
+						oaCaseService.mobileSaveStep(model, 1);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				}else if (step.equals("2")) {
 					// 结案-承办机构
 					OaCase model = new OaCase();
@@ -380,11 +461,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setInstitutionCloseCaseApproval(approve.equals("pass")?true:false);
 					model.setInstitutionCloseCaseOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utJaShp_Cbjg"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 
 				} else if (step.equals("3")) {
 					// 结案 - 案管中心
@@ -403,11 +492,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setCaseMgtCenterCloseCaseApproval(approve.equals("pass")?true:false);
 					model.setCaseMgtCenterCloseCaseOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utJaShp_AjGlZhx"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				}  else if (step.equals("4")) {
 					// 结案-主管领导
 					OaCase model = new OaCase();
@@ -425,11 +522,19 @@ public class ApiOaController  extends BaseController {
 					
 					model.setMainLeaderCloseCaseApproval(approve.equals("pass")?true:false);
 					model.setMainLeaderCloseCaseOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
-					oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
+					if(model.getAct().getTaskDefKey().equals("utJaShp_Zgld"))
+					{
+						oaCaseService.mobileSaveStep(model, approve.equals("pass")?1:0);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					}else{
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "this step has approved");
+					}
 				}
 			} else {
 				jsonObject.put("msg", "data is error");
