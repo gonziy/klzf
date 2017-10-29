@@ -144,7 +144,13 @@ public class ApiOaController  extends BaseController {
 							break;
 						}
 					}
-					
+					if(model.equals(null)){
+
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "failed");
+						jsonObject.put("remark", "you don't have permission to approve");
+					}
 					model.setInstitutionRegApproval(approve.equals("pass")?true:false);
 					model.setInstitutionRegOption(opinion.isEmpty()?"该用户未填写意见(手机端)":opinion+"(手机端)");
 					if(model.getAct().getTaskDefKey().equals("utLaShp_Cbjg"))
