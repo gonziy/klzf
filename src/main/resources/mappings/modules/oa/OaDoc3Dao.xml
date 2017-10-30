@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.kl.chengguan.modules.oa.dao.OaDoc3Dao">
+	
+    <sql id="docColumns">
+		a.*,
+		u.id AS "createBy.id",
+		u.name AS "createBy.name",
+		o.id AS "publisher.office.id",
+		o.name AS "publisher.office.name"
+	</sql>
+	
+	<sql id="docJoins">
+		JOIN sys_user u ON u.id = a.create_by
+		JOIN sys_office o ON o.id = u.office_id
+    </sql>
+    
+    <select id="get" resultType="OaDoc3">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc3 a
+			<include refid="docJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaDoc3">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc3 a
+			<include refid="docJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="docQueryCreateDateStart != null">
+			AND a.create_date &gt;= #{docQueryPublishDateStart}
+		</if>
+		<if test="docQueryCreateDateEnd != null">
+			AND a.create_date &lt;= #{docQueryPublishDateEnd}
+		</if>
+		<if test="docQueryTitle != null and docQueryTitle != ''">
+			AND a.doc_title LIKE
+					<if test="dbName == 'mysql'">CONCAT('%', #{docQueryTitle}, '%')</if>
+					<if test="dbName == 'oracle'">'%'||#{docQueryTitle}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{udocQueryTitle}+'%'</if>
+		</if>
+		<if test="docQueryStage != null and docQueryStage != ''">
+			AND a.DRStage = #{docQueryStage}
+		</if>		
+		${sqlMap.dsf}
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="findAllList" resultType="OaDoc3">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc3 a
+			<include refid="docJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="getByProcInsId" resultType="OaDoc3">
+		SELECT 
+			<include refid="docColumns"/>
+		FROM oa_doc3 a
+			<include refid="docJoins"/>
+		WHERE a.proc_ins_id = #{processInstanceId}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_doc3(
+			id,
+		DocTitle,
+		AttachLinks,
+		OfficeHeaderOption,
+		OfficeHeaderApproval,
+		DueDate,
+		OfficeHeaderApproveDate,
+		LeaderId,
+		LeaderOption,
+		LeaderApproveDate,
+		reviewersIDs,
+		reviewersIDs1,
+		DRStage,
+			proc_ins_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag	
+		) VALUES (
+			#{id}, 
+		#{docTitle},
+		#{attachLinks},
+		#{officeHeaderOption},
+		#{officeHeaderApproval},
+		#{dueDate},
+		#{officeHeaderApproveDate},
+		#{leaderId},
+		#{leaderOption},
+		#{leaderApproveDate},
+		#{reviewersIDs},
+		#{reviewersIDs1},
+		#{DRStage},
+			#{processInstanceId},
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_doc3 SET 
+			DocTitle = #{docTitle},
+			AttachLinks = #{attachLinks},
+			OfficeHeaderOption = #{officeHeaderOption},
+			OfficeHeaderApproval = #{officeHeaderApproval},
+			DueDate = #{dueDate},
+			OfficeHeaderApproveDate = #{officeHeaderApproveDate},
+			LeaderId = #{leaderId},
+			LeaderOption = #{leaderOption},
+			LeaderApproveDate = #{leaderApproveDate},
+			reviewersIDs = #{reviewersIDs},
+			reviewersIDs1 = #{reviewersIDs1},
+			DRStage = #{DRStage}
+		WHERE id = #{id}
+	</update>
+		
+	
+	<update id="updateOfficeHeaderApproval">
+		UPDATE oa_doc3 SET 
+			OfficeHeaderOption = #{officeHeaderOption},
+			OfficeHeaderApproval = #{officeHeaderApproval},
+			DueDate = #{dueDate},
+			LeaderId = #{leaderId},
+			OfficeHeaderApproveDate = #{officeHeaderApproveDate},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateLeaderApproval">
+		UPDATE oa_doc3 SET 
+			LeaderId = #{leaderId},
+			LeaderOption = #{leaderOption},
+			LeaderApproveDate = #{leaderApproveDate},
+			reviewersIDs = #{reviewersIDs},
+			DRStage = #{DRStage},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateOfficeHeaderDispatch">
+		UPDATE oa_doc3 SET 
+			reviewersIDs1 = #{reviewersIDs1},
+			DRStage = #{DRStage},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateDrStage">
+		UPDATE oa_doc3 SET 
+			DRStage = #{DRStage},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+			
+	<update id="updateProcessInstanceId">
+		UPDATE oa_doc3 SET 
+			proc_ins_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_doc3 SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateInsId">
+		UPDATE oa_doc3 SET 
+			proc_ins_id = #{processInstanceId},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -73,7 +73,7 @@ public class OaCaseController extends BaseController {
 	public String form(OaCase oaCase, Model model) {
 		// 案件申报
 		String view = "oaCase_Reg1_apply";
-
+		
 		// 查看审批申请单
 		if (StringUtils.isNotBlank(oaCase.getId())){//.getAct().getProcInsId())){
 			// 环节编号

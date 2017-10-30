@@ -38,6 +38,7 @@ import gov.kl.chengguan.modules.gen.dao.GenTableDao;
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaDoc;
+import gov.kl.chengguan.modules.sys.interceptor.MobileInterceptor;
 /**
  * OaCaseService
  * @author
@@ -71,16 +72,19 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	
 		for(Act act : acts)
 		{
-			//根据business id 获取案件参数
-			String businessId = act.getBusinessId();
-			businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
-			OaCase oaCase = caseDao.get(businessId);
-			if(oaCase != null) {
-				oaCase.setTask(act.getTask());
-				oaCase.setProcessInstance(act.getProcIns());
-				oaCase.setProcessDefinition(act.getProcDef());
-				oaCase.setVariables(act.getVars().getVariableMap());
-				results.add(oaCase);
+			if(act.getProcDefKey() == ActUtils.PD_CASE[0])
+			{
+				//根据business id 获取案件参数
+				String businessId = act.getBusinessId();
+				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+				OaCase oaCase = caseDao.get(businessId);
+				if(oaCase != null) {
+					oaCase.setTask(act.getTask());
+					oaCase.setProcessInstance(act.getProcIns());
+					oaCase.setProcessDefinition(act.getProcDef());
+					oaCase.setVariables(act.getVars().getVariableMap());
+					results.add(oaCase);
+				}
 			}
 		}
 		return results;
@@ -95,11 +99,18 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	
 		for(Act act : acts)
 		{
-			OaCase oaCase = dao.get(act.getBusinessId());
-			oaCase.setTask(act.getTask());
-			oaCase.setProcessInstance(act.getProcIns());
-			oaCase.setProcessDefinition(act.getProcDef());
-			results.add(oaCase);
+			if(act.getProcDefKey() == ActUtils.PD_CASE[0]) {
+				//根据business id 获取案件参数
+				String businessId = act.getBusinessId();
+				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+				OaCase oaCase = caseDao.get(businessId);
+				if(oaCase != null) {
+					oaCase.setTask(act.getTask());
+					oaCase.setProcessInstance(act.getProcIns());
+					oaCase.setProcessDefinition(act.getProcDef());
+					results.add(oaCase);
+				}
+			}
 		}
 		return results;
 	}
@@ -166,6 +177,177 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 	}
 
+	/*
+	 * iReturnState页面返回的状态
+	 * 1： 同意
+	 * 0: 驳回(更新数据)
+	 */
+	@Transactional(readOnly = false)
+	public void mobileSaveStep(OaCase oaCase, int iReturnState) 
+	{
+		oaCase.getAct().setComment(iReturnState ==1?"[同意] ":"[驳回] ");
+		oaCase.preUpdate();
+		
+		// 对不同环节的业务逻辑进行操作
+		String taskDefKey = oaCase.getAct().getTaskDefKey();
+		Map<String, Object> vars = Maps.newHashMap();
+		if ("utLaShp_Cbjg".equals(taskDefKey)){
+			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			oaCase.setCaseStage((iReturnState ==1) ? 1: 5);
+			dao.updateInstitutionRegOption(oaCase);
+			// 提交流程任务
+			vars.put("regInstitutionPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utLaShp_Fgld".equals(taskDefKey)){
+			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			dao.updateDeptLeaderRegOption(oaCase);
+			// 提交流程任务
+			vars.put("regDeptLeaderPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utLaShp_Zgld".equals(taskDefKey)){
+			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			if(iReturnState == 1) {
+				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
+				dao.updateMainLeaderRegOption1(oaCase);		
+			}
+			else
+				dao.updateMainLeaderRegOption(oaCase);		
+			// 提交流程任务
+			vars.put("regMainLeaderPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utAnjianDiaocha".equals(taskDefKey)){
+			oaCase.setCaseStage(2);
+			if(iReturnState >= 0)
+			{
+				if(iReturnState == 1) {
+					// 设置案件调查结束时间
+					oaCase.setCaseSurveyEndDate(Calendar.getInstance().getTime());
+					vars.put("regPass", 1);
+					actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+				}
+				dao.updateCaseSurveyEndData(oaCase);
+			}
+		}
+		// 立案审批结束
+		//
+		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
+			if(iReturnState == 1) {
+				oaCase.setCaseStage(3);
+				// 只有不是拒绝的任务才能更新开始时间
+				oaCase.setCasePenalStartDate(Calendar.getInstance().getTime());
+				if(oaCase.getRejectFlag()) {
+					// 是被驳回的流程，但作为基本的流程，除了不干，只能让iReturnState=1...
+					oaCase.setRejectFlag((iReturnState ==1)?false: true);
+					dao.updateAssigneePenalOption(oaCase);
+				}
+				else dao.updateAssigneePenalOption1(oaCase);
+				
+				// 提交流程任务
+				actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+			}
+		}
+		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
+			oaCase.setInstitutionPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			dao.updateInstitutionPenalOption(oaCase);
+			// 提交流程任务
+			vars.put("penalInstitutionPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
+			oaCase.setCaseMgtCenterPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			dao.updateMgtCenterPenalOption(oaCase);
+			// 提交流程任务
+			vars.put("penalMgtCenterPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utXzhChf_Fgld".equals(taskDefKey)){
+			oaCase.setDeptLeaderPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			dao.updateDeptLeaderPenalOption(oaCase);
+			// 提交流程任务
+			vars.put("penalDeptLeaderPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
+		}	
+		else if ("utXzhChf_Zgld".equals(taskDefKey)){
+			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			if(iReturnState == 1) {
+				oaCase.setCasePenalEndDate(Calendar.getInstance().getTime());
+				dao.updateMainLeaderPenalOption1(oaCase);
+			}
+			else 
+				dao.updateMainLeaderPenalOption(oaCase);
+			// 提交流程任务
+			vars.put("penalMainLeaderPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);	
+		}
+		// 行政处罚审批结束
+		//
+		else if ("utJaShp_Chbr".equals(taskDefKey)){
+			if(iReturnState == 1) {
+				oaCase.setCaseStage(4);
+				oaCase.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
+				if(oaCase.getRejectFlag()){
+					oaCase.setRejectFlag((iReturnState ==1)?false: true);
+					dao.updateAssigneeCloseOption(oaCase);
+				}
+				else dao.updateAssigneeCloseOption1(oaCase);
+
+				// 提交流程任务
+				actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+			}
+		}
+		else if ("utJaShp_Cbjg".equals(taskDefKey)){
+			oaCase.setInstitutionCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			dao.updateInstitutionCloseOption(oaCase);
+			// 提交流程任务
+			vars.put("closeInstitutionPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
+			oaCase.setCaseMgtCenterCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			dao.updateMgtCenterCloseOption(oaCase);
+			// 提交流程任务
+			vars.put("closeMgtCenterPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}
+		else if ("utJaShp_Zgld".equals(taskDefKey)){
+			oaCase.setMainLeaderCloseCaseApproval((iReturnState ==1)?true: false);
+			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			if(iReturnState ==1) {
+				oaCase.setCaseCloseUpEndDate(Calendar.getInstance().getTime());
+				// 设置为完结状态
+				oaCase.setCaseStage(5);
+				dao.updateMainLeaderCloseOption1(oaCase);
+			}
+			else 
+				dao.updateMainLeaderCloseOption(oaCase);
+				
+			// 提交流程任务
+			vars.put("closeMainLeaderPass", iReturnState);
+			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
+		}	
+		else if ("endevent_case".equals(taskDefKey)){
+			// 结案审批
+			
+		}		
+		// 未知环节，直接返回
+		else{
+			return;
+		}		
+		
+	}
+	
 	/**
 	 * 审核审批保存
 	 * @param oaCase

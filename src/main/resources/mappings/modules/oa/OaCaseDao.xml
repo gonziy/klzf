@@ -514,7 +514,7 @@
 		FROM oa_case a
 			<include refid="caseJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
-		<if test="caseQueryStage != null">
+		<if test="caseQueryStage >0">
 			AND a.case_stage = #{caseQueryStage}
 		</if>	
 		<if test="caseQueryTitle != null and caseQueryTitle != ''" >
