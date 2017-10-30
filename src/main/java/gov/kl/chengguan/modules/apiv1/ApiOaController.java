@@ -155,7 +155,13 @@ public class ApiOaController  extends BaseController {
 					// ##################立案阶段######################
 					if (step.equals("2")) {
 						// 立案-承办机构
-
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setDeptLeaderRegOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setInstitutionRegApproval(approve.equals("pass") ? true
 								: false);
 						model.setInstitutionRegOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -177,6 +183,13 @@ public class ApiOaController  extends BaseController {
 
 					} else if (step.equals("3")) {
 						// 立案 - 分管领导
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setMainLeaderRegOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setDeptLeaderRegApproval(approve.equals("pass") ? true
 								: false);
 						model.setDeptLeaderRegOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -242,13 +255,19 @@ public class ApiOaController  extends BaseController {
 					// ##################处罚阶段######################
 					if (step.equals("1")) {
 						// 处罚-承办人
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setInstitutionPenalOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
 						model.setNormAssigneePenalOptPart2(punish);
 						model.setCaseDocNo(new SimpleDateFormat(
 								"yyyyMMddHHmmss").format(new Date()));
 
 						model.setAssigneePenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
-						model.setInstitutionPenalApproval(null);
+						
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_CbrYj")) {
 							oaCaseService.mobileSaveStep(model, 1);
@@ -264,10 +283,17 @@ public class ApiOaController  extends BaseController {
 						}
 					} else if (step.equals("2")) {
 						// 处罚-承办机构
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setCaseMgtCenterPenalOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
 						model.setInstitutionPenalApproval(approve
 								.equals("pass") ? true : false);
 						model.setInstitutionPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
+						model.setCaseMgtCenterPenalOption("");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_Cbjg")) {
 							oaCaseService.mobileSaveStep(model,
@@ -285,6 +311,13 @@ public class ApiOaController  extends BaseController {
 
 					} else if (step.equals("3")) {
 						// 处罚 - 案管中心
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setDeptLeaderPenalOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setCaseMgtCenterPenalApproval(approve
 								.equals("pass") ? true : false);
 						model.setCaseMgtCenterPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -305,6 +338,13 @@ public class ApiOaController  extends BaseController {
 						}
 					} else if (step.equals("4")) {
 						// 处罚-分管领导
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setMainLeaderPenalOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setDeptLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
 						model.setDeptLeaderPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -349,6 +389,13 @@ public class ApiOaController  extends BaseController {
 					// ##################结案阶段######################
 					if (step.equals("1")) {
 						// 结案-承办人
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setInstitutionCloseCaseOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setAssigneeCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
@@ -366,6 +413,13 @@ public class ApiOaController  extends BaseController {
 						}
 					} else if (step.equals("2")) {
 						// 结案-承办机构
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setCaseMgtCenterCloseCaseOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setInstitutionCloseCaseApproval(approve
 								.equals("pass") ? true : false);
 						model.setInstitutionCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -387,6 +441,13 @@ public class ApiOaController  extends BaseController {
 
 					} else if (step.equals("3")) {
 						// 结案 - 案管中心
+						
+						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+						OaCase tmpModelCase = caseDao.get(id);
+						tmpModelCase.setMainLeaderCloseCaseOption(null);
+						caseDao.update(tmpModelCase);
+						//结束
+						
 						model.setCaseMgtCenterCloseCaseApproval(approve
 								.equals("pass") ? true : false);
 						model.setCaseMgtCenterCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
