@@ -234,11 +234,10 @@ public class ApiOaController  extends BaseController {
 					// ##################调查阶段######################
 					if (step.equals("1")) {
 						// 调查
-						model.setCaseSurveyEndDate(new Date());
+						
 						if (model.getAct().getTaskDefKey()
 								.equals("utAnjianDiaocha")) {
-							oaCaseService.mobileSaveStep(model,
-									approve.equals("pass") ? 1 : 0);
+							oaCaseService.mobileSaveStep(model,1);
 							jsonObject.put("msg", "success");
 							jsonObject.put("code", 0);
 							jsonObject.put("result", "success");
