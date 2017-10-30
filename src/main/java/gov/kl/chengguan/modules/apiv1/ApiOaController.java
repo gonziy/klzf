@@ -234,6 +234,7 @@ public class ApiOaController  extends BaseController {
 					// ##################调查阶段######################
 					if (step.equals("1")) {
 						// 调查
+						model.setCaseSurveyEndDate(new Date());
 						if (model.getAct().getTaskDefKey()
 								.equals("utAnjianDiaocha")) {
 							oaCaseService.mobileSaveStep(model,
