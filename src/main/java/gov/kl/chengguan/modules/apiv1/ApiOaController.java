@@ -248,6 +248,7 @@ public class ApiOaController  extends BaseController {
 
 						model.setAssigneePenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
+						model.setInstitutionPenalApproval(null);
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_CbrYj")) {
 							oaCaseService.mobileSaveStep(model, 1);
