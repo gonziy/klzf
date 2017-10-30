@@ -802,7 +802,7 @@ public class ApiOaController  extends BaseController {
 //				apiOaCase.setCasePenalStartDate(oaCase.getCasePenalStartDate());
 //				apiOaCase.setCasePenalEndDate(oaCase.getCasePenalEndDate());
 				apiOaCase.setCaseStage(oaCase.getCaseStage());
-//				apiOaCase.setAssigneeCloseCaseOption(oaCase.getAssigneeCloseCaseOption());
+				apiOaCase.setAssigneeCloseCaseOption(oaCase.getAssigneeCloseCaseOption());
 				apiOaCase.setInstitutionCloseCaseOption(oaCase.getInstitutionCloseCaseOption());
 //				apiOaCase.setInstitutionCloseCaseApproval(oaCase.getInstitutionCloseCaseApproval());
 				apiOaCase.setCaseMgtCenterCloseCaseOption(oaCase.getCaseMgtCenterCloseCaseOption());
