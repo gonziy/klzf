@@ -181,7 +181,7 @@ public class ApiOaController  extends BaseController {
 							jsonObject.put("remark", "this step has approved");
 						}
 
-					} else if (step.equals("3")) {
+					} else if (step.equals("4")) {
 						// 立案 - 分管领导
 						
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
@@ -208,7 +208,7 @@ public class ApiOaController  extends BaseController {
 							jsonObject.put("result", "failed");
 							jsonObject.put("remark", "this step has approved");
 						}
-					} else if (step.equals("4")) {
+					} else if (step.equals("5")) {
 						// 立案 - 主管领导
 						model.setMainLeaderRegApproval(approve.equals("pass") ? true
 								: false);
@@ -466,7 +466,7 @@ public class ApiOaController  extends BaseController {
 							jsonObject.put("result", "failed");
 							jsonObject.put("remark", "this step has approved");
 						}
-					} else if (step.equals("4")) {
+					} else if (step.equals("5")) {
 						// 结案-主管领导
 						model.setMainLeaderCloseCaseApproval(approve
 								.equals("pass") ? true : false);
