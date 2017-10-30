@@ -878,8 +878,8 @@ public class ApiOaController  extends BaseController {
 		java.util.List<ApiStep> list = new ArrayList<ApiStep>();
 		list.add(new ApiStep("立案", "承办人", "pass", oaCase.getCaseCheckResult()==null?"":oaCase.getCaseCheckResult(),"1,1"));
 		list.add(new ApiStep("立案", "承办机构",oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegApproval()==true?"pass":"reject", oaCase.getInstitutionRegOption()==null?"":oaCase.getInstitutionRegOption(),"1,2"));
-		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),"1,3"));
-		list.add(new ApiStep("立案", "主要领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),"1,4"));
+		list.add(new ApiStep("立案", "分管领导", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegApproval()==true?"pass":"reject", oaCase.getDeptLeaderRegOption()==null?"":oaCase.getDeptLeaderRegOption(),"1,4"));
+		list.add(new ApiStep("立案", "主要领导",  oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegApproval()==true?"pass":"reject", oaCase.getMainLeaderRegOption()==null?"":oaCase.getMainLeaderRegOption(),"1,5"));
 		list.add(new ApiStep("调查", "调查", oaCase.getCaseSurveyEndDate()==null?"":true==true?"pass":"reject", "","2,1"));
 		list.add(new ApiStep("处罚", "承办人", oaCase.getAssigneePenalOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneePenalOption()==null?"":oaCase.getAssigneePenalOption(),"3,1"));
 		list.add(new ApiStep("处罚", "承办机构", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalApproval()==true?"pass":"reject", oaCase.getInstitutionPenalOption()==null?"":oaCase.getInstitutionPenalOption(),"3,2"));
@@ -889,7 +889,7 @@ public class ApiOaController  extends BaseController {
 		list.add(new ApiStep("结案", "承办人", oaCase.getAssigneeCloseCaseOption()==null?"":true==true?"pass":"reject", oaCase.getAssigneeCloseCaseOption()==null?"":oaCase.getAssigneeCloseCaseOption(),"4,1"));
 		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption(),"4,2"));
 		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption(),"4,3"));
-		list.add(new ApiStep("结案", "主要领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),"4,4"));
+		list.add(new ApiStep("结案", "主要领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),"4,5"));
 		list.add(new ApiStep("结束", "已完成", "", "","5,1"));
 		return list;
 	}
