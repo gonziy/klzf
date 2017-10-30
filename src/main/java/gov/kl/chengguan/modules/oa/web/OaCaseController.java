@@ -25,6 +25,7 @@ import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
+import gov.kl.chengguan.modules.test.entity.Test;
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.service.OaCaseService;
@@ -51,6 +52,21 @@ public class OaCaseController extends BaseController {
 			oaCase = new OaCase();
 		}
 		return oaCase;
+	}
+	
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "documents")
+	public String getDocuments(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/oaCaseDocuments";
+		
+	}
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_lianshenpibiao")
+	public String getDocuments1(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_lianshenpibiao";
+		
 	}
 	
 	@RequiresPermissions("oa:oaCase:view")

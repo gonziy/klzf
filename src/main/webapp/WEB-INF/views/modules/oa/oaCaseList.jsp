@@ -36,12 +36,13 @@
 	
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
-		<tr><th>当事人</th><th>法人</th><th>案件说明</th><th>申请时间</th><th>立案时间</th><th>承办人</th><th>调查结束时间</th><th>行政处罚决定</th><th>结案状态</th><th>结案时间</th><shiro:hasPermission name="oa:oaCase:edit"><th>操作</th></shiro:hasPermission></tr>
+		<tr><th>标题</th><th>当事人</th><th>法人</th><th>案件说明</th><th>申请时间</th><th>立案时间</th><th>承办人</th><th>调查结束时间</th><th>行政处罚决定</th><th>结案状态</th><th>结案时间</th><shiro:hasPermission name="oa:oaCase:edit"><th>操作</th></shiro:hasPermission></tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="oaCase">
 			<tr>
-				<td><a href="${ctx}/oa/oaCase/form?id=${oaCase.id}">${oaCase.caseParties}</a></td>
+				<td><a href="${ctx}/oa/oaCase/form?id=${oaCase.id}">${oaCase.title}</a></td>
+				<td>${oaCase.caseParties}</td>
 				<td>${oaCase.caseLegalAgent}</td>
 				<td>${oaCase.getNormCaseDesc()}</td>
 				<td><fmt:formatDate value="${oaCase.caseRegStartDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
@@ -53,6 +54,7 @@
 				<td><fmt:formatDate value="${oaCase.caseSurveyEndDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>								
 				<shiro:hasPermission name="oa:oaCase:edit"><td>
     				<a href="${ctx}/oa/oaCase/form?id=${oaCase.id}">查询</a>
+    				<a href="${ctx}/oa/oaCase/documents?id=${oaCase.id}">文书打印</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

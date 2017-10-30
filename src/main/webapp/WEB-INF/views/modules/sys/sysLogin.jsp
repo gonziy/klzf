@@ -6,7 +6,10 @@
 	<title>${fns:getConfig('productName')} 登录</title>
 	<meta name="decorator" content="blank"/>
 	<style type="text/css">
-      html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
+	body{ background:url(../static/images/login_bg.jpg) no-repeat top center; position:relative;}
+	#loginbox{ position:absolute; left:50%; margin-left:150px; top:300px;}
+	.footer{ position:absolute; left:50%; margin-left:-150px; bottom:10px; color:#fff;}
+      html,body,table{width:100%;text-align:center; height:100%;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
       .form-signin{position:relative;text-align:left;width:300px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
         	-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,.05);box-shadow:0 1px 2px rgba(0,0,0,.05);}
       .form-signin .checkbox{margin-bottom:10px;color:#0663a2;} .form-signin .input-label{font-size:16px;line-height:23px;color:#999;}
@@ -46,27 +49,29 @@
 			<label id="loginError" class="error">${message}</label>
 		</div>
 	</div>
-	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>
-	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
-		<label class="input-label" for="username">登录名</label>
-		<input type="text" id="username" name="username" class="input-block-level required" value="${username}">
-		<label class="input-label" for="password">密码</label>
-		<input type="password" id="password" name="password" class="input-block-level required">
-		<%--<c:if test="${isValidateCodeLogin}"><div class="validateCode">
-			<label class="input-label mid" for="validateCode">验证码</label>
-			<sys:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
-		</div></c:if>
-		<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
-		<input class="btn btn-large btn-primary" type="submit" value="登 录"/>&nbsp;&nbsp;
-		<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
-		<div id="themeSwitch" class="dropdown" style="display:none">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>
-			<ul class="dropdown-menu">
-			  <c:forEach items="${fns:getDictList('theme')}" var="dict"><li><a href="#" onclick="location='${pageContext.request.contextPath}/theme/${dict.value}?url='+location.href">${dict.label}</a></li></c:forEach>
-			</ul>
-			<!--[if lte IE 6]><script type="text/javascript">$('#themeSwitch').hide();</script><![endif]-->
-		</div>
-	</form>
+	<!-- <h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>-->
+	<div id="loginbox">
+		<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
+			<label class="input-label" for="username">登录名</label>
+			<input type="text" id="username" name="username" class="input-block-level required" value="${username}">
+			<label class="input-label" for="password">密码</label>
+			<input type="password" id="password" name="password" class="input-block-level required">
+			<%--<c:if test="${isValidateCodeLogin}"><div class="validateCode">
+				<label class="input-label mid" for="validateCode">验证码</label>
+				<sys:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
+			</div></c:if>
+			<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
+			<input class="btn btn-large btn-primary" type="submit" value="登 录"/>&nbsp;&nbsp;
+			<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
+			<div id="themeSwitch" class="dropdown" style="display:none">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+				  <c:forEach items="${fns:getDictList('theme')}" var="dict"><li><a href="#" onclick="location='${pageContext.request.contextPath}/theme/${dict.value}?url='+location.href">${dict.label}</a></li></c:forEach>
+				</ul>
+				<!--[if lte IE 6]><script type="text/javascript">$('#themeSwitch').hide();</script><![endif]-->
+			</div>
+		</form>
+	</div>
 	<div class="footer">
 		Copyright &copy; ${fns:getConfig('copyrightYear')} <span>${fns:getConfig('productName')}</span> ${fns:getConfig('version')} 
 	</div>
