@@ -7,7 +7,7 @@
 	<meta name="decorator" content="blank"/>
 	<style type="text/css">
 	body{ background:url(../static/images/login_bg.jpg) no-repeat top center; position:relative;}
-	#loginbox{ position:absolute; left:50%; margin-left:150px; top:300px;}
+	#loginbox{ position:absolute; left:50%; margin-left:-180px; top:300px;}
 	.footer{ position:absolute; left:50%; margin-left:-150px; bottom:10px; color:#fff;}
       html,body,table{width:100%;text-align:center; height:100%;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
       .form-signin{position:relative;text-align:left;width:300px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;

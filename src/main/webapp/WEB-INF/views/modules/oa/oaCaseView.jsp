@@ -66,7 +66,7 @@
 				</tr>				
 				<tr>
 					<td class="tit">案件来源</td><td colspan="2">${oaCase.caseSource}</td>
-					<td class="tit">承办人</td><td colspan="2">${oaCase.assigneeIds}</td>
+					<td class="tit">承办人</td><td colspan="2">${oaCase.assigneeNames}</td>
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
