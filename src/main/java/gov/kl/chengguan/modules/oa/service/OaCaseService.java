@@ -398,6 +398,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			}
 		}
 		else if ("utLaShp_Cbjg".equals(taskDefKey)){
+			//立案 承办机构
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setDeptLeaderRegOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			oaCase.setCaseStage((iReturnState ==1) ? 1: 5);
@@ -407,6 +415,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utLaShp_Fgld".equals(taskDefKey)){
+			//立案 分管领导
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setMainLeaderRegOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderRegOption(oaCase);
@@ -415,6 +431,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utLaShp_Zgld".equals(taskDefKey)){
+			//立案 主要领导
 			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
@@ -443,6 +460,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		// 立案审批结束
 		//
 		else if ("utXzhChf_CbrYj".equals(taskDefKey)){
+			//处罚  承办人
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setInstitutionPenalOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(3);
 				// 只有不是拒绝的任务才能更新开始时间
@@ -459,6 +484,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			}
 		}
 		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
+			//处罚  承办机构
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setCaseMgtCenterPenalOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setInstitutionPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionPenalOption(oaCase);
@@ -467,6 +500,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
+			//处罚  案管中心
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setDeptLeaderPenalOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setCaseMgtCenterPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterPenalOption(oaCase);
@@ -475,6 +516,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utXzhChf_Fgld".equals(taskDefKey)){
+			//处罚  分管领导
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setMainLeaderPenalOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setDeptLeaderPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderPenalOption(oaCase);
@@ -483,6 +532,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
 		}	
 		else if ("utXzhChf_Zgld".equals(taskDefKey)){
+			//处罚  主要领导
 			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
@@ -498,6 +548,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		// 行政处罚审批结束
 		//
 		else if ("utJaShp_Chbr".equals(taskDefKey)){
+			//结案 承办人
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setInstitutionCloseCaseOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(4);
 				oaCase.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
@@ -512,6 +570,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			}
 		}
 		else if ("utJaShp_Cbjg".equals(taskDefKey)){
+			//结案 承办机构
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setCaseMgtCenterCloseCaseOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setInstitutionCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionCloseOption(oaCase);
@@ -520,6 +586,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
+			//结案 案管中心
+			
+			//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
+			OaCase tmpModelCase = caseDao.get(oaCase.getId());
+			tmpModelCase.setMainLeaderCloseCaseOption(null);
+			caseDao.update(tmpModelCase);
+			//结束
+			
 			oaCase.setCaseMgtCenterCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterCloseOption(oaCase);
@@ -528,6 +602,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utJaShp_Zgld".equals(taskDefKey)){
+			//结案 主要领导
 			oaCase.setMainLeaderCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState ==1) {
