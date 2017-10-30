@@ -4,24 +4,35 @@
 <head>
 	<title>案件管理</title>
 	<meta name="decorator" content="default"/>
+	<style>
+	.listimg{ width:150px; height:120px; margin-right:10px;}
+	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("#name").focus();
-			$("#inputForm").validate({
-				submitHandler: function(form){
-					loading('正在提交，请稍等...');
-					form.submit();
-				},
-				errorContainer: "#messageBox",
-				errorPlacement: function(error, element) {
-					$("#messageBox").text("输入有误，请先更正。");
-					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
-						error.appendTo(element.parent().parent());
-					} else {
-						error.insertAfter(element);
-					}
+			var imgs = "${oaCase.caseImages}";
+			var arrayimgs = imgs.split(";");
+			for(var i=0; i<arrayimgs.length;i++){
+				if(arrayimgs[i].length>0){
+					$("#fileimgs").append("<img class=\"listimg\" src=\""+arrayimgs[i]+"\" \/>");
 				}
-			});
+			}
+			
+			var vdos = "${oaCase.caseVideos}";
+			var arrayvdos = vdos.split(";");
+			for(var i=0; i<arrayvdos.length;i++){
+				if(arrayvdos[i].length>0){
+					$("#filevdos").append("<img class=\"listimg\" src=\""+arrayvdos[i]+"\" \/>");
+				}
+			}
+			
+			var docs = "${oaCase.caseDocuments}";
+			var arraydocs = docs.split(";");
+			for(var i=0; i<arraydocs.length;i++){
+				if(arraydocs[i].length>0){
+					$("#filedocs").append("<img class=\"listimg\" src=\""+arraydocs[i]+"\" \/>");
+				}
+			}
+			
 		});
 	</script>
 </head>
@@ -186,6 +197,15 @@
 					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
 					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>
 					<td class="tit">结案日期</td><td>${oaCase.caseCloseUpEndDate}</td>					
+				</tr>
+				<tr>
+					<td class="tit">文档</td><td colspan="5"><div id="filedocs"></div></td>				
+				</tr>
+				<tr>
+					<td class="tit">照片</td><td colspan="5"><div id="fileimgs"></div></td>				
+				</tr>
+				<tr>
+					<td class="tit">视频</td><td colspan="5"><div id="filevdos"></div></td>				
 				</tr>
 			</table>
 		</fieldset>

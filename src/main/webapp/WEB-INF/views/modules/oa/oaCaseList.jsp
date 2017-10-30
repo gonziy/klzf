@@ -23,7 +23,7 @@
 		<li class="active"><a href="${ctx}/oa/oaCase/">案件列表</a></li>
 		<li><a href="${ctx}/act/task/process">新建任务</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/list" method="post" class="breadcrumb form-search" style="display:none">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<label>按承办人查询：</label>

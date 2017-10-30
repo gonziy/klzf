@@ -4,6 +4,10 @@
 <head>
 	<title>案件管理</title>
 	<meta name="decorator" content="default"/>
+	<style>
+	.docs li { width:140px; height:140px; display:block; float:left; margin:10px; border:1px solid #ccc; text-align:center; font-size:14px; color:#333; line-height:20px; padding:80px 10px 10px 10px;}
+	.docs li a{width:140px; height:140px; display:block;}
+	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#name").focus();
@@ -34,10 +38,17 @@
 		<sys:message content="${message}"/>
 		<fieldset>
 			<legend>文书打印</legend>
-			<ul>
-				<li style=" width:140px; height:200px; display:block; float:left; margin:10px; border:1px solid #ccc; text-align:center; font-size:14px; color:#333; line-height:200px;">
-					<a style=" width:140px; height:200px; display:block;" href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">立案审批表</a>
-				</li>
+			<ul class="docs">
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">立案审批表</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令限期整改通知书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令停止违法行为通知书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">行政处罚审批表</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">陈述、申辩（听证）权利告知书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令限期拆除决定书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">行政处罚决定书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">拆除催告通知书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">拆除公告通知书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">结案登记表</a></li>
 			</ul>
 		</fieldset>
 		<div class="form-actions">
