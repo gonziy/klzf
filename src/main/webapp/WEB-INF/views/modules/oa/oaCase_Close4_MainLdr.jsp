@@ -40,7 +40,7 @@
 		<form:hidden id="flag" path="act.flag"/>
 		<sys:message content="${message}"/>
 		<fieldset>
-			<legend>主管领导结案审批：${oaCase.title}</legend>
+			<legend>主要领导结案审批：${oaCase.title}</legend>
 			<table class="table-form">
 				<!-- 案件简报 -->
 				<tr><td class="tit" colspan=6><h4>案情</h4></td></tr>	
@@ -54,7 +54,7 @@
 				</tr>							
 				<tr>
 					<td class="tit">案件来源</td><td colspan="2">${oaCase.caseSource}</td>
-					<td class="tit">承办人</td><td colspan="2">${oaCase.assigneeIds}</td>
+					<td class="tit">承办人</td><td colspan="2">${oaCase.assigneeNames}</td>
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
@@ -107,7 +107,7 @@
 				<!--  -->
 				<tr><td class="tit" colspan=6><h4>填写</h4></td></tr>	
 				<tr>
-					<td class="tit">主管领导意见</td>
+					<td class="tit">主要领导意见</td>
 					<td colspan="5">
 						<form:textarea path="mainLeaderCloseCaseOption" class="required" rows="3" maxlength="300"/>
 					</td>	

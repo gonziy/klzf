@@ -22,6 +22,26 @@
 					}
 				}
 			});
+			
+			var url = "${ctx}/../apiv1/user/info/list";
+			$.ajax({
+				type : "get",
+				url : url,
+				async : false,
+				success : function(result) {
+					var resviewersData = "[";
+					for (var i = 0; i < result.data.length; i++) {
+						resviewersData += "{\"id\":\"" + result.data[i].id + "\",\"text\":\"" + result.data[i].name + "\"},";
+					}
+					resviewersData = resviewersData.substring(0,resviewersData.length-1);
+					resviewersData += "]";
+					var resviewersJsonData = eval('(' + resviewersData+ ')');
+					$("#assigneeIds").select2({
+						data : resviewersJsonData,
+						multiple : true
+					});
+				}
+			});
 		});
 	</script>
 </head>
@@ -88,7 +108,8 @@
 				<tr>																			
 					<td class="tit">承办人：</td>
 					<td colspan="2">
-						<form:input path="assigneeIds" class="required" maxlength="150"/>
+						<form:select path="assigneeIds" class="form-control" multiple="multiple" style="width:300px; border:1 px solid #ccc;">
+						</form:select>
 					</td>
 				</tr>
 				<tr>

@@ -845,8 +845,11 @@ public class ApiOaController  extends BaseController {
 		for(int i = 0; i < steps.size();i++){
 			if(steps.get(i).getStatus().equals("pass")){
 				txtString = steps.get(i+1).getStep() + "," + steps.get(i+1).getStage() + "," + steps.get(i+1).getName();
-			}else {
+			}else if(steps.get(i).getStatus().equals("reject")){
 				txtString = steps.get(i-1).getStep() + "," + steps.get(i-1).getStage() + "," + steps.get(i-1).getName();
+				break;
+			}else if(steps.get(i).getStatus().isEmpty()){
+				txtString = steps.get(i).getStep() + "," + steps.get(i).getStage() + "," + steps.get(i).getName();
 				break;
 			}
 			

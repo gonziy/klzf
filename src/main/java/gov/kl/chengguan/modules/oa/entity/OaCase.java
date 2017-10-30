@@ -9,13 +9,17 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import gov.kl.chengguan.common.persistence.ActEntity;
+import gov.kl.chengguan.common.utils.SpringContextHolder;
+import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.entity.User;
 
 /*
  * 公文流转实体类
  */
 public class OaCase extends ActEntity<OaCase> {
+	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
 	/**
 	 * 版本id
 	 */
@@ -50,6 +54,26 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseSource;
 	// 案件承办人,可以多个，用;隔开
 	private String assigneeIds;
+	private String assigneeNames;
+	public String getAssigneeNames() {
+		String strAssigneeNames = "";
+		if(getAssigneeIds()!=null && !getAssigneeIds().isEmpty()){
+			String[] assigneeIdsList = getAssigneeIds().split(";");
+			if(assigneeIdsList.length>0){
+				for (String id : assigneeIdsList) {
+					User user = userDao.get(id);
+					if(user!=null){
+						strAssigneeNames += user.getName() + ";";
+					}
+				}
+				if(strAssigneeNames.endsWith(";")){
+					strAssigneeNames = strAssigneeNames.substring(0,strAssigneeNames.length()-1);
+				}
+			}
+		}
+		return strAssigneeNames;
+	}
+
 	// 案件的规范描述：[某行为] 违反了 [某条例]
 	private String normCaseDescPart1;
 	private String normCaseDescPart2;	

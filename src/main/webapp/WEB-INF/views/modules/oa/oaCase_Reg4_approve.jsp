@@ -61,7 +61,11 @@
 				<tr>
 					<td class="tit">案情简述</td>
 					<td colspan="5">${oaCase.caseDescription}</td>
-				</tr>	
+				</tr>						
+				<tr>
+					<td class="tit">案件来源</td><td colspan="2">${oaCase.caseSource}</td>
+					<td class="tit">承办人</td><td colspan="2">${oaCase.assigneeNames}</td>
+				</tr>
 				<tr>
 					<td class="tit">案件申报日期</td>
 					<td colspan="5"><fmt:formatDate value="${oaCase.caseRegStartDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>	

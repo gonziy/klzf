@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sun.tools.classfile.StackMap_attribute.stack_map_frame;
+
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.sys.entity.User;
@@ -226,6 +228,21 @@ public class OaCaseController extends BaseController {
 	@RequiresPermissions("oa:oaCase:edit")
 	@RequestMapping(value = "saveCase")
 	public String saveCase(OaCase oaCase, Model model) {
+		
+		String ut = oaCase.getAct().getTaskDefKey();
+		if(ut.equals("utAnjianLuru")){
+			if(oaCase.getAssigneeIds() != null){
+				String tmpAssigneeIds = oaCase.getAssigneeIds().replace(",",";");
+				oaCase.setAssigneeIds(tmpAssigneeIds);
+				if(tmpAssigneeIds.split(";").length!=2){
+					addMessage(model, "请选择两个承办人");
+					return form(oaCase, model);
+				}
+			}else{
+				addMessage(model, "请选择两个承办人");
+				return form(oaCase, model);
+			}
+		}
 
 		if (StringUtils.isBlank(oaCase.getAct().getFlag())) {
 			if("yes".equals(oaCase.getAct().getFlag()))
@@ -233,7 +250,7 @@ public class OaCaseController extends BaseController {
 			else
 				oaCase.getAct().setComment("failed");
 				//|| StringUtils.isBlank(oaCase.getAct().getComment())){
-			addMessage(model, "请填写审核意见。");
+			addMessage(model, "请填写审核意见");
 			return form(oaCase, model);
 		}
 		oaCaseService.saveStep(oaCase);

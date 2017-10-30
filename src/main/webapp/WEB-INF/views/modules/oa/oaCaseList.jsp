@@ -47,7 +47,7 @@
 				<td>${oaCase.getNormCaseDesc()}</td>
 				<td><fmt:formatDate value="${oaCase.caseRegStartDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td><fmt:formatDate value="${oaCase.caseRegEndDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-				<td>${oaCase.assigneeIds}</td>
+				<td>${oaCase.assigneeNames}</td>
 				<td><fmt:formatDate value="${oaCase.caseSurveyEndDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>${oaCase.getNormAssigneePenalOpt()}</td>	
 				<td>结案状态</td>

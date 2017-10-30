@@ -57,7 +57,7 @@
 				</tr>										
 				<tr>
 					<td class="tit">案件来源</td><td>${oaCase.caseSource}</td>
-					<td class="tit">承办人</td><td>${oaCase.assigneeIds}</td>
+					<td class="tit">承办人</td><td>${oaCase.assigneeNames}</td>
 				</tr>
 				<tr>
 					<td class="tit">案情</td>
@@ -100,10 +100,10 @@
 				</c:if>
 			</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
-		</div>
+		</div><!-- 
 		<c:if test="${not empty oaCase.id}">
 			<act:histoicFlow procInsId="${oaCase.act.procInsId}" />
-		</c:if>
+		</c:if>-->
 	</form:form>
 </body>
 </html>
