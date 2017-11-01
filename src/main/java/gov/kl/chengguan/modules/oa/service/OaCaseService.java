@@ -39,6 +39,7 @@ import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaDoc;
 import gov.kl.chengguan.modules.sys.interceptor.MobileInterceptor;
+import gov.kl.chengguan.modules.sys.utils.UserUtils;
 /**
  * OaCaseService
  * @author
@@ -185,6 +186,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	@Transactional(readOnly = false)
 	public void mobileSaveStep(OaCase oaCase, int iReturnState) 
 	{
+		/*
+		 * 1030更新数据库后，需要设置oaCase相应字段，在此提交时完成更新
+		 */
 		oaCase.getAct().setComment(iReturnState ==1?"[同意] ":"[驳回] ");
 		oaCase.preUpdate();
 		
@@ -360,6 +364,12 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		oaCase.preUpdate();
 		
 		/*
+		 * 1030 更新数据，增加对操作人和操作时间的处理
+		 * 可以修改此处的getId，记录人员的id或者name
+		 */
+		String currentUser = UserUtils.getUser().getId();
+		
+		/*
 		 * 获取审批返回值
 		 * 0 ：驳回
 		 * 1：通过审批
@@ -401,6 +411,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utAnjianLuru".equals(taskDefKey)){
 			if(iReturnState == 1) {
+				oaCase.setLaRecAssignee(currentUser);
+				oaCase.setLaRecDate(Calendar.getInstance().getTime());
 				dao.updateCaseRecord(oaCase);
 				// 提交流程任务
 				vars.put("caseAssigneeIds", oaCase.getAssigneeIds());			
@@ -411,6 +423,10 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			oaCase.setCaseStage((iReturnState ==1) ? 1: 5);
+			
+			oaCase.setInstitutionRegAssignee(currentUser);
+			oaCase.setInstitutionRegDate(Calendar.getInstance().getTime());
+			
 			dao.updateInstitutionRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regInstitutionPass", iReturnState);
@@ -419,6 +435,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		else if ("utLaShp_Fgld".equals(taskDefKey)){
 			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			
+			oaCase.setDeptLeaderRegAssignee(currentUser);
+			oaCase.setDeptLeaderRegDate(Calendar.getInstance().getTime());
 			dao.updateDeptLeaderRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regDeptLeaderPass", iReturnState);
@@ -427,6 +446,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		else if ("utLaShp_Zgld".equals(taskDefKey)){
 			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			oaCase.setMainLeaderRegAssignee(currentUser);
 			if(iReturnState == 1) {
 				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
 				dao.updateMainLeaderRegOption1(oaCase);		
@@ -456,6 +476,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(3);
 				// 只有不是拒绝的任务才能更新开始时间
+				oaCase.setPenalAssignee(currentUser);
 				oaCase.setCasePenalStartDate(Calendar.getInstance().getTime());
 				if(oaCase.getRejectFlag()) {
 					// 是被驳回的流程，但作为基本的流程，除了不干，只能让iReturnState=1...
@@ -469,6 +490,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			}
 		}
 		else if ("utXzhChf_Cbjg".equals(taskDefKey)){
+			oaCase.setInstitutionPenalAssignee(currentUser);
+			oaCase.setInstitutionPenalDate(Calendar.getInstance().getTime());
 			oaCase.setInstitutionPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionPenalOption(oaCase);
@@ -477,6 +500,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utXzhChf_AjGlZhx".equals(taskDefKey)){
+			oaCase.setCaseMgtCenterPenalAssignee(currentUser);
+			oaCase.setCaseMgtCenterPenalDate(Calendar.getInstance().getTime());
+			
 			oaCase.setCaseMgtCenterPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterPenalOption(oaCase);
@@ -485,6 +511,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utXzhChf_Fgld".equals(taskDefKey)){
+			oaCase.setDeptLeaderPenalAssignee(currentUser);
+			oaCase.setDeptLeaderPenalDate(Calendar.getInstance().getTime());
+			
 			oaCase.setDeptLeaderPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderPenalOption(oaCase);
@@ -493,6 +522,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
 		}	
 		else if ("utXzhChf_Zgld".equals(taskDefKey)){
+			oaCase.setMainLeaderPenalAssignee(currentUser);
 			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
@@ -510,6 +540,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		else if ("utJaShp_Chbr".equals(taskDefKey)){
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(4);
+				oaCase.setCloseUpAssignee(currentUser);
 				oaCase.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
 				if(oaCase.getRejectFlag()){
 					oaCase.setRejectFlag((iReturnState ==1)?false: true);
@@ -522,6 +553,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			}
 		}
 		else if ("utJaShp_Cbjg".equals(taskDefKey)){
+			oaCase.setInstitutionCloseAssignee(currentUser);
+			oaCase.setInstitutionCloseDate(Calendar.getInstance().getTime());
+			
 			oaCase.setInstitutionCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionCloseOption(oaCase);
@@ -530,6 +564,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utJaShp_AjGlZhx".equals(taskDefKey)){
+			oaCase.setCaseMgtCenterCloseAssignee(currentUser);
+			oaCase.setCaseMgtCenterCloseDate(Calendar.getInstance().getTime());
+			
 			oaCase.setCaseMgtCenterCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterCloseOption(oaCase);
@@ -538,6 +575,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utJaShp_Zgld".equals(taskDefKey)){
+			oaCase.setMainLeaderCloseAssignee(currentUser);
+			
 			oaCase.setMainLeaderCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState ==1) {

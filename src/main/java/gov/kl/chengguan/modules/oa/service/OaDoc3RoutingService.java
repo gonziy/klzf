@@ -111,6 +111,32 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		return results;
 	}
 	
+	/*
+	 * 手机启动公文传阅流程
+	 */
+	@Transactional(readOnly = false)
+	public void mobileSave(String userId,OaDoc3 oaDoc3) {
+		// 申请发起
+		Map<String, Object> vars = Maps.newHashMap();
+		if (StringUtils.isBlank(oaDoc3.getId())){
+			oaDoc3.preInsert();
+			dao.insert(oaDoc3);
+			
+			// 启动流程
+			vars.put("applyer", userId);
+			actTaskService.startProcess(ActUtils.PD_DOC3_ROUTING[0], ActUtils.PD_DOC3_ROUTING[1], 
+					oaDoc3.getId(), oaDoc3.getDocTitle(), vars);
+		} 
+		else{
+			oaDoc3.preUpdate();
+			dao.update(oaDoc3);
+			oaDoc3.getAct().setComment(("yes".equals(oaDoc3.getAct().getFlag())?"[重申] ":"[销毁] ")+oaDoc3.getAct().getComment());
+			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");
+			actTaskService.complete(oaDoc3.getAct().getTaskId(), oaDoc3.getAct().getProcInsId(), 
+					oaDoc3.getAct().getComment(), oaDoc3.getDocTitle(), vars);
+		}
+	}
+	
 	/**
 	 * 审核新增或编辑
 	 * @param oaDoc3
@@ -134,6 +160,65 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			actTaskService.complete(oaDoc3.getAct().getTaskId(), oaDoc3.getAct().getProcInsId(), 
 					oaDoc3.getAct().getComment(), oaDoc3.getDocTitle(), vars);
 		}
+	}
+
+	/**
+	 * 审核审批保存
+	 * @param oaDoc3
+	 */
+	@Transactional(readOnly = false)
+	public void mobileSaveStep(OaDoc3 oaDoc3, int iReturnState) {		
+		// 设置意见
+		oaDoc3.getAct().setComment(iReturnState ==1?"[同意] ":"[驳回] ");
+		oaDoc3.preUpdate();
+
+		
+		// 对不同环节的业务逻辑进行操作
+		String taskDefKey = oaDoc3.getAct().getTaskDefKey();
+
+		Map<String, Object> vars = Maps.newHashMap();
+		// 审核环节
+		if ("utOfficeHeaderApprove".equals(taskDefKey)){
+			oaDoc3.setOfficeHeaderApproveDate(Calendar.getInstance().getTime());
+			oaDoc3.setDRStage("1");
+			oaDoc3.setOfficeHeaderApproval((iReturnState ==1)?true : false);
+			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
+			
+			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");			
+		}
+		else if ("utLeaderApprove".equals(taskDefKey)){
+			oaDoc3.setLeaderApproveDate(Calendar.getInstance().getTime());
+			oaDoc3.setDRStage("2");
+			oaDoc3Dao.updateLeaderApproval(oaDoc3);
+		}
+		else if ("utInformApplyer".equals(taskDefKey)){
+			// 
+		}
+		else if ("utOfficeHeaderDispatch".equals(taskDefKey)){
+			oaDoc3.setDRStage("3");
+			String[] ss = oaDoc3.getReviewersIDs1().trim().split(";");
+			List<String> reviewers = new ArrayList<String>();
+			for(String s : ss)
+			{
+				reviewers.add(s.trim());				
+			}
+			vars.put("approvers", reviewers);
+			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
+		}
+		else if ("utBrowseDoc".equals(taskDefKey)){ //11
+			// stage 4
+		}
+		else if ("end_event".equals(taskDefKey)){
+			// 这个语句没有执行，如果不行就只能使用空任务
+//			oaDoc3.setDRStage("5");
+//			oaDoc3Dao.updateDrStage(oaDoc3);
+		}
+		else{
+			return;
+		}
+		
+		// 提交流程任务
+		actTaskService.complete(oaDoc3.getAct().getTaskId(), oaDoc3.getAct().getProcInsId(), oaDoc3.getAct().getComment(), vars);
 	}
 	
 	/**
@@ -178,12 +263,13 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
 		}
-		else if ("utBrowseDoc".equals(taskDefKey)){
+		else if ("utBrowseDoc".equals(taskDefKey)){ //11
 			// stage 4
 		}
 		else if ("end_event".equals(taskDefKey)){
-			oaDoc3.setDRStage("5");
-			oaDoc3Dao.updateDrStage(oaDoc3);
+			// 这个语句没有执行，如果不行就只能使用空任务
+//			oaDoc3.setDRStage("5");
+//			oaDoc3Dao.updateDrStage(oaDoc3);
 		}
 		else{
 			return;

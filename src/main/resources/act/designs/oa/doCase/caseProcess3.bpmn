@@ -14,7 +14,7 @@
     <sequenceFlow id="flow3" sourceRef="exclusivegateway1" targetRef="utAnjianLuru">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${regCheckPass==1}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="utLaShp_Cbjg" name="承办机构立案审批" activiti:assignee="${applyer}">
+    <userTask id="utLaShp_Cbjg" name="承办机构立案审批">
       <extensionElements>
         <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseRegInstitutionApproveCreateListener"></activiti:taskListener>
       </extensionElements>
@@ -22,19 +22,31 @@
     <sequenceFlow id="flow4" sourceRef="utAnjianLuru" targetRef="utLaShp_Cbjg"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow5" sourceRef="utLaShp_Cbjg" targetRef="exclusivegateway2"></sequenceFlow>
-    <userTask id="utLaShp_Fgld" name="分管领导立案审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utLaShp_Fgld" name="分管领导立案审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseDeptLdrApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow6" sourceRef="exclusivegateway2" targetRef="utLaShp_Fgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${regInstitutionPass==1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow7" sourceRef="utLaShp_Fgld" targetRef="exclusivegateway3"></sequenceFlow>
-    <userTask id="utLaShp_Zgld" name="主管领导立案审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utLaShp_Zgld" name="主管领导立案审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseMainLdrApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow8" sourceRef="exclusivegateway3" targetRef="utLaShp_Zgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${regDeptLeaderPass==1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway4" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow9" sourceRef="utLaShp_Zgld" targetRef="exclusivegateway4"></sequenceFlow>
-    <userTask id="utAnjianDiaocha" name="案件调查" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utAnjianDiaocha" name="案件调查">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseAssigneeOpCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow10" sourceRef="exclusivegateway4" targetRef="utAnjianDiaocha">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${regMainLeaderPass==1}]]></conditionExpression>
     </sequenceFlow>
@@ -47,24 +59,44 @@
     <sequenceFlow id="flow13" sourceRef="exclusivegateway4" targetRef="utLaShp_Fgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${regMainLeaderPass==0}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="utXzhChf_CbrYj" name="承办人处罚意见提报" activiti:assignee="${applyer}"></userTask>
-    <userTask id="utXzhChf_Cbjg" name="承办机构处罚审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utXzhChf_CbrYj" name="承办人处罚意见提报">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseAssigneeOpCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="utXzhChf_Cbjg" name="承办机构处罚审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseInstitutionApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow18" sourceRef="utXzhChf_CbrYj" targetRef="utXzhChf_Cbjg"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway7" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow19" sourceRef="utXzhChf_Cbjg" targetRef="exclusivegateway7"></sequenceFlow>
-    <userTask id="utXzhChf_AjGlZhx" name="案件管理中心处罚审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utXzhChf_AjGlZhx" name="案件管理中心处罚审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseMgtCenterApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow20" sourceRef="exclusivegateway7" targetRef="utXzhChf_AjGlZhx">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${penalInstitutionPass==1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway8" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow21" sourceRef="utXzhChf_AjGlZhx" targetRef="exclusivegateway8"></sequenceFlow>
-    <userTask id="utXzhChf_Fgld" name="分管领导处罚审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utXzhChf_Fgld" name="分管领导处罚审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseDeptLdrApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow22" sourceRef="exclusivegateway8" targetRef="utXzhChf_Fgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${penalMgtCenterPass==1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway9" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow23" sourceRef="utXzhChf_Fgld" targetRef="exclusivegateway9"></sequenceFlow>
-    <userTask id="utXzhChf_Zgld" name="主管领导处罚审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utXzhChf_Zgld" name="主管领导处罚审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseMainLdrApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow24" sourceRef="exclusivegateway9" targetRef="utXzhChf_Zgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${penalDeptLeaderPass==1}]]></conditionExpression>
     </sequenceFlow>
@@ -82,21 +114,37 @@
     <sequenceFlow id="flow29" sourceRef="exclusivegateway10" targetRef="utXzhChf_Fgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${penalMainLeaderPass==0}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="utJaShp_Chbr" name="承办人结案签字" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utJaShp_Chbr" name="承办人结案签字">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseAssigneeOpCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow30" sourceRef="exclusivegateway10" targetRef="utJaShp_Chbr">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${penalMainLeaderPass==1}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="utJaShp_Cbjg" name="承办机构结案审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utJaShp_Cbjg" name="承办机构结案审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseInstitutionApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow31" sourceRef="utJaShp_Chbr" targetRef="utJaShp_Cbjg"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway11" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow32" sourceRef="utJaShp_Cbjg" targetRef="exclusivegateway11"></sequenceFlow>
-    <userTask id="utJaShp_AjGlZhx" name="案件管理中心结案审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utJaShp_AjGlZhx" name="案件管理中心结案审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseMgtCenterApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow33" sourceRef="exclusivegateway11" targetRef="utJaShp_AjGlZhx">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${closeInstitutionPass==1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway12" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow34" sourceRef="utJaShp_AjGlZhx" targetRef="exclusivegateway12"></sequenceFlow>
-    <userTask id="utJaShp_Zgld" name="主管领导结案审批" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utJaShp_Zgld" name="主管领导结案审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.CaseMainLdrApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow35" sourceRef="exclusivegateway12" targetRef="utJaShp_Zgld">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${closeMgtCenterPass==1}]]></conditionExpression>
     </sequenceFlow>

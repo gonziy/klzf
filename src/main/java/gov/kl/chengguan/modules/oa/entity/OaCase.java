@@ -144,6 +144,34 @@ public class OaCase extends ActEntity<OaCase> {
 	 */
 	private boolean rejectFlag;
 	
+	/* 
+	 * 1030添加字段
+	 */
+	private String LaRecAssignee;
+	private String institutionRegAssignee;
+	private String deptLeaderRegAssignee;
+	private String mainLeaderRegAssignee;
+	private String penalAssignee;
+	private String institutionPenalAssignee;
+	private String caseMgtCenterPenalAssignee;
+	private String deptLeaderPenalAssignee;
+	private String mainLeaderPenalAssignee;
+	private String closeUpAssignee;
+	private String institutionCloseAssignee;
+	private String caseMgtCenterCloseAssignee;
+	private String mainLeaderCloseAssignee;
+
+	private Date LaRecDate;
+	private Date institutionRegDate;
+	private Date deptLeaderRegDate;
+	private Date institutionPenalDate;
+	private Date caseMgtCenterPenalDate;
+	private Date deptLeaderPenalDate;
+	private Date institutionCloseDate;
+	private Date caseMgtCenterCloseDate;
+	/*
+	 * 
+	 */
 	
 	// 与Case实例相关的流程定义，
 	// 所在的流程实例、所在任务，其中的流程变量，
@@ -159,7 +187,6 @@ public class OaCase extends ActEntity<OaCase> {
 	// 历史的流程实例
 	private HistoricProcessInstance historicProcessInstance;
 
-	
 	/*
 	 * 查询时使用的变量列表
 	 */
@@ -761,6 +788,179 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setRejectFlag(boolean rejectFlag) {
 		this.rejectFlag = rejectFlag;
 	}	
+	
+
+	/*
+	 * 1030添加字段
+	 */
+	
+	public String getLaRecAssignee() {
+		return LaRecAssignee;
+	}
+
+	public void setLaRecAssignee(String laRecAssignee) {
+		LaRecAssignee = laRecAssignee;
+	}
+
+	public String getInstitutionRegAssignee() {
+		return institutionRegAssignee;
+	}
+
+	public void setInstitutionRegAssignee(String institutionRegAssignee) {
+		this.institutionRegAssignee = institutionRegAssignee;
+	}
+
+	public String getDeptLeaderRegAssignee() {
+		return deptLeaderRegAssignee;
+	}
+
+	public void setDeptLeaderRegAssignee(String deptLeaderRegAssignee) {
+		this.deptLeaderRegAssignee = deptLeaderRegAssignee;
+	}
+
+	public String getMainLeaderRegAssignee() {
+		return mainLeaderRegAssignee;
+	}
+
+	public void setMainLeaderRegAssignee(String mainLeaderRegAssignee) {
+		this.mainLeaderRegAssignee = mainLeaderRegAssignee;
+	}
+
+	public String getPenalAssignee() {
+		return penalAssignee;
+	}
+
+	public void setPenalAssignee(String penalAssignee) {
+		this.penalAssignee = penalAssignee;
+	}
+
+	public String getInstitutionPenalAssignee() {
+		return institutionPenalAssignee;
+	}
+
+	public void setInstitutionPenalAssignee(String institutionPenalAssignee) {
+		this.institutionPenalAssignee = institutionPenalAssignee;
+	}
+
+	public String getCaseMgtCenterPenalAssignee() {
+		return caseMgtCenterPenalAssignee;
+	}
+
+	public void setCaseMgtCenterPenalAssignee(String caseMgtCenterPenalAssignee) {
+		this.caseMgtCenterPenalAssignee = caseMgtCenterPenalAssignee;
+	}
+
+	public String getDeptLeaderPenalAssignee() {
+		return deptLeaderPenalAssignee;
+	}
+
+	public void setDeptLeaderPenalAssignee(String deptLeaderPenalAssignee) {
+		this.deptLeaderPenalAssignee = deptLeaderPenalAssignee;
+	}
+
+	public String getMainLeaderPenalAssignee() {
+		return mainLeaderPenalAssignee;
+	}
+
+	public void setMainLeaderPenalAssignee(String mainLeaderPenalAssignee) {
+		this.mainLeaderPenalAssignee = mainLeaderPenalAssignee;
+	}
+
+	public String getCloseUpAssignee() {
+		return closeUpAssignee;
+	}
+
+	public void setCloseUpAssignee(String closeUpAssignee) {
+		this.closeUpAssignee = closeUpAssignee;
+	}
+
+	public String getInstitutionCloseAssignee() {
+		return institutionCloseAssignee;
+	}
+
+	public void setInstitutionCloseAssignee(String institutionCloseAssignee) {
+		this.institutionCloseAssignee = institutionCloseAssignee;
+	}
+
+	public String getCaseMgtCenterCloseAssignee() {
+		return caseMgtCenterCloseAssignee;
+	}
+
+	public void setCaseMgtCenterCloseAssignee(String caseMgtCenterCloseAssignee) {
+		this.caseMgtCenterCloseAssignee = caseMgtCenterCloseAssignee;
+	}
+
+	public String getMainLeaderCloseAssignee() {
+		return mainLeaderCloseAssignee;
+	}
+
+	public void setMainLeaderCloseAssignee(String mainLeaderCloseAssignee) {
+		this.mainLeaderCloseAssignee = mainLeaderCloseAssignee;
+	}
+
+	public Date getLaRecDate() {
+		return LaRecDate;
+	}
+
+	public void setLaRecDate(Date laRecDate) {
+		LaRecDate = laRecDate;
+	}
+
+	public Date getInstitutionRegDate() {
+		return institutionRegDate;
+	}
+
+	public void setInstitutionRegDate(Date institutionRegDate) {
+		this.institutionRegDate = institutionRegDate;
+	}
+
+	public Date getDeptLeaderRegDate() {
+		return deptLeaderRegDate;
+	}
+
+	public void setDeptLeaderRegDate(Date deptLeaderRegDate) {
+		this.deptLeaderRegDate = deptLeaderRegDate;
+	}
+
+	public Date getInstitutionPenalDate() {
+		return institutionPenalDate;
+	}
+
+	public void setInstitutionPenalDate(Date institutionPenalDate) {
+		this.institutionPenalDate = institutionPenalDate;
+	}
+
+	public Date getCaseMgtCenterPenalDate() {
+		return caseMgtCenterPenalDate;
+	}
+
+	public void setCaseMgtCenterPenalDate(Date caseMgtCenterPenalDate) {
+		this.caseMgtCenterPenalDate = caseMgtCenterPenalDate;
+	}
+
+	public Date getDeptLeaderPenalDate() {
+		return deptLeaderPenalDate;
+	}
+
+	public void setDeptLeaderPenalDate(Date deptLeaderPenalDate) {
+		this.deptLeaderPenalDate = deptLeaderPenalDate;
+	}
+
+	public Date getInstitutionCloseDate() {
+		return institutionCloseDate;
+	}
+
+	public void setInstitutionCloseDate(Date institutionCloseDate) {
+		this.institutionCloseDate = institutionCloseDate;
+	}
+
+	public Date getCaseMgtCenterCloseDate() {
+		return caseMgtCenterCloseDate;
+	}
+
+	public void setCaseMgtCenterCloseDate(Date caseMgtCenterCloseDate) {
+		this.caseMgtCenterCloseDate = caseMgtCenterCloseDate;
+	}
 	
 	@Override
 	public String toString() {
