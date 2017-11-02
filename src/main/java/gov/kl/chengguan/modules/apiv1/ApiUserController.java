@@ -2,12 +2,17 @@ package gov.kl.chengguan.modules.apiv1;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import oracle.sql.DATE;
 
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.util.ByteSource;
@@ -31,6 +36,7 @@ import gov.kl.chengguan.modules.sys.entity.BaseUser;
 import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.security.SystemAuthorizingRealm.Principal;
+import gov.kl.chengguan.modules.sys.service.PushService;
 import gov.kl.chengguan.modules.sys.service.SystemService;
 import gov.kl.chengguan.modules.sys.service.UserService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
@@ -44,7 +50,7 @@ public class ApiUserController  extends BaseController {
 	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
 	private static BaseUserDao baseUserDao = SpringContextHolder.getBean(BaseUserDao.class);
 	
-	@RequestMapping(value = {"user/info/test"})
+	@RequestMapping(value = {"user/device/push"})
 	public void test(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
@@ -52,14 +58,27 @@ public class ApiUserController  extends BaseController {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
-		UserService userService = new UserService();
-		List<BaseUser> users = new ArrayList<BaseUser>();
-		//users = userService.getAssigneeUsers("0dc9ddf2fdf44f5295dd65665c380247");
-		users = userService.getInstitutionUser("0dc9ddf2fdf44f5295dd65665c380247", "队长");
-		for (BaseUser user : users) {
-			System.out.println(user.getName());
-		}
+
+		String user_id = request.getParameter("id");
+		PushService pushService = new PushService();
+		pushService.PushToUser(user_id, "你好，百度推送" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 		
+
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		jsonObject.put("remark", "");
+		jsonObject.put("result", "success");
+		jsonObject.put("msg", "success");
+		jsonObject.put("code", 0);
+		
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	@RequestMapping(value = {"user/info/login"})
 	public void login(HttpServletRequest request, HttpServletResponse response) {
