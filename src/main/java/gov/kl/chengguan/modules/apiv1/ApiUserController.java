@@ -325,7 +325,7 @@ public class ApiUserController  extends BaseController {
 	}
 	
 	@RequestMapping(value = {"user/info/updatebaidupush"})
-	public void setUserPassword(HttpServletRequest request, HttpServletResponse response) {
+	public void setBaiduPush(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -335,9 +335,9 @@ public class ApiUserController  extends BaseController {
 		String userid = request.getParameter("userid");
 		String baiduId = request.getParameter("baiduid");
 		
-		if(userid==null || userid.isEmpty() || baiduId==null || baiduId.isEmpty() )
+		if(userid==null || userid.isEmpty())
 		{
-			jsonObject.put("msg", "missing url, baiduId or userid is null");
+			jsonObject.put("msg", "missing url, userid is null");
 			jsonObject.put("code", 41010);
 			PrintWriter out;
 			try {
@@ -350,8 +350,6 @@ public class ApiUserController  extends BaseController {
 			}
 			return;
 		}
-
-		
 		
 		try {
 			User user = new User();
@@ -386,6 +384,7 @@ public class ApiUserController  extends BaseController {
 			
 			}
 		}
+		
 	}
 	
 	public class ApiUser
