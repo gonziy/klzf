@@ -61,7 +61,7 @@ public class ApiUserController  extends BaseController {
 
 		String user_id = request.getParameter("id");
 		PushService pushService = new PushService();
-		pushService.PushToUser(user_id, "你好，百度推送" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+		pushService.PushToUser(user_id, "你好，孙冰:百度推送" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 		
 
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
