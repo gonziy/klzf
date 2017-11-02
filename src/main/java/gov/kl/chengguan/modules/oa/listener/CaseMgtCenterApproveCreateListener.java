@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import gov.kl.chengguan.modules.oa.utils.WorkDayUtil;
 import gov.kl.chengguan.modules.sys.entity.BaseUser;
+import gov.kl.chengguan.modules.sys.service.PushService;
 
 /*
  * 用户首次提报案件材料完成时调用，
@@ -24,6 +25,7 @@ public class CaseMgtCenterApproveCreateListener implements TaskListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static String TAG="CaseCaseMgtCenterApproveCreateListener";
+	private static String Message ="您有一项工作等待审批";
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -34,16 +36,19 @@ public class CaseMgtCenterApproveCreateListener implements TaskListener{
 		logger.debug(TAG, "case record create: Set Candidate according to bp variables");
 		
 		List<BaseUser> cmas = (List<BaseUser>)delegateTask.getVariable("CaseMgtApprovers");
+		PushService pusher = new PushService();
 		if(cmas.size() < 1) {
 			logger.debug(TAG, "ERROR,no candidate user for Task!");
 		}
 		else if(cmas.size() == 1) {
 			delegateTask.setAssignee(cmas.get(0).getId());
+			if(pusher.isEnabled()) pusher.PushToUser(cmas.get(0).getId(), Message);
 		}
 		else {
 			for(BaseUser bu : cmas)
 			{
 				delegateTask.addCandidateUser(bu.getId());
+				if(pusher.isEnabled()) pusher.PushToUser(bu.getId(), Message);
 			}			
 		}
 	}

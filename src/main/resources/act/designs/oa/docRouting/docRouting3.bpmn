@@ -2,17 +2,25 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="gov.kl.chengguan.modules.oa.doc3Routing">
   <process id="Doc3Routing" name="Doc3Routing" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="applyer" activiti:formKey="/oa/doc3Routing/form"></startEvent>
-    <userTask id="utOfficeHeaderApprove" name="办公室主任审核" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utOfficeHeaderApprove" name="办公室主任审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="gov.kl.chengguan.modules.oa.listener.Doc3OfficeHeaderApproveCreateListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway">
       <documentation>${bOfficeHeaderApproval==1}</documentation>
     </exclusiveGateway>
     <sequenceFlow id="flow3" sourceRef="utOfficeHeaderApprove" targetRef="exclusivegateway1"></sequenceFlow>
-    <userTask id="utLeaderApprove" name="领导审阅，指定传阅人" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utLeaderApprove" name="领导审阅，指定传阅人" activiti:assignee="${leader}">
+      <extensionElements>
+        <activiti:taskListener event="complete" class="gov.kl.chengguan.modules.oa.listener.Doc3LeaderApproveCompleteListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="utLeaderApprove">
       <documentation>${!bOfficeHeaderApproval}</documentation>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${pass==1}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="utOfficeHeaderDispatch" name="办公室主任转发传阅人" activiti:assignee="${applyer}"></userTask>
+    <userTask id="utOfficeHeaderDispatch" name="办公室主任转发传阅人" activiti:assignee="${officeHeader}"></userTask>
     <sequenceFlow id="flow6" sourceRef="utLeaderApprove" targetRef="utOfficeHeaderDispatch"></sequenceFlow>
     <sequenceFlow id="flow7" sourceRef="utOfficeHeaderDispatch" targetRef="subpBrowseDoc"></sequenceFlow>
     <endEvent id="end_event" name="End"></endEvent>
