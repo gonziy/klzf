@@ -55,6 +55,33 @@ public class UserService extends BaseService{
 	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
 
 	/**
+	 * 办公室文员
+	 * @return
+	 */
+	public List<BaseUser> getOfficeUser() {
+		List<BaseUser> deptUsers = new ArrayList<BaseUser>();
+		BaseUser userWhere = new BaseUser();
+		Office officeWhere = new Office();
+		officeWhere.setId("f8fba35852f341cabeefa05515c6dda4");
+		userWhere.setOffice(officeWhere);
+		deptUsers =  UserUtils.getBaseAllList(userWhere);
+	    return deptUsers;		
+	}
+	/**
+	 * 办公室主任
+	 * @return
+	 */
+	public List<BaseUser> getOfficeLeader() {
+		List<BaseUser> deptUsers = new ArrayList<BaseUser>();
+		BaseUser userWhere = new BaseUser();
+		Office officeWhere = new Office();
+		officeWhere.setId("f33eca3a7a5e466baaaa6fd608c1c86b");
+		userWhere.setOffice(officeWhere);
+		deptUsers =  UserUtils.getBaseAllList(userWhere);
+	    return deptUsers;		
+	}
+	
+	/**
 	 * 副局长
 	 * @return
 	 */

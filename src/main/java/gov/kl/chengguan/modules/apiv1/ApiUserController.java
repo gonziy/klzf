@@ -136,7 +136,7 @@ public class ApiUserController  extends BaseController {
 				user.setName(baseUser.getName());
 				user.setOfficeId(baseUser.getOffice().getId());
 				user.setOfficeName(baseUser.getOffice().getName());
-				user.setBaiduPushChannelId(baseUser.getBaiduPushChannelId());
+				user.setBaiduPushChannelId(baseUser.getBaiduPushChannelId()==null?"":baseUser.getBaiduPushChannelId());
 				
 				jsonObject.put("data",JSONObject.toJSON(user));
 			}

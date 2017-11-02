@@ -80,10 +80,10 @@ public class ApiCmsController  extends BaseController {
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setCharacterEncoding("UTF-8");
 		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		String version = request.getParameter("version");
+		String version = request.getParameter("versionCode");
 		if(version==null || version.isEmpty())
 		{
-			jsonObject.put("msg", "missing url, version is null");
+			jsonObject.put("msg", "missing url, versionCode is null");
 			jsonObject.put("code", 41010);
 			PrintWriter out;
 			try {
