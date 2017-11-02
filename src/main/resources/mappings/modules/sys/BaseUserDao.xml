@@ -19,6 +19,7 @@
 		a.remarks,
 		a.login_flag,
 		a.photo,
+		a.baidu_push_channel_id as "baiduPushChannelId",
 		a.create_by AS "createBy.id",
 		a.create_date,
 		a.update_by AS "updateBy.id",

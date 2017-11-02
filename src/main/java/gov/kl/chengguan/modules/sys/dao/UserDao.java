@@ -49,6 +49,13 @@ public interface UserDao extends CrudDao<User> {
 	public int updatePasswordById(User user);
 	
 	/**
+	 * 更新百度推送账号
+	 * @param user
+	 * @return
+	 */
+	public int updateBaiduPushChannelIdById(User user);
+	
+	/**
 	 * 更新登录信息，如：登录IP、登录时间
 	 * @param user
 	 * @return

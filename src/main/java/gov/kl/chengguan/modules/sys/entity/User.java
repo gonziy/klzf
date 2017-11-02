@@ -42,6 +42,15 @@ public class User extends DataEntity<User> {
 	private String loginFlag;	// 是否允许登陆
 	private String photo;	// 头像
 
+	private String baiduPushChannelId;//百度推送账号
+	public String getBaiduPushChannelId() {
+		return baiduPushChannelId;
+	}
+
+	public void setBaiduPushChannelId(String baiduPushChannelId) {
+		this.baiduPushChannelId = baiduPushChannelId;
+	}
+
 	private String oldLoginName;// 原登录名
 	private String newPassword;	// 新密码
 	

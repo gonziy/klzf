@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
+
 import gov.kl.chengguan.common.config.Global;
 import gov.kl.chengguan.common.persistence.DataEntity;
 import gov.kl.chengguan.common.supcan.annotation.treelist.cols.SupCol;
@@ -41,6 +42,15 @@ public class BaseUser extends DataEntity<BaseUser> {
 	private Date loginDate;	// 最后登陆日期
 	private String loginFlag;	// 是否允许登陆
 	private String photo;	// 头像
+	
+	private String baiduPushChannelId;//百度推送账号
+	public String getBaiduPushChannelId() {
+		return baiduPushChannelId;
+	}
+
+	public void setBaiduPushChannelId(String baiduPushChannelId) {
+		this.baiduPushChannelId = baiduPushChannelId;
+	}
 
 	public BaseUser() {
 		super();

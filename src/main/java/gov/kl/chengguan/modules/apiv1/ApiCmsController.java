@@ -70,6 +70,87 @@ public class ApiCmsController  extends BaseController {
 		}
 
 	}
+	
+	@RequestMapping(value = {"app/check/update"})
+	public void getVersionList(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String version = request.getParameter("version");
+		if(version==null || version.isEmpty())
+		{
+			jsonObject.put("msg", "missing url, version is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		try {
+			/* ##############################↓↓↓↓↓↓↓↓↓↓↓↓↓↓读取字段看这一段↓↓↓↓↓↓↓↓↓↓########################### */
+			/*
+			 * categoryid 的值
+			 * ab46c1295da648a18a0291b83ed0e30b
+			 */
+			BaseArticle whereArticle = new BaseArticle();
+			Category whereCategory = new Category();
+			whereCategory.setId("ab46c1295da648a18a0291b83ed0e30b");
+			whereArticle.setCategory(whereCategory);
+			BaseArticle lastversion = baseArticleDao.findLast(whereArticle) ;
+			/* ##############################↑↑↑↑↑↑↑↑↑↑↑↑↑↑读取字段看这一段↑↑↑↑↑↑↑↑↑########################### */
+			if(lastversion!=null)
+			{
+				com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+				if(Integer.parseInt(version)<lastversion.getWeight()){
+					jsonData.put("versionCode", lastversion.getWeight());
+					jsonData.put("versionName", lastversion.getTitle());
+					jsonData.put("url", "http://47.93.52.62:8080/klzf2/app"+lastversion.getWeight()+".apk");
+					jsonData.put("description", lastversion.getDescription());
+				}else{
+					jsonData.put("versionCode", 0);
+				}
+				
+				jsonObject.put("data", jsonData);
+			}
+			else
+			{
+				jsonObject.put("msg", "data is null");
+				jsonObject.put("code", 44004);
+			}
+			
+			PrintWriter out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+		}
+
+	}
+	
+	
+	
 	@RequestMapping("oa/document/list")
 	// 公文列表接口
 	public void oaDocumentList(HttpServletRequest request,

@@ -355,6 +355,11 @@
 			password = #{password} 
 		WHERE id = #{id}
 	</update>
+	<update id="updateBaiduPushChannelIdById">
+		UPDATE sys_user SET 
+			baidu_push_channel_id = #{baiduPushChannelId} 
+		WHERE id = #{id}
+	</update>
 	
 	<!-- 更新登录信息，如登录IP、登录时间 -->
 	<update id="updateLoginInfo">

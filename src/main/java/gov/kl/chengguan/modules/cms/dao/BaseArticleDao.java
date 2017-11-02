@@ -19,5 +19,7 @@ public interface BaseArticleDao extends CrudDao<BaseArticle> {
 	
 	public List<BaseArticle> findList(BaseArticle article);
 	
+	public BaseArticle findLast(BaseArticle article);
+	
 	
 }

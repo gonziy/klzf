@@ -136,6 +136,7 @@ public class ApiUserController  extends BaseController {
 				user.setName(baseUser.getName());
 				user.setOfficeId(baseUser.getOffice().getId());
 				user.setOfficeName(baseUser.getOffice().getName());
+				user.setBaiduPushChannelId(baseUser.getBaiduPushChannelId());
 				
 				jsonObject.put("data",JSONObject.toJSON(user));
 			}
@@ -323,66 +324,69 @@ public class ApiUserController  extends BaseController {
 
 	}
 	
-//	@RequestMapping(value = {"user/info/updatepassword"})
-//	public void setUserPassword(HttpServletRequest request, HttpServletResponse response) {
-//		response.setContentType("application/json");
-//		response.setHeader("Pragma", "No-cache");
-//		response.setHeader("Cache-Control", "no-cache");
-//		response.setCharacterEncoding("UTF-8");
-//		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-//		
-//		String password = request.getParameter("password");
-//		String userid = request.getParameter("userid");
-//		
-//		if((password==null || password.isEmpty())||(userid==null || userid.isEmpty()))
-//		{
-//			jsonObject.put("msg", "missing url, password and userid is null");
-//			jsonObject.put("code", 41010);
-//			PrintWriter out;
-//			try {
-//				out = response.getWriter();
-//				out.print(jsonObject.toJSONString());
-//				out.flush();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return;
-//		}
-//		gov.kl.chengguan.modules.sys.entity.User user = new User();
-//		user.setId(userid);
-//		user.setPassword(SystemService.entryptPassword(password));
-//		
-//		try {
-//			Integer result = userDao.updatePasswordById(user);
-//			if(result>0)
-//			{
-//				jsonObject.put("msg", "success");
-//				jsonObject.put("code", 200);
-//				jsonObject.put("result", "success");
-//			}
-//			else {
-//				jsonObject.put("msg", "success");
-//				jsonObject.put("code", 200);
-//				jsonObject.put("result", "failed");
-//			}
-//			PrintWriter out = response.getWriter();
-//			out.print(jsonObject.toJSONString());
-//			out.flush();
-//			
-//		} catch (Exception e) {
-//			jsonObject.put("msg", "system error");
-//			jsonObject.put("code", -1);
-//			PrintWriter out;
-//			try {
-//				out = response.getWriter();
-//				out.print(jsonObject.toJSONString());
-//				out.flush();
-//			} catch (IOException e1) {
-//			
-//			}
-//		}
-//	}
+	@RequestMapping(value = {"user/info/updatebaidupush"})
+	public void setUserPassword(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+
+		String userid = request.getParameter("userid");
+		String baiduId = request.getParameter("baiduid");
+		
+		if(userid==null || userid.isEmpty() || baiduId==null || baiduId.isEmpty() )
+		{
+			jsonObject.put("msg", "missing url, baiduId or userid is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+
+		
+		
+		try {
+			User user = new User();
+			user.setId(userid);
+			user.setBaiduPushChannelId(baiduId);
+			
+			Integer result = userDao.updateBaiduPushChannelIdById(user);
+			if(result>0)
+			{
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+				jsonObject.put("result", "success");
+			}
+			else {
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+				jsonObject.put("result", "failed");
+			}
+			PrintWriter out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+			
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+		}
+	}
 	
 	public class ApiUser
 	{
@@ -394,6 +398,15 @@ public class ApiUserController  extends BaseController {
 		private String name;	// 姓名
 		private String officeId;
 		private String officeName;
+		private String baiduPushChannelId;//百度推送账号
+		public String getBaiduPushChannelId() {
+			return baiduPushChannelId;
+		}
+
+		public void setBaiduPushChannelId(String baiduPushChannelId) {
+			this.baiduPushChannelId = baiduPushChannelId;
+		}
+		
 		public String getId() {
 			return id;
 		}

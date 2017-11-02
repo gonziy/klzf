@@ -26,7 +26,17 @@ public class BaseArticle extends DataEntity<BaseArticle> {
 	private Category category;// 分类编号
 	private String title;	// 标题
 	private String description;// 描述、摘要
-	
+	private Integer weight;
+
+
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
+	}
+
 	public BaseArticle() {
 		super();
 	}

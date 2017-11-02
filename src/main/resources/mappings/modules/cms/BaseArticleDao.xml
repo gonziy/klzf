@@ -6,7 +6,8 @@
 		a.id AS "id",
 		a.category_id AS "category.id",
 		a.title AS "title",
-		a.description AS "description"
+		a.description AS "description",
+		a.weight as "weight"
 	</sql>
     
 	<select id="get" resultType="BaseArticle">
@@ -49,5 +50,17 @@
 		<where>
 			id in (${id});
 		</where>		
+	</select>
+	<select id="findLast" resultType="BaseArticle">
+		SELECT 
+			<include refid="cmsBaseArticleColumns"/>
+		from cms_article a 
+		<where>
+			a.del_flag = #{delFlag}
+			<if test="category.id != null and category.id != ''">
+				AND a.category_id = #{category.id}
+			</if>
+		</where>
+		order by a.update_date desc	limit 1
 	</select>
 </mapper>
