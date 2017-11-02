@@ -76,7 +76,11 @@ public class PushService extends BaseService{
 
 	public PushKeyPair pair;
 	public BaiduPushClient pushClient;
-	
+	/**
+	 * 百度推送，根据获取的ChannelID
+	 * @param userid
+	 * @param msg
+	 */
 	public void PushToUser(String userid,String msg) {
 		if(userid!=null && !userid.isEmpty()){
 			BaseUser baseUser = baseUserDao.get(userid);
