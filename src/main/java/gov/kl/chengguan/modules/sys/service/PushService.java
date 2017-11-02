@@ -105,7 +105,7 @@ public class PushService extends BaseService{
 			                    addChannelId(channelId).
 			                    addMsgExpires(new Integer(3600 * 24)).   //设置消息的有效时间,单位秒,默认3600*5.
 			                    addMessageType(1).              //设置消息类型,0表示透传消息,1表示通知,默认为0.
-			                    addMessage(msg.isEmpty()?"有一项任务需要急需处理":msg).
+			                    addMessage("{\"title\":\"消息提醒\",\"description\":\"" + (msg.isEmpty()?"有一项任务需要急需处理":msg) + "\"}").
 			                    addDeviceType(3);      //设置设备类型，deviceType => 1 for web, 2 for pc, 
 			                                           //3 for android, 4 for ios, 5 for wp.
 			            // 5. 执行Http请求
