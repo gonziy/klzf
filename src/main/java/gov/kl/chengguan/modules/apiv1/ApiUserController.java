@@ -343,7 +343,7 @@ public class ApiUserController  extends BaseController {
 
 	}
 	
-	@RequestMapping(value = {"user/info/updatebaidupush"})
+	@RequestMapping(value = {"user/device/updatebaidupush"})
 	public void setBaiduPush(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
