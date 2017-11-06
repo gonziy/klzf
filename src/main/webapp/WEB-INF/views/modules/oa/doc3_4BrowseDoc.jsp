@@ -52,7 +52,7 @@
 			</table>
 		</fieldset>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="确 定" onclick="$('#flag').val('yes')"/>
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="我已阅读" onclick="$('#flag').val('yes')"/>
 		</div>
 	</form:form>
 </body>

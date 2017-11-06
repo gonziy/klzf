@@ -70,7 +70,9 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 	
 		for(Act act : acts)
 		{
-			if(act.getProcDefKey() == ActUtils.PD_DOC3_ROUTING[0]) 
+			ProcessDefinitionEntity prodef = (ProcessDefinitionEntity) act.getProcDef();
+			String prodefkey = prodef.getKey();
+			if(prodefkey.equals(ActUtils.PD_DOC3_ROUTING[0]))
 			{
 				//根据business id 获取案件参数
 				String businessId = act.getBusinessId();

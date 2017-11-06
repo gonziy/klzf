@@ -63,7 +63,7 @@
 			</table>
 		</fieldset>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="发 文" onclick="$('#flag').val('yes')"/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="确 认" onclick="$('#flag').val('yes')"/>&nbsp;
 		</div>
 	</form:form>
 </body>

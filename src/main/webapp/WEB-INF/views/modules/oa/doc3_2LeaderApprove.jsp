@@ -61,7 +61,7 @@
 			</table>
 		</fieldset>
 		<div class="form-actions">
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="确 定" onclick="$('#flag').val('yes')"/>&nbsp;
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="确 认" onclick="$('#flag').val('yes')"/>&nbsp;
 			<!-- <input id="btnSubmit" class="btn btn-inverse" type="submit" value="修 回" onclick="$('#flag').val('no')"/>&nbsp; -->
 		</div>
 	</form:form>

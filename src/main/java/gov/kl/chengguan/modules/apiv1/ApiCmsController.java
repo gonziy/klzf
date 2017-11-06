@@ -154,43 +154,6 @@ public class ApiCmsController  extends BaseController {
 	}
 	
 	
-	
-	@RequestMapping("oa/document/list")
-	// 公文列表接口
-	public void oaDocumentList(HttpServletRequest request,
-			HttpServletResponse response, int page, int stage, String user_id) {
-
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "success");
-		jsonObject.put("code", 0);
-
-		JSONObject jsonData = new JSONObject();
-		jsonData.put("pagesize", 10);
-		jsonData.put("pagecount", 5);
-
-		JSONArray jsonArray = new JSONArray();
-		for (int i = 0; i < 10; i++) {
-			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("id", "s01010" + i);
-			m.put("title", "公文标题");
-			m.put("created", "2017/10/05");
-			m.put("progressCode", (i % 4) + 1);
-
-			jsonArray.add(new JSONObject(m));
-		}
-		jsonData.put("data", jsonArray);
-
-		jsonObject.put("data", jsonData);
-
-		try {
-			PrintWriter out = response.getWriter();
-			out.print(jsonObject.toJSONString());
-			out.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	/*
 	 * 查找对应关系文章 
 	 * @param request
