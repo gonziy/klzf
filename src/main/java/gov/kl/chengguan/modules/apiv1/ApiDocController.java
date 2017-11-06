@@ -3,6 +3,7 @@ package gov.kl.chengguan.modules.apiv1;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,9 @@ import gov.kl.chengguan.common.security.Digests;
 import gov.kl.chengguan.common.utils.Encodes;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.web.BaseController;
+import gov.kl.chengguan.modules.act.entity.Act;
 import gov.kl.chengguan.modules.act.service.ActTaskService;
+import gov.kl.chengguan.modules.act.utils.ActUtils;
 import gov.kl.chengguan.modules.apiv1.ApiOaController.ApiOaCase;
 import gov.kl.chengguan.modules.cms.dao.BaseArticleDao;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
@@ -64,7 +67,8 @@ public class ApiDocController  extends BaseController {
 	private BaseUserDao baseUserDao;
 	@Autowired
 	private OaDoc3Dao oaDoc3Dao;
-	
+	@Autowired
+	private ActTaskService actTaskService;
 	@Autowired
 	private TaskService taskService;
 	@Autowired
@@ -91,8 +95,102 @@ public class ApiDocController  extends BaseController {
 		out.print(jsonObject.toJSONString());
 		out.flush();
 	}
-	
-	
+	/**
+	 * 流程审批
+	 * @param request
+	 * @param response
+	 * @param reqData
+	 */
+	@RequestMapping(value = {"oa/doc/approve"})
+	public void docToNextStep(HttpServletRequest request, HttpServletResponse response, @RequestBody String reqData) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String dataString = reqData;
+		PrintWriter out;
+		if(dataString != null)
+		{
+			JSONObject json = JSONObject.parseObject(dataString);
+			JSONObject userJson = json.getJSONObject("user");
+			JSONObject docJson = json.getJSONObject("document");
+			java.util.List<Act> todoList = actTaskService.findTodoTasks(userJson.getString("userId"), ActUtils.PD_DOC3_ROUTING[0]);
+			OaDoc3 model = null;
+			if(todoList.size()>0)
+			{
+				for (Act act : todoList) {
+					String businessId= act.getBusinessId();
+					businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+					OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
+					if(oaDoc3.getId().equals(docJson.getString("id"))){
+						model = oaDoc3;
+						model.setAct(act);
+						model.setTask(act.getTask());
+						break;
+					}
+				}
+			}
+			if (model==null) {
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+				jsonObject.put("result", "failed");
+				jsonObject.put("remark", "you don't have permission to approve");
+			} else{
+				
+			}
+			Integer stage = docJson.getInteger("progressCode");
+			if(stage==1){
+				//办公室主任审批
+				
+				try {
+					model.setLeaderId(docJson.getString("approvalId"));
+					model.setDueDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2099-12-31 23:59:59"));
+					User updater = userDao.get(userJson.getString("userId"));
+					model.setUpdateBy(updater);
+					model.setUpdateDate(new Date());
+					doc3Service.mobileSaveStep(model, 1);
+					jsonObject.put("msg", "success");
+					jsonObject.put("code", 0);
+					jsonObject.put("result", "success");
+					jsonObject.put("remark", "");
+				} catch (Exception e) {
+				}
+
+			}else if(stage == 2){
+				
+			}else if(stage == 3){
+				
+			}else if(stage == 4){
+				
+			}
+			
+			
+			
+			
+		}else {
+
+			jsonObject.put("msg", "data is null");
+			jsonObject.put("code", 44004);
+		}
+		try {
+			out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+
+			}
+		}
+	}
 	
 	/**
 	 * 创建公文流转
@@ -394,7 +492,7 @@ public class ApiDocController  extends BaseController {
 	public ApiDoc3 ToApiDoc3(OaDoc3 doc)
 	{
 		ApiDoc3 apiDoc3 = new ApiDoc3();
-		apiDoc3.setAttachLinks(doc.getAttachLinks());
+		apiDoc3.setFiles(doc.getAttachLinks());
 		apiDoc3.setDocTitle(doc.getDocTitle());
 		apiDoc3.setDRStage(doc.getDRStage());
 		apiDoc3.setDueDate(doc.getDueDate());
@@ -416,7 +514,7 @@ public class ApiDocController  extends BaseController {
 		// 发文的标题
 		private String docTitle;
 		// 到公文的链接，可能一次发布多个文件，用;分割
-		private String attachLinks;
+		private String files;
 		// 办公室领导意见
 		private String officeHeaderOption;
 		private boolean officeHeaderApproval;
@@ -445,11 +543,11 @@ public class ApiDocController  extends BaseController {
 		public void setDocTitle(String docTitle) {
 			this.docTitle = docTitle;
 		}
-		public String getAttachLinks() {
-			return attachLinks;
+		public String getFiles() {
+			return files;
 		}
-		public void setAttachLinks(String attachLinks) {
-			this.attachLinks = attachLinks;
+		public void setFiles(String attachLinks) {
+			this.files = attachLinks;
 		}
 		public String getOfficeHeaderOption() {
 			return officeHeaderOption;

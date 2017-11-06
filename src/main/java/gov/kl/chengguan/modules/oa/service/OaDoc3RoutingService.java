@@ -186,9 +186,11 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			oaDoc3.setOfficeHeaderApproveDate(Calendar.getInstance().getTime());
 			oaDoc3.setDRStage("1");
 			oaDoc3.setOfficeHeaderApproval((iReturnState ==1)?true : false);
-			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
-	
-			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");	
+			int r = oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
+
+//			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");
+			//孙 修改
+			vars.put("pass", iReturnState==1?"1":"0");	
 			// 需要设置办理该工作的领导
 			if(iReturnState == 1) vars.put("leader", oaDoc3.getLeaderId());		
 		}

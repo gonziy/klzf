@@ -40,6 +40,7 @@ public class OaDoc3 extends ActEntity<OaDoc3> {
 	// 公文审阅人ID列表，用;分割
 	private String reviewersIDs;
 	private String reviewersIDs1;
+	//状态  0:公文提报  1:主任审批 2:领导审批 3:主任处理领导意见  (4:其他人传阅 )
 	private String DRStage;
 	
 	/*
