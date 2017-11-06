@@ -21,13 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sun.tools.classfile.StackMap_attribute.stack_map_frame;
-
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
-import gov.kl.chengguan.modules.test.entity.Test;
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.service.OaCaseService;
@@ -71,13 +68,10 @@ public class OaCaseController extends BaseController {
 		
 	}
 	
-	@RequiresPermissions("oa:oaCase:view")
+	//@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = {"list"})
 	public String list(OaCase oaCase, HttpServletRequest request, HttpServletResponse response, Model model) {
-		oaCase.setCaseQueryStage(0);
-		Page<OaCase> pageWhere = new Page<OaCase>(request, response);
-		pageWhere.setPageSize(10);
-        Page<OaCase> page = oaCaseService.findPage(pageWhere, oaCase); 
+        Page<OaCase> page = oaCaseService.findPage(new Page<OaCase>(request, response), oaCase); 
         model.addAttribute("page", page);        
 		return "modules/oa/oaCaseList";
 	}
@@ -94,7 +88,7 @@ public class OaCaseController extends BaseController {
 	public String form(OaCase oaCase, Model model) {
 		// 案件申报
 		String view = "oaCase_Reg1_apply";
-
+		
 		// 查看审批申请单
 		if (StringUtils.isNotBlank(oaCase.getId())){//.getAct().getProcInsId())){
 			// 环节编号
@@ -183,7 +177,6 @@ public class OaCaseController extends BaseController {
 	//@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = {"list/task",""})
 	public String taskList(HttpSession session, Model model) {
-
 		/*
 		String userId = UserUtils.getUser().getId();//ObjectUtils.toString(UserUtils.getUser().getId());
 		List<OaCase> results = oaCaseService.findTodoTasks(userId);
@@ -208,13 +201,30 @@ public class OaCaseController extends BaseController {
 		if (!beanValidator(model, oaCase)){
 			return form(oaCase, model);
 		}
+
+		String initiator = UserUtils.getUser().getId();	
 		
+		/*
+		 * 测试手机端，从流程开始直接提交到承办机构审批阶段
+		oaCase.setTitle("手机案件测试1");
+		oaCase.setCaseParties("张三；王五；赵六");
+		oaCase.setAddress("垦利垦东社区");
+		oaCase.setCaseLegalAgent("张三");
+		oaCase.setPhoneNumber("13312341234");
+		oaCase.setCaseSource("上级交办");
+		oaCase.setNormCaseDescPart1("城市中的建筑物和设施，应当符合国家规定的城市容貌标准");
+		oaCase.setNormCaseDescPart2("对应法条1");
+		oaCase.setCaseDescription("违法搭建");
+		oaCase.setAssigneeIds("1;2");
+		oaCaseService.mobileSave(initiator, oaCase);
+		*/
+		
+		///* 测试使用
 		Map<String, Object> vars = new HashMap<String, Object>();
-		String initiator = UserUtils.getUser().getId();
 		System.out.println("process applyer:" + initiator);
 		vars.put("applyer", initiator);		
 		oaCaseService.save(oaCase, vars);
-		
+		//*/
 		addMessage(redirectAttributes, "提交成功");
 		return "redirect:" + adminPath + "/act/task/todo/";
 	}
@@ -228,7 +238,7 @@ public class OaCaseController extends BaseController {
 	@RequiresPermissions("oa:oaCase:edit")
 	@RequestMapping(value = "saveCase")
 	public String saveCase(OaCase oaCase, Model model) {
-		
+
 		String ut = oaCase.getAct().getTaskDefKey();
 		if(ut.equals("utAnjianLuru")){
 			if(oaCase.getAssigneeIds() != null){
@@ -243,14 +253,14 @@ public class OaCaseController extends BaseController {
 				return form(oaCase, model);
 			}
 		}
-
+		
 		if (StringUtils.isBlank(oaCase.getAct().getFlag())) {
 			if("yes".equals(oaCase.getAct().getFlag()))
 				oaCase.getAct().setComment("passed");
 			else
 				oaCase.getAct().setComment("failed");
 				//|| StringUtils.isBlank(oaCase.getAct().getComment())){
-			addMessage(model, "请填写审核意见");
+			addMessage(model, "请填写审核意见。");
 			return form(oaCase, model);
 		}
 		oaCaseService.saveStep(oaCase);

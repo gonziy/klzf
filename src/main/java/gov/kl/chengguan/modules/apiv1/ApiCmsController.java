@@ -20,7 +20,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import gov.kl.chengguan.common.web.BaseController;
+import gov.kl.chengguan.modules.cms.dao.ArticleDao;
 import gov.kl.chengguan.modules.cms.dao.BaseArticleDao;
+import gov.kl.chengguan.modules.cms.entity.Article;
 import gov.kl.chengguan.modules.cms.entity.BaseArticle;
 import gov.kl.chengguan.modules.cms.entity.Category;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
@@ -33,9 +35,11 @@ import gov.kl.chengguan.modules.sys.utils.UserUtils;
 @RestController
 @RequestMapping(value = "/apiv1")
 public class ApiCmsController  extends BaseController {
-	
+
 	@Autowired
 	private BaseArticleDao baseArticleDao;
+	@Autowired
+	private ArticleDao articleDao;
 	
 	
 	@RequestMapping(value = {"test"})
@@ -186,6 +190,83 @@ public class ApiCmsController  extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	 * 查找对应关系文章 
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = {"cms/article/similar"})
+	public void getLikeArticleList(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String title = request.getParameter("title");
+		if(title==null || title.isEmpty())
+		{
+			jsonObject.put("msg", "missing url, title is null");
+			jsonObject.put("code", 41010);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		try {
+			Article articleWhere = new Article();
+			articleWhere.setTitle(title);
+			java.util.List<Article> list = articleDao.getLikeList(articleWhere);
+			if(list!=null)
+			{
+				jsonObject.put("msg", "success");
+				jsonObject.put("code", 0);
+				ArrayList<ApiArticle> articles = new ArrayList<ApiArticle>();
+				for (Article article : list) {
+					ApiArticle apiArticle = new ApiArticle();
+					apiArticle.setId(article.getId());
+					apiArticle.setTitle(article.getTitle());
+					apiArticle.setCategoryId(article.getCategory().getId());
+					apiArticle.setDescription(article.getDescription());
+					
+					articles.add(apiArticle);
+				}
+
+				jsonObject.put("data", articles);
+			}
+			else
+			{
+				jsonObject.put("msg", "data is null");
+				jsonObject.put("code", 44004);
+			}
+			
+			PrintWriter out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+		}
+
+	}
+	
 	/**
 	 * 获取文章列表
 	 * @param request

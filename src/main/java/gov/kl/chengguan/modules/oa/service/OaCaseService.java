@@ -5,6 +5,7 @@ package gov.kl.chengguan.modules.oa.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,12 @@ import gov.kl.chengguan.modules.gen.dao.GenTableDao;
 import gov.kl.chengguan.modules.oa.dao.OaCaseDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaDoc;
+import gov.kl.chengguan.modules.sys.dao.OfficeDao;
+import gov.kl.chengguan.modules.sys.dao.UserDao;
+import gov.kl.chengguan.modules.sys.entity.Office;
+import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.interceptor.MobileInterceptor;
+import gov.kl.chengguan.modules.sys.utils.UserUtils;
 /**
  * OaCaseService
  * @author
@@ -51,6 +57,10 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	private ActTaskService actTaskService;
 	@Autowired
 	private OaCaseDao caseDao;
+	@Autowired
+	private UserDao userDao;
+	@Autowired
+	private OfficeDao officeDao;
 	
 	public OaCase getByProcInsId(String procInsId) {
 		return dao.getByProcInsId(procInsId);
@@ -72,16 +82,21 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	
 		for(Act act : acts)
 		{
-			//根据business id 获取案件参数
-			String businessId = act.getBusinessId();
-			businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
-			OaCase oaCase = caseDao.get(businessId);
-			if(oaCase != null) {
-				oaCase.setTask(act.getTask());
-				oaCase.setProcessInstance(act.getProcIns());
-				oaCase.setProcessDefinition(act.getProcDef());
-				oaCase.setVariables(act.getVars().getVariableMap());
-				results.add(oaCase);
+			ProcessDefinitionEntity prodef = (ProcessDefinitionEntity) act.getProcDef();
+			String prodefkey = prodef.getKey();
+			if(prodefkey.equals(ActUtils.PD_CASE[0]))
+			{
+				//根据business id 获取案件参数
+				String businessId = act.getBusinessId();
+				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+				OaCase oaCase = caseDao.get(businessId);
+				if(oaCase != null) {
+					oaCase.setTask(act.getTask());
+					oaCase.setProcessInstance(act.getProcIns());
+					oaCase.setProcessDefinition(act.getProcDef());
+					oaCase.setVariables(act.getVars().getVariableMap());
+					results.add(oaCase);
+				}
 			}
 		}
 		return results;
@@ -96,11 +111,18 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	
 		for(Act act : acts)
 		{
-			OaCase oaCase = dao.get(act.getBusinessId());
-			oaCase.setTask(act.getTask());
-			oaCase.setProcessInstance(act.getProcIns());
-			oaCase.setProcessDefinition(act.getProcDef());
-			results.add(oaCase);
+			if(act.getProcDefKey() == ActUtils.PD_CASE[0]) {
+				//根据business id 获取案件参数
+				String businessId = act.getBusinessId();
+				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+				OaCase oaCase = caseDao.get(businessId);
+				if(oaCase != null) {
+					oaCase.setTask(act.getTask());
+					oaCase.setProcessInstance(act.getProcIns());
+					oaCase.setProcessDefinition(act.getProcDef());
+					results.add(oaCase);
+				}
+			}
 		}
 		return results;
 	}
@@ -147,6 +169,14 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setCaseStage(1);
 			// 补充需要完成的字段一次性全部更新到库里
 			oaCase.setCaseCheckFlag(true);
+			
+			oaCase.setAutoId(Integer.parseInt(caseDao.getMax().toString()));
+			Calendar calendar = Calendar.getInstance();
+			String year = String.valueOf(calendar.YEAR);
+			String officeCode = userDao.get(userId).getOffice().getCode();
+			String caseId = String.format("%03d", oaCase.getAutoId()+1);  
+			oaCase.setCaseDocNo(year + "05" + officeCode + caseId);
+			
 			oaCase.setCaseCheckResult("手机端，自动通过初审认证");
 			dao.insert(oaCase);
 		
@@ -175,6 +205,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	@Transactional(readOnly = false)
 	public void mobileSaveStep(OaCase oaCase, int iReturnState) 
 	{
+		/*
+		 * 1030更新数据库后，需要设置oaCase相应字段，在此提交时完成更新
+		 */
 		oaCase.getAct().setComment(iReturnState ==1?"[同意] ":"[驳回] ");
 		oaCase.preUpdate();
 		
@@ -350,6 +383,12 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		oaCase.preUpdate();
 		
 		/*
+		 * 1030 更新数据，增加对操作人和操作时间的处理
+		 * 可以修改此处的getId，记录人员的id或者name
+		 */
+		String currentUser = UserUtils.getUser().getId();
+		
+		/*
 		 * 获取审批返回值
 		 * 0 ：驳回
 		 * 1：通过审批
@@ -391,6 +430,21 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		}
 		else if ("utAnjianLuru".equals(taskDefKey)){
 			if(iReturnState == 1) {
+				oaCase.setLaRecAssignee(currentUser);
+				oaCase.setLaRecDate(Calendar.getInstance().getTime());
+
+				Long maxId = caseDao.getMax();
+				oaCase.setAutoId(Integer.parseInt(maxId.toString()) + 1);
+				Calendar calendar = Calendar.getInstance();
+				String year = String.valueOf(calendar.get(Calendar.YEAR));
+				User currentUserModel = userDao.get(currentUser);
+				String parentOfficeId = currentUserModel.getOffice().getParent().getId();
+				String officeCode = officeDao.get(parentOfficeId).getCode();
+				
+				
+				String caseId = String.format("%03d", oaCase.getAutoId());  
+				oaCase.setCaseDocNo(year + "05" + officeCode + caseId);
+				
 				dao.updateCaseRecord(oaCase);
 				// 提交流程任务
 				vars.put("caseAssigneeIds", oaCase.getAssigneeIds());			
@@ -409,6 +463,10 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setInstitutionRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			oaCase.setCaseStage((iReturnState ==1) ? 1: 5);
+			
+			oaCase.setInstitutionRegAssignee(currentUser);
+			oaCase.setInstitutionRegDate(Calendar.getInstance().getTime());
+			
 			dao.updateInstitutionRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regInstitutionPass", iReturnState);
@@ -425,15 +483,18 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			
 			oaCase.setDeptLeaderRegApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			
+			oaCase.setDeptLeaderRegAssignee(currentUser);
+			oaCase.setDeptLeaderRegDate(Calendar.getInstance().getTime());
 			dao.updateDeptLeaderRegOption(oaCase);
 			// 提交流程任务
 			vars.put("regDeptLeaderPass", iReturnState);
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utLaShp_Zgld".equals(taskDefKey)){
-			//立案 主要领导
 			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
+			oaCase.setMainLeaderRegAssignee(currentUser);
 			if(iReturnState == 1) {
 				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
 				dao.updateMainLeaderRegOption1(oaCase);		
@@ -471,6 +532,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(3);
 				// 只有不是拒绝的任务才能更新开始时间
+				oaCase.setPenalAssignee(currentUser);
 				oaCase.setCasePenalStartDate(Calendar.getInstance().getTime());
 				if(oaCase.getRejectFlag()) {
 					// 是被驳回的流程，但作为基本的流程，除了不干，只能让iReturnState=1...
@@ -492,6 +554,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			caseDao.update(tmpModelCase);
 			//结束
 			
+			oaCase.setInstitutionPenalAssignee(currentUser);
+			oaCase.setInstitutionPenalDate(Calendar.getInstance().getTime());
 			oaCase.setInstitutionPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionPenalOption(oaCase);
@@ -507,6 +571,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			tmpModelCase.setDeptLeaderPenalOption(null);
 			caseDao.update(tmpModelCase);
 			//结束
+			
+			oaCase.setCaseMgtCenterPenalAssignee(currentUser);
+			oaCase.setCaseMgtCenterPenalDate(Calendar.getInstance().getTime());
 			
 			oaCase.setCaseMgtCenterPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
@@ -524,6 +591,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			caseDao.update(tmpModelCase);
 			//结束
 			
+			oaCase.setDeptLeaderPenalAssignee(currentUser);
+			oaCase.setDeptLeaderPenalDate(Calendar.getInstance().getTime());
+			
 			oaCase.setDeptLeaderPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateDeptLeaderPenalOption(oaCase);
@@ -532,7 +602,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);		
 		}	
 		else if ("utXzhChf_Zgld".equals(taskDefKey)){
-			//处罚  主要领导
+			oaCase.setMainLeaderPenalAssignee(currentUser);
 			oaCase.setMainLeaderPenalApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
@@ -558,6 +628,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			
 			if(iReturnState == 1) {
 				oaCase.setCaseStage(4);
+				oaCase.setCloseUpAssignee(currentUser);
 				oaCase.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
 				if(oaCase.getRejectFlag()){
 					oaCase.setRejectFlag((iReturnState ==1)?false: true);
@@ -578,6 +649,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			caseDao.update(tmpModelCase);
 			//结束
 			
+			oaCase.setInstitutionCloseAssignee(currentUser);
+			oaCase.setInstitutionCloseDate(Calendar.getInstance().getTime());
+			
 			oaCase.setInstitutionCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateInstitutionCloseOption(oaCase);
@@ -594,6 +668,9 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			caseDao.update(tmpModelCase);
 			//结束
 			
+			oaCase.setCaseMgtCenterCloseAssignee(currentUser);
+			oaCase.setCaseMgtCenterCloseDate(Calendar.getInstance().getTime());
+			
 			oaCase.setCaseMgtCenterCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			dao.updateMgtCenterCloseOption(oaCase);
@@ -602,7 +679,8 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 		}
 		else if ("utJaShp_Zgld".equals(taskDefKey)){
-			//结案 主要领导
+			oaCase.setMainLeaderCloseAssignee(currentUser);
+			
 			oaCase.setMainLeaderCloseCaseApproval((iReturnState ==1)?true: false);
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState ==1) {

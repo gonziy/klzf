@@ -25,6 +25,7 @@ import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.act.entity.Act;
 import gov.kl.chengguan.modules.act.service.ActTaskService;
 import gov.kl.chengguan.modules.act.utils.ActUtils;
+import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
 /**
@@ -146,7 +147,8 @@ public class ActTaskController extends BaseController {
 	@RequestMapping(value = "claim")
 	@ResponseBody
 	public String claim(Act act) {
-		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
+		//String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
+		String userId = UserUtils.getUser().getId();
 		actTaskService.claim(act.getTaskId(), userId);
 		return "true";//adminPath + "/act/task";
 	}

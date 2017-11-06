@@ -88,6 +88,27 @@ public class ApiOaController  extends BaseController {
 	@Autowired
 	private UserService userService;
 	
+	
+	@RequestMapping(value = { "oa/maxid" })
+	public void test(HttpServletRequest request,HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		Long caseCountInteger = caseDao.getMax();
+		System.out.println(caseCountInteger);
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.print(caseCountInteger);
+			out.flush();
+		} catch (IOException e1) {
+
+		}
+	}
 	/**
 	 * 案件审批
 	 * @param request
@@ -139,6 +160,7 @@ public class ApiOaController  extends BaseController {
 					if(oaCase.getId().equals(id)){
 						model = oaCase;
 						model.setAct(act);
+						model.setTask(act.getTask());
 						break;
 					}
 				}
@@ -147,14 +169,16 @@ public class ApiOaController  extends BaseController {
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
 				jsonObject.put("result", "failed");
-				jsonObject
-						.put("remark", "you don't have permission to approve");
+				jsonObject.put("remark", "you don't have permission to approve");
 			} else {
 
 				if (table.equals("1")) {
 					// ##################立案阶段######################
 					if (step.equals("2")) {
 						// 立案-承办机构
+						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
 						
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
@@ -184,6 +208,9 @@ public class ApiOaController  extends BaseController {
 					} else if (step.equals("4")) {
 						// 立案 - 分管领导
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+						
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setMainLeaderRegOption(null);
@@ -210,6 +237,10 @@ public class ApiOaController  extends BaseController {
 						}
 					} else if (step.equals("5")) {
 						// 立案 - 主管领导
+						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+						
 						model.setMainLeaderRegApproval(approve.equals("pass") ? true
 								: false);
 						model.setMainLeaderRegOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -256,6 +287,9 @@ public class ApiOaController  extends BaseController {
 					if (step.equals("1")) {
 						// 处罚-承办人
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+						
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setInstitutionPenalOption(null);
@@ -284,6 +318,9 @@ public class ApiOaController  extends BaseController {
 					} else if (step.equals("2")) {
 						// 处罚-承办机构
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+												
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setCaseMgtCenterPenalOption(null);
@@ -312,6 +349,9 @@ public class ApiOaController  extends BaseController {
 					} else if (step.equals("3")) {
 						// 处罚 - 案管中心
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+												
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setDeptLeaderPenalOption(null);
@@ -339,6 +379,9 @@ public class ApiOaController  extends BaseController {
 					} else if (step.equals("4")) {
 						// 处罚-分管领导
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+												
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setMainLeaderPenalOption(null);
@@ -365,6 +408,10 @@ public class ApiOaController  extends BaseController {
 						}
 					} else if (step.equals("5")) {
 						// 处罚-主管领导
+						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+						
 						model.setMainLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
 						model.setMainLeaderPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -390,6 +437,9 @@ public class ApiOaController  extends BaseController {
 					if (step.equals("1")) {
 						// 结案-承办人
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+												
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setInstitutionCloseCaseOption(null);
@@ -414,6 +464,9 @@ public class ApiOaController  extends BaseController {
 					} else if (step.equals("2")) {
 						// 结案-承办机构
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+												
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setCaseMgtCenterCloseCaseOption(null);
@@ -442,6 +495,9 @@ public class ApiOaController  extends BaseController {
 					} else if (step.equals("3")) {
 						// 结案 - 案管中心
 						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+												
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setMainLeaderCloseCaseOption(null);
@@ -468,6 +524,10 @@ public class ApiOaController  extends BaseController {
 						}
 					} else if (step.equals("5")) {
 						// 结案-主管领导
+						
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userId);
+						
 						model.setMainLeaderCloseCaseApproval(approve
 								.equals("pass") ? true : false);
 						model.setMainLeaderCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
@@ -890,7 +950,7 @@ public class ApiOaController  extends BaseController {
 		list.add(new ApiStep("结案", "承办机构", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseApproval()==true?"pass":"reject", oaCase.getInstitutionCloseCaseOption()==null?"":oaCase.getInstitutionCloseCaseOption(),"4,2"));
 		list.add(new ApiStep("结案", "案管中心", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseApproval()==true?"pass":"reject", oaCase.getCaseMgtCenterCloseCaseOption()==null?"":oaCase.getCaseMgtCenterCloseCaseOption(),"4,3"));
 		list.add(new ApiStep("结案", "主要领导", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseApproval()==true?"pass":"reject", oaCase.getMainLeaderCloseCaseOption()==null?"":oaCase.getMainLeaderCloseCaseOption(),"4,5"));
-		list.add(new ApiStep("结束", "已完成", "", "","5,1"));
+		list.add(new ApiStep("结束", "已完成", oaCase.getCaseStage().equals(5)?"pass":"", "","5,1"));
 		return list;
 	}
 	

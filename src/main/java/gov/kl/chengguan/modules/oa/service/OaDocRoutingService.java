@@ -124,7 +124,7 @@ public class OaDocRoutingService extends BaseService{
 		docDao.updateProcessInstanceId(doc);
 		
 		logger.debug("start process of {key={}, bkey={}, pid={}, variables={}}", new Object[] { 
-				ActUtils.PD_LEAVE[0], businessKey, processInstance.getId(), variables });
+				ActUtils.PD_DOC_ROUTIN[0], businessKey, processInstance.getId(), variables });
 		
 	}
 	
@@ -149,7 +149,6 @@ public class OaDocRoutingService extends BaseService{
 				.taskCandidateUser(userId).active()
 				.orderByTaskPriority().desc().orderByTaskCreateTime().desc().list();
 		
-		// 合并，这个版本的activiti有问题啊
 		tasks.addAll(todoList);
 		tasks.addAll(unsignedTasks);
 		
@@ -302,7 +301,6 @@ public class OaDocRoutingService extends BaseService{
 		}
 		return results;
 	}
-	
 	
 
 }

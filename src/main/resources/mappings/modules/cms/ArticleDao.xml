@@ -41,6 +41,30 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<select id="getLikeList" resultType="Article">
+		SELECT 
+		a.id AS "id",
+		a.category_id AS "category.id",
+		a.title AS "title",
+		a.link AS "link",
+		a.color AS "color",
+		a.image AS "image",
+		a.keywords AS "keywords",
+		a.description AS "description"
+		from cms_article a
+		where a.id in (
+		select id from cms_article_data b
+		<where>
+			<if test="title != null and title != ''">
+			b.content like 
+				<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+			</if>
+		</where>
+		)
+	</select>
+	
 	<select id="findList" resultType="Article">
 		SELECT 
 			<include refid="cmsArticleColumns"/>

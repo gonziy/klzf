@@ -42,6 +42,7 @@ public class ActUtils {
 	public static final String[] PD_TEST_AUDIT = new String[]{"test_audit", "oa_test_audit"};
 	//
 	public static final String[] PD_DOC_ROUTIN = new String[]{"DocRouting", "oa_doc"};
+	public static final String[] PD_DOC3_ROUTING = new String[]{"Doc3Routing", "oa_doc3"};
 	public static final String[] PD_CASE = new String[]{"CaseProcess", "oa_case"};
 //	/**
 //	 * 流程定义Map（自动初始化）

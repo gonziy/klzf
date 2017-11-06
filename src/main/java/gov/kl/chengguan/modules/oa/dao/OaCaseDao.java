@@ -43,4 +43,7 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	public int updateMgtCenterCloseOption(OaCase oaCase);
 	public int updateMainLeaderCloseOption(OaCase oaCase);
 	public int updateMainLeaderCloseOption1(OaCase oaCase);
+	
+	//案件数量
+	public Long getMax();
 }

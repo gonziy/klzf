@@ -19,6 +19,8 @@ import gov.kl.chengguan.modules.cms.entity.Category;
 public interface ArticleDao extends CrudDao<Article> {
 	
 	public List<Article> findByIdIn(String[] ids);
+	
+	public List<Article> getLikeList(Article article);
 //	{
 //		return find("from Article where id in (:p1)", new Parameter(new Object[]{ids}));
 //	}
