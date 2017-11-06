@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -90,7 +91,7 @@ public class ApiOaController  extends BaseController {
 	
 	
 	@RequestMapping(value = { "oa/maxid" })
-	public void test(HttpServletRequest request,HttpServletResponse response) {
+	public void maxid(HttpServletRequest request,HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -1193,6 +1194,11 @@ public class ApiOaController  extends BaseController {
 		}
 	}
 	
+	/**
+	 * 案件文件列表
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/case/getfile"})
 	public void getCaseFile(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1309,6 +1315,11 @@ public class ApiOaController  extends BaseController {
 		}
 	}
 	
+	/**
+	 * 案件列表
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/case/list"})
 	public void getCaseList(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1503,6 +1514,11 @@ public class ApiOaController  extends BaseController {
 
 	}
 	
+	/**
+	 * 待办列表
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/case/todolist"})
 	public void getCaseToDoList(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1681,9 +1697,11 @@ public class ApiOaController  extends BaseController {
 		}
 
 	}
-	
-	
-
+	/**
+	 * 弃用
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/casefields/get"})
 	public void getCaseFieldsInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1751,7 +1769,11 @@ public class ApiOaController  extends BaseController {
 		}
 
 	}
-	
+	/**
+	 * 弃用
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/casefields/insert"})
 	public void insertCaseFieldsInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1826,7 +1848,11 @@ public class ApiOaController  extends BaseController {
 		}
 
 	}
-	
+	/**
+	 * 弃用
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/casefields/update"})
 	public void updateCaseFieldsInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1914,7 +1940,11 @@ public class ApiOaController  extends BaseController {
 		}
 
 	}
-	
+	/**
+	 * 弃用
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/files/get"})
 	public void getFileInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -1982,7 +2012,11 @@ public class ApiOaController  extends BaseController {
 		}
 
 	}
-	
+	/**
+	 * 弃用
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/files/list"})
 	public void getFileList(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -2045,7 +2079,11 @@ public class ApiOaController  extends BaseController {
 		}
 
 	}
-	
+	/**
+	 * 弃用
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = {"oa/files/delete"})
 	public void deleteFileInfo(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -2118,6 +2156,12 @@ public class ApiOaController  extends BaseController {
 
 	}
 	
+	/**
+	 * 手机端上传文件
+	 * @param request
+	 * @param response
+	 * @param files
+	 */
 	@RequestMapping(value = { "oa/files/upload" })
 	public void uploadFileInfo(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("files") MultipartFile[] files) {
@@ -2235,6 +2279,134 @@ public class ApiOaController  extends BaseController {
 
 			}
 		}
+	}
+	/**
+	 * PC端上传文件
+	 * @param request
+	 * @param response
+	 * @param files
+	 */
+	@RequestMapping(value = {"oa/files/webupload"})
+	public void uploadWebFileInfo(HttpServletRequest request,
+				HttpServletResponse response) {
+			response.setContentType("application/json");
+			response.setHeader("Pragma", "No-cache");
+			response.setHeader("Cache-Control", "no-cache");
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			response.setHeader("Access-Control-Allow-Headers",
+					"Origin, X-Requested-With, Content-Type, Accept");
+			response.setCharacterEncoding("UTF-8");
+			com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+            MultipartFile file = multipartRequest.getFile("file");
+            
+			if (file!=null) {
+
+
+					String filename = file.getOriginalFilename().toLowerCase();
+					String fileExt = filename.substring(filename.lastIndexOf("."));
+					String fileType = "";
+
+					// 判断文件格式,非法格式禁止上传
+					if (fileExt.equals(".jpg") || fileExt.equals(".jpeg")
+							|| fileExt.equals(".png")) {
+						fileType = "image";
+					} else if (fileExt.equals(".mpeg") || fileExt.equals(".mpg")
+							|| fileExt.equals(".dat") || fileExt.equals(".avi")
+							|| fileExt.equals(".mov") || fileExt.equals(".asf")
+							|| fileExt.equals(".wmv") || fileExt.equals(".3gp")
+							|| fileExt.equals(".mkv") || fileExt.equals(".flv")
+							|| fileExt.equals(".f4v") || fileExt.equals(".rmvb")
+							|| fileExt.equals(".mp4")) {
+						fileType = "video";
+					} else if (fileExt.equals(".mp3") || fileExt.equals(".wma")
+							|| fileExt.equals(".arm") || fileExt.equals(".wave")
+							|| fileExt.equals(".aiff") || fileExt.equals(".flac")
+							|| fileExt.equals(".aac")) {
+						fileType = "audio";
+					} else if (fileExt.equals(".txt") || fileExt.equals(".doc")
+							|| fileExt.equals(".docx") || fileExt.equals(".ppt")
+							|| fileExt.equals(".pptx") || fileExt.equals(".xls")
+							|| fileExt.equals(".xlsx") || fileExt.equals(".pdf")
+							|| fileExt.equals(".rtf") || fileExt.equals(".odt")) {
+						fileType = "document";
+					} else {
+						jsonObject.put("msg", "invalid file type");
+						jsonObject.put("code", 40004);
+						PrintWriter out;
+						try {
+							out = response.getWriter();
+							out.print(jsonObject.toJSONString());
+							out.flush();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return;
+					}
+					String folderName = new SimpleDateFormat("yyyyMMdd")
+							.format(new Date());
+					String realPath = Global.getUserfilesBaseDir()
+							+ Global.USERFILES_BASE_URL + fileType + "/"
+							+ folderName + "/";
+					FileUtils.createDirectory(FileUtils.path(realPath));
+					// 设置服务器上存储的文件名，并将文件转存
+					String newFileName = new SimpleDateFormat("yyyyMMddHHmmss")
+							.format(new Date())
+							+ ((int) (new Random().nextDouble() * (99999 - 10000 + 1)) + 10000)
+							+ fileExt;
+					String file_path = realPath + newFileName;
+					try {
+						file.transferTo(new File(file_path));
+					} catch (Exception e) {
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result",  "failure");
+						jsonObject.put("remark", "save file failed");
+						PrintWriter out;
+						try {
+							out = response.getWriter();
+							out.print(jsonObject.toJSONString());
+							out.flush();
+						} catch (IOException e1) {
+
+						}
+						return;
+					}
+
+					String httpPath = "http://47.93.52.62:8080/klzf2"
+							+ Global.USERFILES_BASE_URL + fileType + "/"
+							+ folderName + "/" + newFileName;
+					try {
+							jsonObject.put("msg", "success");
+							jsonObject.put("code", 0);
+							jsonObject.put("result",  "success");
+							com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+							jsonData.put("path", httpPath);
+							jsonObject.put("data", jsonData);
+						
+						PrintWriter out;
+						out = response.getWriter();
+						out.print(jsonObject.toJSONString());
+						out.flush();
+
+					} catch (Exception e) {
+						jsonObject.put("msg", "system error");
+						jsonObject.put("code", -1);
+						PrintWriter out;
+						try {
+							out = response.getWriter();
+							out.print(jsonObject.toJSONString());
+							out.flush();
+						} catch (IOException e1) {
+
+						}
+
+					}
+
+				
+			}
+		
 		
 		
 	}

@@ -243,13 +243,13 @@ public class OaCaseController extends BaseController {
 		if(ut.equals("utAnjianLuru")){
 			if(oaCase.getAssigneeIds() != null){
 				String tmpAssigneeIds = oaCase.getAssigneeIds().replace(",",";");
-				oaCase.setAssigneeIds(tmpAssigneeIds);
-				if(tmpAssigneeIds.split(";").length!=2){
-					addMessage(model, "请选择两个承办人");
+				oaCase.setAssigneeIds(UserUtils.getUser().getId() + ";" + tmpAssigneeIds);
+				if(tmpAssigneeIds.split(";").length!=1){
+					addMessage(model, "请选择另一个承办人");
 					return form(oaCase, model);
 				}
 			}else{
-				addMessage(model, "请选择两个承办人");
+				addMessage(model, "请选择另一个承办人");
 				return form(oaCase, model);
 			}
 		}

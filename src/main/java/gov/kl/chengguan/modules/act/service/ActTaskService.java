@@ -1031,6 +1031,71 @@ public class ActTaskService extends BaseService {
 		
 		return result;
 	}
+	/*
+	 * 按照用户id和流程定义名称返回代办列表 
+	 */
+	public List<Act> findTodoTasks(String userId, String procDefKey)
+	{	
+		List<Act> result = new ArrayList<Act>();
+		
+		// =============== 已经签收的任务  ===============
+		TaskQuery todoTaskQuery = taskService.createTaskQuery().taskAssignee(userId).active()
+				.processDefinitionKey(procDefKey)
+				.includeProcessVariables().orderByTaskCreateTime().desc();
+		
+		// 查询列表
+		List<Task> todoList = todoTaskQuery.list();
+		for (Task task : todoList) {
+			Act e = new Act();
+			e.setTask(task);
+			e.setVars(task.getProcessVariables());
+			String processInstanceId = task.getProcessInstanceId();
+			ProcessInstance processInstance = runtimeService
+					.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId).active().singleResult();			
+			e.setProcIns(processInstance);
+			
+			String businessKey = processInstance.getBusinessKey();			
+			e.setBusinessId(businessKey);
+//			e.setTaskVars(task.getTaskLocalVariables());
+//			System.out.println(task.getId()+"  =  "+task.getProcessVariables() + "  ========== " + task.getTaskLocalVariables());
+			e.setProcDef(ProcessDefCache.get(task.getProcessDefinitionId()));
+//			e.setProcIns(runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult());
+//			e.setProcExecUrl(ActUtils.getProcExeUrl(task.getProcessDefinitionId()));
+			e.setStatus("todo");
+			result.add(e);
+		}
+		// =============== 等待签收的任务  ===============
+		TaskQuery toClaimQuery = taskService.createTaskQuery().taskCandidateUser(userId)
+				.processDefinitionKey(procDefKey)
+				.includeProcessVariables().active().orderByTaskCreateTime().desc();
+		
+		// 查询列表
+		List<Task> toClaimList = toClaimQuery.list();
+		for (Task task : toClaimList) {
+			Act e = new Act();
+			e.setTask(task);
+			e.setVars(task.getProcessVariables());
+			
+			String processInstanceId = task.getProcessInstanceId();
+			ProcessInstance processInstance = runtimeService
+					.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId).active().singleResult();			
+			e.setProcIns(processInstance);
+			
+			String businessKey = processInstance.getBusinessKey();			
+			e.setBusinessId(businessKey);
+//			e.setTaskVars(task.getTaskLocalVariables());
+//			System.out.println(task.getId()+"  =  "+task.getProcessVariables() + "  ========== " + task.getTaskLocalVariables());
+			e.setProcDef(ProcessDefCache.get(task.getProcessDefinitionId()));
+//			e.setProcIns(runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult());
+//			e.setProcExecUrl(ActUtils.getProcExeUrl(task.getProcessDefinitionId()));
+			e.setStatus("claim");
+			result.add(e);
+		}
+		
+		return result;
+	}
 
 	/*
 	 * 查询已经完成的任务
@@ -1059,6 +1124,32 @@ public class ActTaskService extends BaseService {
 		
 		return results;
 	}
+	public List<Act> findFinishedTasks(String userId, String procDefKey) 
+	{
+		List<Act> results = new ArrayList<Act>();
+		HistoricTaskInstanceQuery histTaskQuery = historyService
+				.createHistoricTaskInstanceQuery().taskAssignee(userId).finished()
+				.processDefinitionKey(procDefKey)
+				.includeProcessVariables().orderByHistoricTaskInstanceEndTime().desc();
+		
+		// 根据流程业务ID查询OaDocn表
+		for (HistoricTaskInstance histTask : histTaskQuery.list()) {
+			Act e = new Act();
+			e.setHistTask(histTask);
+			e.setVars(histTask.getProcessVariables());
+//			e.setTaskVars(histTask.getTaskLocalVariables());
+//			System.out.println(histTask.getId()+"  =  "+histTask.getProcessVariables() + "  ========== " + histTask.getTaskLocalVariables());
+			e.setProcDef(ProcessDefCache.get(histTask.getProcessDefinitionId()));
+//			e.setProcIns(runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult());
+//			e.setProcExecUrl(ActUtils.getProcExeUrl(task.getProcessDefinitionId()));
+			e.setStatus("finish");
+			results.add(e);
+			//page.getList().add(e);
+		}
+		
+		return results;
+	}
+	
 	
 	public Map<String, Object> getProcessProgress(String processInstanceId, String taskDefKey) 
 	{

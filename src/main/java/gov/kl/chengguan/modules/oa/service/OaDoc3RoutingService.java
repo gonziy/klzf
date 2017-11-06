@@ -38,11 +38,14 @@ import gov.kl.chengguan.modules.act.service.ActTaskService;
 import gov.kl.chengguan.modules.act.utils.ActUtils;
 import gov.kl.chengguan.modules.oa.dao.OaDoc3Dao;
 import gov.kl.chengguan.modules.oa.entity.OaDoc3;
+import gov.kl.chengguan.modules.sys.service.PushService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 
 @Service
 @Transactional(readOnly = true)
 public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
+	private static String Message ="您有一项发文工作待审批";
+	
 	@Autowired
 	private ActTaskService actTaskService;
 	@Autowired
@@ -62,7 +65,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 	 * 根据用户返回代办的案件
 	 */
 	public List<OaDoc3> findTodoTasks(String userId) {
-		List<Act> acts = actTaskService.findTodoTasks(userId);
+		List<Act> acts = actTaskService.findTodoTasks(userId, ActUtils.PD_DOC3_ROUTING[0]);
 		List<OaDoc3> results = new ArrayList<OaDoc3>();
 	
 		for(Act act : acts)
@@ -89,7 +92,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 	 * 根据用户返回已完成的案件
 	 */
 	public List<OaDoc3> findFinishedTasks(String userId) {
-		List<Act> acts = actTaskService.findFinishedTasks(userId);
+		List<Act> acts = actTaskService.findFinishedTasks(userId, ActUtils.PD_DOC3_ROUTING[0]);
 		List<OaDoc3> results = new ArrayList<OaDoc3>();
 	
 		for(Act act : acts)
@@ -171,7 +174,6 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		// 设置意见
 		oaDoc3.getAct().setComment(iReturnState ==1?"[同意] ":"[驳回] ");
 		oaDoc3.preUpdate();
-
 		
 		// 对不同环节的业务逻辑进行操作
 		String taskDefKey = oaDoc3.getAct().getTaskDefKey();
@@ -183,8 +185,10 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			oaDoc3.setDRStage("1");
 			oaDoc3.setOfficeHeaderApproval((iReturnState ==1)?true : false);
 			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
-			
-			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");			
+	
+			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");	
+			// 需要设置办理该工作的领导
+			if(iReturnState == 1) vars.put("leader", oaDoc3.getLeaderId());		
 		}
 		else if ("utLeaderApprove".equals(taskDefKey)){
 			oaDoc3.setLeaderApproveDate(Calendar.getInstance().getTime());
@@ -233,15 +237,22 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		
 		// 对不同环节的业务逻辑进行操作
 		String taskDefKey = oaDoc3.getAct().getTaskDefKey();
+		PushService pushService = new PushService();
 
 		Map<String, Object> vars = Maps.newHashMap();
 		// 审核环节
 		if ("utOfficeHeaderApprove".equals(taskDefKey)){
 			oaDoc3.setOfficeHeaderApproveDate(Calendar.getInstance().getTime());
 			oaDoc3.setDRStage("1");
-			oaDoc3.setOfficeHeaderApproval("yes".equals(oaDoc3.getAct().getFlag())? true : false);		
+			if("yes".equals(oaDoc3.getAct().getFlag())){
+				oaDoc3.setOfficeHeaderApproval(true);
+				vars.put("leader", oaDoc3.getLeaderId());
+				pushService.PushToUser(oaDoc3.getLeaderId(), Message);
+			}
+			else {
+				oaDoc3.setOfficeHeaderApproval(false);				
+			}		
 			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
-			
 			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");			
 		}
 		else if ("utLeaderApprove".equals(taskDefKey)){
@@ -258,7 +269,9 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			List<String> reviewers = new ArrayList<String>();
 			for(String s : ss)
 			{
-				reviewers.add(s.trim());				
+				String userId = s.trim();
+				reviewers.add(userId);	
+				pushService.PushToUser(userId, Message);
 			}
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
