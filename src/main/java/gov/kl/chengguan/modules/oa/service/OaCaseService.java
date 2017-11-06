@@ -77,7 +77,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	 * 根据用户返回代办的案件
 	 */
 	public List<OaCase> findTodoTasks(String userId) {
-		List<Act> acts = actTaskService.findTodoTasks(userId);
+		List<Act> acts = actTaskService.findTodoTasks(userId, ActUtils.PD_CASE[0]);
 		List<OaCase> results = new ArrayList<OaCase>();
 	
 		for(Act act : acts)
@@ -106,7 +106,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 	 * 根据用户返回已完成的案件
 	 */
 	public List<OaCase> findFinishedTasks(String userId) {
-		List<Act> acts = actTaskService.findFinishedTasks(userId);
+		List<Act> acts = actTaskService.findFinishedTasks(userId, ActUtils.PD_CASE[0]);
 		List<OaCase> results = new ArrayList<OaCase>();
 	
 		for(Act act : acts)

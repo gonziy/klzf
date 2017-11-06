@@ -76,7 +76,11 @@ public class ApiDocumentRouteController  extends BaseController {
 		
 	}
 	
-	
+	/**
+	 * 转换
+	 * @param doc
+	 * @return
+	 */
 	public ApiDoc3 ToApiDoc3(OaDoc3 doc)
 	{
 		ApiDoc3 apiDoc3 = new ApiDoc3();
@@ -92,6 +96,8 @@ public class ApiDocumentRouteController  extends BaseController {
 		apiDoc3.setOfficeHeaderApproveDate(doc.getOfficeHeaderApproveDate());
 		apiDoc3.setOfficeHeaderOption(doc.getOfficeHeaderOption());
 		apiDoc3.setReviewersIDs(doc.getReviewersIDs());
+		apiDoc3.setReviewersIDs1(doc.getReviewersIDs1());
+		return apiDoc3;
 	}
 
 	public class ApiDoc3
