@@ -172,7 +172,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			
 			oaCase.setAutoId(Integer.parseInt(caseDao.getMax().toString()));
 			Calendar calendar = Calendar.getInstance();
-			String year = String.valueOf(calendar.YEAR);
+			String year = String.valueOf(calendar.get(Calendar.YEAR));
 			String officeCode = userDao.get(userId).getOffice().getCode();
 			String caseId = String.format("%03d", oaCase.getAutoId()+1);  
 			oaCase.setCaseDocNo(year + "05" + officeCode + caseId);
