@@ -199,11 +199,14 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		}
 		else if ("utOfficeHeaderDispatch".equals(taskDefKey)){
 			oaDoc3.setDRStage("3");
-			String[] ss = oaDoc3.getReviewersIDs1().trim().split(";");
-			List<String> reviewers = new ArrayList<String>();
-			for(String s : ss)
-			{
-				reviewers.add(s.trim());				
+			String reviewerIds = oaDoc3.getReviewersIDs1();
+			List<String> reviewers = new ArrayList<String>();			
+			if(reviewerIds != null && reviewerIds.trim().length() > 1) {
+				String[] ss = reviewerIds.trim().split(";");
+				for(String s : ss)
+				{
+					reviewers.add(s.trim());				
+				}
 			}
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
@@ -270,14 +273,18 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		}
 		else if ("utOfficeHeaderDispatch".equals(taskDefKey)){
 			oaDoc3.setDRStage("3");
-			String[] ss = oaDoc3.getReviewersIDs1().trim().split(";");
-			List<String> reviewers = new ArrayList<String>();
-			for(String s : ss)
-			{
-				String userId = s.trim();
-				reviewers.add(userId);	
-				pushService.PushToUser(userId, Message);
+			String reviewerIds = oaDoc3.getReviewersIDs1();
+			
+			List<String> reviewers = new ArrayList<String>();			
+				String[] ss = reviewerIds.trim().split(";");
+				for(String s : ss)
+				{
+					String userId = s.trim();
+					reviewers.add(userId);	
+					pushService.PushToUser(userId, Message);			
+				}
 			}
+			
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
 		}
