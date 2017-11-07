@@ -47,6 +47,7 @@ import gov.kl.chengguan.common.utils.SpringContextHolder;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.act.entity.Act;
 import gov.kl.chengguan.modules.act.service.ActTaskService;
+import gov.kl.chengguan.modules.act.utils.ActUtils;
 import gov.kl.chengguan.modules.cms.entity.Article;
 import gov.kl.chengguan.modules.cms.service.ArticleService;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
@@ -151,7 +152,7 @@ public class ApiOaController  extends BaseController {
 			// 审批人步骤
 			String step = tmpStepValues[1];
 			OaCase model = null;
-			java.util.List<Act> todoList = actTaskService.findTodoTasks(userId);
+			java.util.List<Act> todoList = actTaskService.findTodoTasks(userId, ActUtils.PD_CASE[0]);
 			if(todoList.size()>0)
 			{
 				for (Act act : todoList) {
