@@ -413,6 +413,7 @@ UPDATE oa_case SET
 
 <update id="updateMainLeaderRegOption1">
 	UPDATE oa_case SET 
+		case_stage = #{caseStage},
 		mainLeader_reg_opt = #{mainLeaderRegOption},
 		mainLeader_reg_flag = #{mainLeaderRegApproval},	
 	mainLeaderRegAssignee = #{mainLeaderRegAssignee},			
@@ -529,6 +530,7 @@ UPDATE oa_case SET
 
 <update id="updateMainLeaderPenalOption1">
 	UPDATE oa_case SET 
+		case_stage = #{caseStage},
 		mainLeader_penal_opt = #{mainLeaderPenalOption},
 		mainLeader_penal_flag = #{mainLeaderPenalApproval},
 		casePenalEndDate = #{casePenalEndDate},	

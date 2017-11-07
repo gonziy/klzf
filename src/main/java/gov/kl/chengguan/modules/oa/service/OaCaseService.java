@@ -236,6 +236,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
 				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
+				oaCase.setCaseStage(2);
 				dao.updateMainLeaderRegOption1(oaCase);		
 			}
 			else
@@ -251,6 +252,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 				if(iReturnState == 1) {
 					// 设置案件调查结束时间
 					oaCase.setCaseSurveyEndDate(Calendar.getInstance().getTime());
+					oaCase.setCaseStage(3);
 					vars.put("regPass", 1);
 					actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 				}
@@ -304,6 +306,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
 				oaCase.setCasePenalEndDate(Calendar.getInstance().getTime());
+				oaCase.setCaseStage(4);
 				dao.updateMainLeaderPenalOption1(oaCase);
 			}
 			else 
@@ -495,8 +498,10 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setMainLeaderRegApproval((iReturnState ==1)?true: false); 
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			oaCase.setMainLeaderRegAssignee(currentUser);
+			
 			if(iReturnState == 1) {
 				oaCase.setCaseRegEndDate(Calendar.getInstance().getTime());
+				oaCase.setCaseStage(2);
 				dao.updateMainLeaderRegOption1(oaCase);		
 			}
 			else
@@ -512,6 +517,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 				if(iReturnState == 1) {
 					// 设置案件调查结束时间
 					oaCase.setCaseSurveyEndDate(Calendar.getInstance().getTime());
+					oaCase.setCaseStage(3);
 					vars.put("regPass", 1);
 					actTaskService.complete(oaCase.getAct().getTaskId(), oaCase.getAct().getProcInsId(), oaCase.getAct().getComment(), vars);
 				}
@@ -607,6 +613,7 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			oaCase.setRejectFlag((iReturnState ==1)?false: true);
 			if(iReturnState == 1) {
 				oaCase.setCasePenalEndDate(Calendar.getInstance().getTime());
+				oaCase.setCaseStage(4);
 				dao.updateMainLeaderPenalOption1(oaCase);
 			}
 			else 
