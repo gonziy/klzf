@@ -70,6 +70,14 @@ public class UserUtils {
 		}
 		return user;
 	}
+	/**
+	 * 根据用户获取签章（图片）
+	 * @param id
+	 * @return
+	 */
+	public static String getUserPhoto(String id){
+		return get(id).getPhoto();
+	}
 	
 	/**
 	 * 根据登录名获取用户

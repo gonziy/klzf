@@ -65,6 +65,30 @@
   </function>
   
   <function>
+    <description>根据编码获取用户头像</description>
+    <name>getUserPhotoById</name>
+    <function-class>gov.kl.chengguan.modules.sys.utils.UserUtils</function-class>
+    <function-signature>java.lang.String getUserPhoto(java.lang.String)</function-signature>
+    <example>${fns:getUserPhotoById(id)}</example>  
+  </function>
+
+  <function>
+    <description>获取案件年份</description>
+    <name>getCaseIdYear</name>
+    <function-class>gov.kl.chengguan.common.utils.StringUtils</function-class>
+    <function-signature>java.lang.String getCaseIdYear(java.lang.String)</function-signature>
+    <example>${fns:getCaseIdYear(id)}</example>  
+  </function>
+  
+  <function>
+    <description>获取案件ID</description>
+    <name>getCaseId</name>
+    <function-class>gov.kl.chengguan.common.utils.StringUtils</function-class>
+    <function-signature>java.lang.String getCaseId(java.lang.String)</function-signature>
+    <example>${fns:getCaseId(id)}</example>  
+  </function>
+  
+  <function>
     <description>获取授权用户信息</description>
     <name>getPrincipal</name>
     <function-class>gov.kl.chengguan.modules.sys.utils.UserUtils</function-class>

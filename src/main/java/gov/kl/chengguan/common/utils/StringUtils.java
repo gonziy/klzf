@@ -15,6 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
 import com.google.common.collect.Lists;
+import com.sun.tools.javac.resources.javac;
 
 /**
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
@@ -133,6 +134,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return replace(replace(Encodes.escapeHtml(txt), "\n", "<br/>"), "\t", "&nbsp; &nbsp; ");
 	}
 
+	public static String getCaseIdYear(String str){
+		return str.substring(0, 4);
+	}
+	public static String getCaseId(String str){
+		return str.substring(4,str.length());
+	}
 	/**
 	 * 缩略字符串（不区分中英文字符）
 	 * @param str 目标字符串
@@ -142,6 +149,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	public static String abbr(String str, int length) {
 		if (str == null) {
 			return "";
+			
 		}
 		try {
 			StringBuilder sb = new StringBuilder();

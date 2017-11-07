@@ -24,7 +24,7 @@
       <h3>立案审批表</h3></p></td>
   </tr>
   <tr>
-    <td colspan="4" height="40" valign="center"><p align="right">垦执立字[ 2017 ] 第123456 号&nbsp;&nbsp; </p></td>
+    <td colspan="4" height="40" valign="center"><p align="right">垦执立字[${fns:getCaseIdYear(oaCase.caseDocNo)}]第 ${fns:getCaseId(oaCase.caseDocNo)}号&nbsp;&nbsp; </p></td>
   </tr>
   <tr>
     <td width="120" height="40" valign="center"><p align="center">当事人 </p></td>
@@ -50,7 +50,11 @@
   <tr>
     <td width="120" height="100" valign="center"><p align="center">承办人 <br>
       意  见 </p></td>
-    <td colspan="3" valign="center"><p>&nbsp;&nbsp;${oaCase.caseCheckResult}</p></td>
+    <td colspan="3" valign="center">
+    <p>&nbsp;&nbsp;${oaCase.caseCheckResult}</p>
+    <p style="text-align:right"><img src="${fns:getUserPhotoById('1')}" alt="" />&nbsp;&nbsp;</p>
+    <p style="text-align:right"><fmt:formatDate value="${oaCase.laRecDate}" pattern="yyyy/MM/dd"/>&nbsp;&nbsp;</p>
+    </td>
   </tr>
   <tr>
     <td width="120" height="100" valign="center"><p align="center">承办机构 <br>

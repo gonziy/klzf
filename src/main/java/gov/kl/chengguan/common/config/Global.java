@@ -97,6 +97,10 @@ public class Global {
 		return getConfig("urlSuffix");
 	}
 	
+	public static String getUserFace(String userId) {
+		return "123";
+	}
+	
 	/**
 	 * 是否是演示模式，演示模式下不能修改用户、角色、密码、菜单、授权
 	 */

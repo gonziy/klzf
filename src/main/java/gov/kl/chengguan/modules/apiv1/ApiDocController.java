@@ -117,18 +117,25 @@ public class ApiDocController  extends BaseController {
 			JSONObject json = JSONObject.parseObject(dataString);
 			JSONObject userJson = json.getJSONObject("user");
 			JSONObject docJson = json.getJSONObject("document");
-			java.util.List<Act> todoList = actTaskService.findTodoTasks(userJson.getString("userId"), ActUtils.PD_DOC3_ROUTING[0]);
+//			java.util.List<Act> todoList = actTaskService.findTodoTasks(userJson.getString("userId"), ActUtils.PD_DOC3_ROUTING[0]);
+			java.util.List<OaDoc3> todoList =doc3Service.findTodoTasks(userJson.getString("userId"));
 			OaDoc3 model = null;
 			if(todoList.size()>0)
 			{
-				for (Act act : todoList) {
-					String businessId= act.getBusinessId();
-					businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
-					OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
-					if(oaDoc3.getId().equals(docJson.getString("id"))){
-						model = oaDoc3;
-						model.setAct(act);
-						model.setTask(act.getTask());
+//				for (Act act : todoList) {
+//					String businessId= act.getBusinessId();
+//					businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+//					OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
+//					if(oaDoc3.getId().equals(docJson.getString("id"))){
+//						model = oaDoc3;
+//						model.setAct(act);
+//						model.setTask(act.getTask());
+//						break;
+//					}
+//				}
+				for (OaDoc3 doc : todoList) {
+					if(doc.getId().equals(docJson.getString("id"))){
+						model = doc;
 						break;
 					}
 				}

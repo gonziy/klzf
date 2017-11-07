@@ -40,6 +40,7 @@ import gov.kl.chengguan.modules.oa.dao.OaDoc3Dao;
 import gov.kl.chengguan.modules.oa.entity.OaDoc3;
 import gov.kl.chengguan.modules.sys.service.PushService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
+import groovy.mock.interceptor.Ignore;
 
 @Service
 @Transactional(readOnly = true)
@@ -70,21 +71,18 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 	
 		for(Act act : acts)
 		{
-			ProcessDefinitionEntity prodef = (ProcessDefinitionEntity) act.getProcDef();
-			String prodefkey = prodef.getKey();
-			if(prodefkey.equals(ActUtils.PD_DOC3_ROUTING[0]))
-			{
-				//根据business id 获取案件参数
-				String businessId = act.getBusinessId();
-				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
-				OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
-				if(oaDoc3 != null) {
-					oaDoc3.setTask(act.getTask());
-					oaDoc3.setProcessInstance(act.getProcIns());
-					oaDoc3.setProcessDefinition(act.getProcDef());
-					oaDoc3.setVariables(act.getVars().getVariableMap());
-					results.add(oaDoc3);
-				}
+			//根据business id 获取案件参数
+			String businessId = act.getBusinessId();
+			businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+			OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
+			if(oaDoc3 != null) {
+				oaDoc3.setAct(act);
+				oaDoc3.setTask(act.getTask());
+				oaDoc3.setProcessInstance(act.getProcIns());
+				oaDoc3.setProcessInstanceId(act.getProcInsId());
+				oaDoc3.setProcessDefinition(act.getProcDef());
+				oaDoc3.setVariables(act.getVars().getVariableMap());
+				results.add(oaDoc3);
 			}
 		}
 		return results;
@@ -99,18 +97,17 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 	
 		for(Act act : acts)
 		{
-			if(act.getProcDefKey() == ActUtils.PD_DOC3_ROUTING[0])
-			{
-				//根据business id 获取案件参数
-				String businessId = act.getBusinessId();
-				businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
-				OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
-				if(oaDoc3 != null) {
-					oaDoc3.setTask(act.getTask());
-					oaDoc3.setProcessInstance(act.getProcIns());
-					oaDoc3.setProcessDefinition(act.getProcDef());
-					results.add(oaDoc3);
-				}
+			//根据business id 获取案件参数
+			String businessId = act.getBusinessId();
+			businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
+			OaDoc3 oaDoc3 = oaDoc3Dao.get(businessId);
+			if(oaDoc3 != null) {
+				oaDoc3.setAct(act);
+				oaDoc3.setTask(act.getTask());
+				oaDoc3.setProcessInstance(act.getProcIns());
+				oaDoc3.setProcessInstanceId(act.getProcInsId());
+				oaDoc3.setProcessDefinition(act.getProcDef());
+				results.add(oaDoc3);
 			}
 		}
 		return results;
@@ -118,9 +115,10 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 	
 	/*
 	 * 手机启动公文传阅流程
+	 * 发起人id
 	 */
 	@Transactional(readOnly = false)
-	public void mobileSave(String userId,OaDoc3 oaDoc3) {
+	public void mobileSave(OaDoc3 oaDoc3, String userId) {
 		// 申请发起
 		Map<String, Object> vars = Maps.newHashMap();
 		if (StringUtils.isBlank(oaDoc3.getId())){
@@ -135,8 +133,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		else{
 			oaDoc3.preUpdate();
 			dao.update(oaDoc3);
-			oaDoc3.getAct().setComment(("yes".equals(oaDoc3.getAct().getFlag())?"[重申] ":"[销毁] ")+oaDoc3.getAct().getComment());
-			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");
+			oaDoc3.getAct().setComment("[提交] ");
 			actTaskService.complete(oaDoc3.getAct().getTaskId(), oaDoc3.getAct().getProcInsId(), 
 					oaDoc3.getAct().getComment(), oaDoc3.getDocTitle(), vars);
 		}
@@ -152,16 +149,16 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		if (StringUtils.isBlank(oaDoc3.getId())){
 			oaDoc3.preInsert();
 			dao.insert(oaDoc3);
-			
+		
 			// 启动流程
+			// vars.put("applyer", UserUtils.getUser().getId()); // 这个在启动流程时Controller中设置
 			actTaskService.startProcess(ActUtils.PD_DOC3_ROUTING[0], ActUtils.PD_DOC3_ROUTING[1], 
 					oaDoc3.getId(), oaDoc3.getDocTitle(), vars);
 		} 
 		else{
 			oaDoc3.preUpdate();
 			dao.update(oaDoc3);
-			oaDoc3.getAct().setComment(("yes".equals(oaDoc3.getAct().getFlag())?"[重申] ":"[销毁] ")+oaDoc3.getAct().getComment());
-			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");
+			oaDoc3.getAct().setComment("[提交] ");
 			actTaskService.complete(oaDoc3.getAct().getTaskId(), oaDoc3.getAct().getProcInsId(), 
 					oaDoc3.getAct().getComment(), oaDoc3.getDocTitle(), vars);
 		}
@@ -186,11 +183,9 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			oaDoc3.setOfficeHeaderApproveDate(Calendar.getInstance().getTime());
 			oaDoc3.setDRStage("1");
 			oaDoc3.setOfficeHeaderApproval((iReturnState ==1)?true : false);
-			int r = oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
-
-//			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");
-			//孙 修改
-			vars.put("pass", iReturnState==1?"1":"0");	
+			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
+	
+			vars.put("pass", iReturnState);	
 			// 需要设置办理该工作的领导
 			if(iReturnState == 1) vars.put("leader", oaDoc3.getLeaderId());		
 		}
@@ -239,6 +234,12 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		oaDoc3.getAct().setComment(("yes".equals(oaDoc3.getAct().getFlag())?"[同意] ":"[驳回] ")+oaDoc3.getAct().getComment());
 		oaDoc3.preUpdate();
 		
+//		List<OaDoc3> doc3s = findTodoTasks(UserUtils.getUser().getId());
+//		for(OaDoc3 doc3 : doc3s)
+//		{
+//			System.out.println("doc3 Task iD" + doc3.getTask().getId());
+//		}
+		
 		// 对不同环节的业务逻辑进行操作
 		String taskDefKey = oaDoc3.getAct().getTaskDefKey();
 		PushService pushService = new PushService();
@@ -257,7 +258,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 				oaDoc3.setOfficeHeaderApproval(false);				
 			}		
 			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
-			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? "1" : "0");			
+			vars.put("pass", "yes".equals(oaDoc3.getAct().getFlag())? 1 : 0);			
 		}
 		else if ("utLeaderApprove".equals(taskDefKey)){
 			oaDoc3.setLeaderApproveDate(Calendar.getInstance().getTime());
