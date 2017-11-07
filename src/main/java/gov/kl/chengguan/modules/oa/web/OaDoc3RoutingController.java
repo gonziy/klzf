@@ -126,6 +126,11 @@ public class OaDoc3RoutingController extends BaseController {
 	//@RequiresPermissions("oa:oaDoc3:view")
 	@RequestMapping(value = {"list/task",""})
 	public String taskList(HttpSession session, Model model) {
+//		Page<OaDoc3> page = oaDoc3RoutingService.findPage(new Page<OaDoc3>(request, response), oaDoc3); 
+//	    model.addAttribute("page", page); 
+//	    //
+//		return "modules/oa/doc3RoutingTodoList";
+		
 		return "redirect:" + adminPath + "/act/task/todo/"; 
 	}
 	

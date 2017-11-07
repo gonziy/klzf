@@ -18,10 +18,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/act/task/todo">待办任务</a></li>
-		<li><a href="${ctx}/act//task/historic">已办任务</a></li>
 		<li class="active"><a href="${ctx}/oa/oaCase/">案件列表</a></li>
-		<li><a href="${ctx}/act/task/process">新建任务</a></li>
+		<li><a href="${ctx}/act/task/form?procDefId=CaseProcess:1:e253a8a5f2fb4cf4937619da3e0c8541">新建任务</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/list" method="post" class="breadcrumb form-search" style="display:none">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

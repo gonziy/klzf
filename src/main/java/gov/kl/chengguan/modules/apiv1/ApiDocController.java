@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import gov.kl.chengguan.common.persistence.Page;
@@ -167,11 +168,62 @@ public class ApiDocController  extends BaseController {
 				}
 
 			}else if(stage == 2){
+				try {
+					model.setLeaderOption(docJson.getString("opinion"));
+					User updater = userDao.get(userJson.getString("userId"));
+					model.setUpdateBy(updater);
+					model.setUpdateDate(new Date());
+					doc3Service.mobileSaveStep(model, 1);
+					jsonObject.put("msg", "success");
+					jsonObject.put("code", 0);
+					jsonObject.put("result", "success");
+					jsonObject.put("remark", "");
+				} catch (Exception e) {
+				}
 				
 			}else if(stage == 3){
+				try {
+					
+					JSONArray readersarray = docJson.getJSONArray("readerIds");
+					String readers ="";
+					if(readersarray!=null){
+						for (Object objReader : readersarray) {
+							readers += objReader.toString()+";";
+						}
+						if(readers.endsWith(";")){
+							readers = readers.substring(0, readers.length()-1);
+						}
+						if(!readers.isEmpty()){
+							model.setReviewersIDs1(readers);
+						}
+					}else {
+						model.setReviewersIDs1("");
+					}
+					
+					User updater = userDao.get(userJson.getString("userId"));
+					model.setUpdateBy(updater);
+					model.setUpdateDate(new Date());
+					doc3Service.mobileSaveStep(model, 1);
+					jsonObject.put("msg", "success");
+					jsonObject.put("code", 0);
+					jsonObject.put("result", "success");
+					jsonObject.put("remark", "");
+				} catch (Exception e) {
+				}
 				
 			}else if(stage == 4){
-				
+				try {
+					
+					User updater = userDao.get(userJson.getString("userId"));
+					model.setUpdateBy(updater);
+					model.setUpdateDate(new Date());
+					doc3Service.mobileSaveStep(model, 1);
+					jsonObject.put("msg", "success");
+					jsonObject.put("code", 0);
+					jsonObject.put("result", "success");
+					jsonObject.put("remark", "");
+				} catch (Exception e) {
+				}
 			}
 			
 			
@@ -266,7 +318,7 @@ public class ApiDocController  extends BaseController {
 			doc3.setDocTitle(docJson.getString("title"));
 			doc3.setUpdateBy(currorUser);
 			doc3.setUpdateDate(new Date());
-			doc3Service.mobileSave(userJson.getString("userId"), doc3);
+			doc3Service.mobileSave(doc3,userJson.getString("userId"));
 
 			jsonObject.put("msg", "success");
 			jsonObject.put("code", 0);
