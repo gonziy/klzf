@@ -807,20 +807,20 @@ public class ApiOaController  extends BaseController {
 				ApiOaCase apiOaCase = new ApiOaCase();
 				
 				String _case_sourceString = oaCase.getCaseSource();
-				if(_case_sourceString=="1"){
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-				}else if(_case_sourceString=="2"){
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-				}else if(_case_sourceString=="3"){
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-				}else if(_case_sourceString=="4"){
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-				}else if(_case_sourceString=="5"){
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-				}else if(_case_sourceString=="6"){
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
+				if(_case_sourceString.equals("上级交办")){
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_1.jpg");
+				}else if(_case_sourceString.equals("有关部门移交")){
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_2.jpg");
+				}else if(_case_sourceString.equals("调查发现")){
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_3.jpg");
+				}else if(_case_sourceString.equals("新闻媒体曝光")){
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_4.jpg");
+				}else if(_case_sourceString.equals("举报投诉")){
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_5.jpg");
+				}else if(_case_sourceString.equals("其他")){
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_6.jpg");
 				}else{
-					oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
+					oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_6.jpg");
 				}
 				apiOaCase.setId(oaCase.getId());
 			    apiOaCase.setCaseDocNo(oaCase.getCaseDocNo()==null?"":oaCase.getCaseDocNo());
@@ -1399,17 +1399,17 @@ public class ApiOaController  extends BaseController {
 					
 					
 					String _case_sourceString = oaCase.getCaseSource();
-					if(_case_sourceString=="上级交办"){
+					if(_case_sourceString.equals("上级交办")){
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_1.jpg");
-					}else if(_case_sourceString=="有关部门移交"){
+					}else if(_case_sourceString.equals("有关部门移交")){
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_2.jpg");
-					}else if(_case_sourceString=="调查发现"){
+					}else if(_case_sourceString.equals("调查发现")){
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_3.jpg");
-					}else if(_case_sourceString=="新闻媒体曝光"){
+					}else if(_case_sourceString.equals("新闻媒体曝光")){
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_4.jpg");
-					}else if(_case_sourceString=="举报投诉"){
+					}else if(_case_sourceString.equals("举报投诉")){
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_5.jpg");
-					}else if(_case_sourceString=="其他"){
+					}else if(_case_sourceString.equals("其他")){
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_6.jpg");
 					}else{
 						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_6.jpg");
