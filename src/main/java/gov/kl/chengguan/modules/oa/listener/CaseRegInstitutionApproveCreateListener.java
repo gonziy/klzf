@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gov.kl.chengguan.modules.sys.entity.BaseUser;
+import gov.kl.chengguan.modules.sys.service.PushService;
 import gov.kl.chengguan.modules.sys.service.UserService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
 import groovyjarjarantlr.debug.ListenerBase;
@@ -28,6 +29,7 @@ public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static String TAG="CaseInstitutionApproveCreateListener";
+	private static String Message ="您有一项工作等待办理";
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -96,12 +98,16 @@ public class CaseRegInstitutionApproveCreateListener implements TaskListener{
 				delegateTask.setVariable("MainLeaders", MainLds);
 				
 				// 设置当前流程的经办人
+				PushService pushService = new PushService();
 				if(institutionLds.size() > 1) {
-					for(BaseUser user : institutionLds)
+					for(BaseUser user : institutionLds) {
 						delegateTask.addCandidateUser(user.getId());
+						pushService.PushToUser(user.getId(), Message);
+					}
 				}
 				else {
 					delegateTask.setAssignee(institutionLds.get(0).getId());
+					pushService.PushToUser(institutionLds.get(0).getId(), Message);
 				}
 			}
 			else
