@@ -465,7 +465,6 @@ UPDATE oa_case SET
 		penalAssignee = #{penalAssignee},		
 		case_stage = #{caseStage},			
 		update_by = #{updateBy.id}, 
-		doc_no = #{caseDocNo},
 		update_date = #{updateDate}
 	WHERE id = #{id}
 </update>
@@ -477,7 +476,6 @@ UPDATE oa_case SET
 		assignee_penal_opt = #{assigneePenalOption},	
 		deptLeader_close_flag = #{rejectFlag},			
 		update_by = #{updateBy.id}, 
-		doc_no = #{caseDocNo},
 		update_date = #{updateDate}
 	WHERE id = #{id}
 </update>

@@ -276,6 +276,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			String reviewerIds = oaDoc3.getReviewersIDs1();
 			
 			List<String> reviewers = new ArrayList<String>();			
+			if(reviewerIds != null && reviewerIds.trim().length() > 1) {
 				String[] ss = reviewerIds.trim().split(";");
 				for(String s : ss)
 				{

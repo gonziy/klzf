@@ -82,6 +82,13 @@ public class Global {
 	public static String getAdminPath() {
 		return getConfig("adminPath");
 	}
+	/**
+	 * 网络路径
+	 * @return
+	 */
+	public static String getWebUrl() {
+		return getConfig("webUrl");
+	}
 	
 	/**
 	 * 获取前端根路径
@@ -95,10 +102,6 @@ public class Global {
 	 */
 	public static String getUrlSuffix() {
 		return getConfig("urlSuffix");
-	}
-	
-	public static String getUserFace(String userId) {
-		return "123";
 	}
 	
 	/**

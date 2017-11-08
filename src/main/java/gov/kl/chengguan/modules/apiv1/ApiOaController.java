@@ -298,10 +298,8 @@ public class ApiOaController  extends BaseController {
 						caseDao.update(tmpModelCase);
 						//结束
 						model.setNormAssigneePenalOptPart2(punish);
-						model.setCaseDocNo(new SimpleDateFormat(
-								"yyyyMMddHHmmss").format(new Date()));
 
-						model.setAssigneePenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setAssigneePenalOption(opinion==null? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						
 						if (model.getAct().getTaskDefKey()
@@ -968,7 +966,11 @@ public class ApiOaController  extends BaseController {
 		
 		for(int i = 0; i < steps.size();i++){
 			if(steps.get(i).getStatus().equals("pass")){
-				txtString = steps.get(i+1).getStep() + "," + steps.get(i+1).getStage() + "," + steps.get(i+1).getName();
+				if(i+1<steps.size()){
+					txtString = steps.get(i+1).getStep() + "," + steps.get(i+1).getStage() + "," + steps.get(i+1).getName();
+				}else{
+					txtString = steps.get(i).getStep() + "," + steps.get(i).getStage() + "," + steps.get(i).getName();
+				}
 			}else if(steps.get(i).getStatus().equals("reject")){
 				txtString = steps.get(i-1).getStep() + "," + steps.get(i-1).getStage() + "," + steps.get(i-1).getName();
 				break;
@@ -1397,20 +1399,20 @@ public class ApiOaController  extends BaseController {
 					
 					
 					String _case_sourceString = oaCase.getCaseSource();
-					if(_case_sourceString=="1"){
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-					}else if(_case_sourceString=="2"){
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-					}else if(_case_sourceString=="3"){
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-					}else if(_case_sourceString=="4"){
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-					}else if(_case_sourceString=="5"){
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
-					}else if(_case_sourceString=="6"){
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
+					if(_case_sourceString=="上级交办"){
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_1.jpg");
+					}else if(_case_sourceString=="有关部门移交"){
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_2.jpg");
+					}else if(_case_sourceString=="调查发现"){
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_3.jpg");
+					}else if(_case_sourceString=="新闻媒体曝光"){
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_4.jpg");
+					}else if(_case_sourceString=="举报投诉"){
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_5.jpg");
+					}else if(_case_sourceString=="其他"){
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_6.jpg");
 					}else{
-						oaCase.setCaseThumbnails("http://pic.to8to.com/attch/day_150717/20150717_e4a515295cb744e19d027i0jtxc6XRla.jpg");
+						oaCase.setCaseThumbnails(Global.getWebUrl()+"/static/images/icon_6.jpg");
 					}
 					apiOaCase.setTitle(oaCase.getTitle());
 				    apiOaCase.setCaseDocNo(oaCase.getCaseDocNo()==null?"":oaCase.getCaseDocNo());
@@ -2248,7 +2250,7 @@ public class ApiOaController  extends BaseController {
 					return;
 				}
 
-				String httpPath = "http://47.93.52.62:8080/klzf2"
+				String httpPath =Global.getWebUrl()
 						+ Global.USERFILES_BASE_URL + fileType + "/"
 						+ folderName + "/" + newFileName;
 				try {
