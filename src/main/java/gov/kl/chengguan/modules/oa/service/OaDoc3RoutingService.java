@@ -207,6 +207,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 				{
 					reviewers.add(s.trim());				
 				}
+				oaDoc3.setReviewersIDs1(reviewerIds);
 			}
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
@@ -284,8 +285,10 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 					reviewers.add(userId);	
 					pushService.PushToUser(userId, Message);			
 				}
+
+				oaDoc3.setReviewersIDs1(reviewerIds);
 			}
-			
+
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
 		}

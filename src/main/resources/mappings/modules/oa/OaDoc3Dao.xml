@@ -131,6 +131,7 @@
 	
 	<update id="updateOfficeHeaderApproval">
 		UPDATE oa_doc3 SET 
+			DRStage = #{DRStage},
 			OfficeHeaderOption = #{officeHeaderOption},
 			OfficeHeaderApproval = #{officeHeaderApproval},
 			DueDate = #{dueDate},

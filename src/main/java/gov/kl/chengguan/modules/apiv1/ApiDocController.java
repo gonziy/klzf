@@ -147,87 +147,149 @@ public class ApiDocController  extends BaseController {
 				jsonObject.put("result", "failed");
 				jsonObject.put("remark", "you don't have permission to approve");
 			} else{
-				
-			}
-			Integer stage = docJson.getInteger("progressCode");
-			if(stage==1){
-				//办公室主任审批
-				
-				try {
-					model.setLeaderId(docJson.getString("approvalId"));
-					model.setDueDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2099-12-31 23:59:59"));
-					User updater = userDao.get(userJson.getString("userId"));
-					model.setUpdateBy(updater);
-					model.setUpdateDate(new Date());
-					doc3Service.mobileSaveStep(model, 1);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
-				} catch (Exception e) {
-				}
+				Integer stage = docJson.getInteger("progressCode");
+				if(stage==1){
+					//办公室主任审批
+					try {
+						
+						if(docJson.getString("approvalId")==null || docJson.getString("approvalId").isEmpty())
+						{
+							jsonObject.put("msg", "missing url, approvalId is null, please put a parameter");
+							jsonObject.put("code", 41010);
+							try {
+								out = response.getWriter();
+								out.print(jsonObject.toJSONString());
+								out.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							return;
+						}
+						
+						model.setLeaderId(docJson.getString("approvalId"));
+						model.setDueDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2099-12-31 23:59:59"));
+						User updater = userDao.get(userJson.getString("userId"));
+						model.setUpdateBy(updater);
+						model.setUpdateDate(new Date());
+						doc3Service.mobileSaveStep(model, 1);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+						
+					} catch (Exception e) {
+					}
 
-			}else if(stage == 2){
-				try {
-					model.setLeaderOption(docJson.getString("opinion"));
-					User updater = userDao.get(userJson.getString("userId"));
-					model.setUpdateBy(updater);
-					model.setUpdateDate(new Date());
-					doc3Service.mobileSaveStep(model, 1);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
-				} catch (Exception e) {
-				}
-				
-			}else if(stage == 3){
-				try {
-					
-					JSONArray readersarray = docJson.getJSONArray("readerIds");
-					String readers ="";
-					if(readersarray!=null){
-						for (Object objReader : readersarray) {
-							readers += objReader.toString()+";";
+				}else if(stage == 2){
+					try {
+						if(docJson.getString("userId")==null || docJson.getString("userId").isEmpty())
+						{
+							jsonObject.put("msg", "missing url, userId is null, please put a parameter");
+							jsonObject.put("code", 41010);
+							try {
+								out = response.getWriter();
+								out.print(jsonObject.toJSONString());
+								out.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							return;
 						}
-						if(readers.endsWith(";")){
-							readers = readers.substring(0, readers.length()-1);
+						if(docJson.getString("opinion")==null || docJson.getString("opinion").isEmpty())
+						{
+							jsonObject.put("msg", "missing url, opinion is null, please put a parameter");
+							jsonObject.put("code", 41010);
+							try {
+								out = response.getWriter();
+								out.print(jsonObject.toJSONString());
+								out.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							return;
 						}
-						if(!readers.isEmpty()){
-							model.setReviewersIDs1(readers);
-						}
-					}else {
-						model.setReviewersIDs1("");
+						model.setLeaderOption(docJson.getString("opinion"));
+						User updater = userDao.get(userJson.getString("userId"));
+						model.setUpdateBy(updater);
+						model.setUpdateDate(new Date());
+						doc3Service.mobileSaveStep(model, 1);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					} catch (Exception e) {
 					}
 					
-					User updater = userDao.get(userJson.getString("userId"));
-					model.setUpdateBy(updater);
-					model.setUpdateDate(new Date());
-					doc3Service.mobileSaveStep(model, 1);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
-				} catch (Exception e) {
-				}
-				
-			}else if(stage == 4){
-				try {
+				}else if(stage == 3){
+					try {
+
+						if(docJson.getJSONArray("readerIds")==null || docJson.getJSONArray("readerIds").size()==0)
+						{
+							jsonObject.put("msg", "missing url, readerIds is null, please put a parameter");
+							jsonObject.put("code", 41010);
+							try {
+								out = response.getWriter();
+								out.print(jsonObject.toJSONString());
+								out.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							return;
+						}
+						JSONArray readersarray = docJson.getJSONArray("readerIds");
+						String readers ="";
+						if(readersarray!=null){
+							for (Object objReader : readersarray) {
+								readers += objReader.toString()+";";
+							}
+							if(readers.endsWith(";")){
+								readers = readers.substring(0, readers.length()-1);
+							}
+							if(!readers.isEmpty()){
+								model.setReviewersIDs1(readers);
+							}
+						}else {
+							model.setReviewersIDs1("");
+						}
+						
+						User updater = userDao.get(userJson.getString("userId"));
+						model.setUpdateBy(updater);
+						model.setUpdateDate(new Date());
+						doc3Service.mobileSaveStep(model, 1);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					} catch (Exception e) {
+					}
 					
-					User updater = userDao.get(userJson.getString("userId"));
-					model.setUpdateBy(updater);
-					model.setUpdateDate(new Date());
-					doc3Service.mobileSaveStep(model, 1);
-					jsonObject.put("msg", "success");
-					jsonObject.put("code", 0);
-					jsonObject.put("result", "success");
-					jsonObject.put("remark", "");
-				} catch (Exception e) {
+				}else if(stage == 4){
+					try {
+						if(docJson.getString("userId")==null || docJson.getString("userId").isEmpty())
+						{
+							jsonObject.put("msg", "missing url, userId is null, please put a parameter");
+							jsonObject.put("code", 41010);
+							try {
+								out = response.getWriter();
+								out.print(jsonObject.toJSONString());
+								out.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							return;
+						}
+						User updater = userDao.get(userJson.getString("userId"));
+						model.setUpdateBy(updater);
+						model.setUpdateDate(new Date());
+						doc3Service.mobileSaveStep(model, 1);
+						jsonObject.put("msg", "success");
+						jsonObject.put("code", 0);
+						jsonObject.put("result", "success");
+						jsonObject.put("remark", "");
+					} catch (Exception e) {
+					}
 				}
 			}
-			
-			
-			
 			
 		}else {
 

@@ -16,8 +16,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/oa/doc3Routing/list/task">待办任务</a></li>
-		<li class="active"><a href="${ctx}/oa/doc3Routing/list">任务管理</a></li>
+		<li class="active"><a href="${ctx}/oa/doc3Routing/list">公文管理</a></li>
 		<!--<shiro:hasPermission name="oa:doc3Routing:edit"> -->
 		<li><a href="${ctx}/oa/doc3Routing/form">发文</a></li>
 		<!--</shiro:hasPermission> -->
@@ -49,11 +48,7 @@
 			<th>发文名称</th>
 			<th>创建人</th>
 			<th>创建时间</th>
-			<th>截至时间</th>
-			<th>审批领导</th>
-			<th>传阅人列表</th>
-			<th>当前环节</th>
-			<th>操作</th>
+
 		</tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="doc">
@@ -63,18 +58,7 @@
 			<tr>
 				<td>${doc.docTitle}</td>
 				<td>${doc.createBy.name}</td>
-				<td><fmt:formatDate value="${doc.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-				<td><fmt:formatDate value="${doc.dueDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>	
-				<td><fmt:formatDate value="${doc.leaderId}"/></td>	
-				<td>${doc.reviewersIDs}</td>								
-				<c:if test="${not empty task}">
-					<td>${task.name}</td>
-					<td><a target="_blank" href="${ctx}/act/task/trace/photo/${task.processDefinitionId}/${task.executionId}">进度</a></td>
-				</c:if>
-				<c:if test="${empty task}">
-					<td>已结束</td>
-					<td>&nbsp;</td>
-				</c:if>
+				<td></td>
 			</tr>
 		</c:forEach>
 		</tbody>

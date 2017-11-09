@@ -190,7 +190,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setInstitutionRegApproval(approve.equals("pass") ? true
 								: false);
-						model.setInstitutionRegOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setInstitutionRegOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utLaShp_Cbjg")) {
@@ -221,7 +221,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setDeptLeaderRegApproval(approve.equals("pass") ? true
 								: false);
-						model.setDeptLeaderRegOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setDeptLeaderRegOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utLaShp_Fgld")) {
@@ -245,7 +245,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setMainLeaderRegApproval(approve.equals("pass") ? true
 								: false);
-						model.setMainLeaderRegOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setMainLeaderRegOption(opinion==null? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utLaShp_Zgld")) {
@@ -328,7 +328,7 @@ public class ApiOaController  extends BaseController {
 						//结束
 						model.setInstitutionPenalApproval(approve
 								.equals("pass") ? true : false);
-						model.setInstitutionPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setInstitutionPenalOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						model.setCaseMgtCenterPenalOption("");
 						if (model.getAct().getTaskDefKey()
@@ -360,7 +360,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setCaseMgtCenterPenalApproval(approve
 								.equals("pass") ? true : false);
-						model.setCaseMgtCenterPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setCaseMgtCenterPenalOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_AjGlZhx")) {
@@ -390,7 +390,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setDeptLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
-						model.setDeptLeaderPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setDeptLeaderPenalOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_Fgld")) {
@@ -414,7 +414,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setMainLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
-						model.setMainLeaderPenalOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setMainLeaderPenalOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_Zgld")) {
@@ -446,7 +446,7 @@ public class ApiOaController  extends BaseController {
 						caseDao.update(tmpModelCase);
 						//结束
 						
-						model.setAssigneeCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setAssigneeCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_Chbr")) {
@@ -475,7 +475,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setInstitutionCloseCaseApproval(approve
 								.equals("pass") ? true : false);
-						model.setInstitutionCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setInstitutionCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_Cbjg")) {
@@ -506,7 +506,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setCaseMgtCenterCloseCaseApproval(approve
 								.equals("pass") ? true : false);
-						model.setCaseMgtCenterCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setCaseMgtCenterCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_AjGlZhx")) {
@@ -530,7 +530,7 @@ public class ApiOaController  extends BaseController {
 						
 						model.setMainLeaderCloseCaseApproval(approve
 								.equals("pass") ? true : false);
-						model.setMainLeaderCloseCaseOption(opinion.isEmpty() ? "该用户未填写意见(手机端)"
+						model.setMainLeaderCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_Zgld")) {
