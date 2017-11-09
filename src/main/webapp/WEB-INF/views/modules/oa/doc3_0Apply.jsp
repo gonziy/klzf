@@ -74,7 +74,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/oa/doc3Routing/">发文列表</a></li>
+		<li><a href="${ctx}/oa/doc3Routing/list">发文列表</a></li>
 		<li class="active"><a href="${ctx}/oa/doc3Routing/form/?id=${oaDoc3.id}">发文详情</a></li>
 	</ul>
 	<form:form id="inputForm" modelAttribute="oaDoc3" action="${ctx}/oa/doc3Routing/save" method="post" class="form-horizontal">

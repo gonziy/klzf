@@ -71,6 +71,15 @@
     <function-signature>java.lang.String getUserPhoto(java.lang.String)</function-signature>
     <example>${fns:getUserPhotoById(id)}</example>  
   </function>
+  
+  <function>
+    <description>根据编码获取姓名</description>
+    <name>getUserNameById</name>
+    <function-class>gov.kl.chengguan.modules.sys.utils.UserUtils</function-class>
+    <function-signature>java.lang.String getUserName(java.lang.String)</function-signature>
+    <example>${fns:getUserNameById(id)}</example>  
+  </function>
+  
 
   <function>
     <description>获取案件年份</description>

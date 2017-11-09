@@ -78,6 +78,14 @@ public class UserUtils {
 	public static String getUserPhoto(String id){
 		return get(id).getPhoto();
 	}
+	/**
+	 * 获取用户姓名
+	 * @param id
+	 * @return
+	 */
+	public static String getUserName(String id){
+		return get(id).getName();
+	}
 	
 	/**
 	 * 根据登录名获取用户

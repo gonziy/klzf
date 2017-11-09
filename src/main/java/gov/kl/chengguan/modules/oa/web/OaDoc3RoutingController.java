@@ -68,7 +68,7 @@ public class OaDoc3RoutingController extends BaseController {
 	    Page<OaDoc3> page = oaDoc3RoutingService.findPage(new Page<OaDoc3>(request, response), oaDoc3); 
 	    model.addAttribute("page", page); 
 	    //
-		return "modules/oa/oaDoc3List";
+		return "modules/oa/doc3RoutingList";
 	}
 	
 	/**

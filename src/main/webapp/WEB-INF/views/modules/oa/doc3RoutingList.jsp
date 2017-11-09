@@ -48,7 +48,6 @@
 			<th>发文名称</th>
 			<th>创建人</th>
 			<th>创建时间</th>
-
 		</tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="doc">
@@ -58,7 +57,7 @@
 			<tr>
 				<td>${doc.docTitle}</td>
 				<td>${doc.createBy.name}</td>
-				<td></td>
+				<td><fmt:formatDate value="${doc.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 			</tr>
 		</c:forEach>
 		</tbody>
