@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
@@ -44,6 +45,7 @@ import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.supcan.common.Common;
 import gov.kl.chengguan.common.utils.FileUtils;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
+import gov.kl.chengguan.common.utils.WorkDayUtils;
 import gov.kl.chengguan.common.web.BaseController;
 import gov.kl.chengguan.modules.act.entity.Act;
 import gov.kl.chengguan.modules.act.service.ActTaskService;
@@ -59,6 +61,7 @@ import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaCaseFields;
 import gov.kl.chengguan.modules.oa.entity.OaFiles;
 import gov.kl.chengguan.modules.oa.service.OaCaseService;
+import gov.kl.chengguan.modules.oa.utils.WorkDayUtil;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
 import gov.kl.chengguan.modules.sys.entity.User;
 import gov.kl.chengguan.modules.sys.service.UserService;
@@ -111,6 +114,136 @@ public class ApiOaController  extends BaseController {
 
 		}
 	}
+	
+	
+	@RequestMapping(value = { "oa/case/planlist" })
+	public void CasePlanList(HttpServletRequest request,HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+		PrintWriter out;
+		OaCase oaCaseWhere = new OaCase();
+		String userId = request.getParameter("user_id");
+		
+		if(userId==null || userId.isEmpty())
+		{
+			jsonObject.put("msg", "missing url, user_id is null");
+			jsonObject.put("code", 41010);
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		oaCaseWhere.setLaRecAssignee(userId);
+		java.util.List<ApiPlan> list = new ArrayList<ApiPlan>();
+		java.util.List<OaCase> list1 = caseDao.liantodiaocha(oaCaseWhere);
+		java.util.List<OaCase> list2 = caseDao.diaochatochufa(oaCaseWhere);
+		java.util.List<OaCase> list3 = caseDao.chufatogaozhi(oaCaseWhere);
+//		java.util.List<OaCase> list4 = caseDao.gaozhitochufa(oaCaseWhere);
+//		java.util.List<OaCase> list5 = caseDao.chufatocuigao(oaCaseWhere);
+		if(list1!=null && list1.size()>0)
+		{
+			for (OaCase oaCase : list1) {
+				Calendar cal1=Calendar.getInstance();
+				cal1.setTime(oaCase.getCaseRegEndDate());  
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 1));
+				ApiPlan plan = new ApiPlan();
+				plan.setId(oaCase.getId());
+				plan.setTitle(oaCase.getTitle());
+				plan.setExpire(expire);
+				if(expire>0){
+					plan.setPlanRemark(expire + "日后待调查");
+				}else if(expire==0){
+					plan.setPlanRemark("务必今日调查");
+				}else{
+					plan.setPlanRemark("调查时间已超过"+ Math.abs(expire) +"日");
+				}
+				
+				list.add(plan);
+			}
+		}
+		if(list2!=null && list2.size()>0)
+		{
+			for (OaCase oaCase : list2) {
+				Calendar cal1=Calendar.getInstance();
+				cal1.setTime(oaCase.getCaseSurveyEndDate());  
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 1));
+				ApiPlan plan = new ApiPlan();
+				plan.setId(oaCase.getId());
+				plan.setTitle(oaCase.getTitle());
+				plan.setExpire(expire);
+				if(expire>0){
+					plan.setPlanRemark(expire + "日后待提交行政处罚审批");
+				}else if(expire==0){
+					plan.setPlanRemark("务必今日提交行政处罚审批");
+				}else{
+					plan.setPlanRemark("提交行政处罚审批已超过"+ Math.abs(expire) +"日");
+				}
+				
+				list.add(plan);
+			}
+		}
+		if(list3!=null && list3.size()>0)
+		{
+			for (OaCase oaCase : list3) {
+				Calendar cal1=Calendar.getInstance();
+				cal1.setTime(oaCase.getCasePenalEndDate());  
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 3));
+				ApiPlan plan = new ApiPlan();
+				plan.setId(oaCase.getId());
+				plan.setTitle(oaCase.getTitle());
+				plan.setExpire(expire);
+				if(expire>0){
+					plan.setPlanRemark(expire + "日后待送达权利告知书");
+				}else if(expire==0){
+					plan.setPlanRemark("务必今日送达权利告知书");
+				}else{
+					plan.setPlanRemark("送达权利告知书已超过"+ Math.abs(expire) +"日");
+				}
+				
+				list.add(plan);
+			}
+		}
+		
+		if(list == null || list.size()==0){
+			jsonObject.put("msg", "data is null");
+			jsonObject.put("code", 44004);
+		}else {
+			jsonObject.put("msg", "success");
+			jsonObject.put("code", 0);
+
+			
+			jsonData.put("data", list);
+			jsonObject.put("data", JSONObject.toJSON(jsonData));
+		}
+
+		try {
+			out = response.getWriter();
+			out.print(jsonObject.toJSONString());
+			out.flush();
+		} catch (Exception e) {
+			jsonObject.put("msg", "system error");
+			jsonObject.put("code", -1);
+			try {
+				out = response.getWriter();
+				out.print(jsonObject.toJSONString());
+				out.flush();
+			} catch (IOException e1) {
+			
+			}
+		}
+	}
 	/**
 	 * 案件审批
 	 * @param request
@@ -157,10 +290,9 @@ public class ApiOaController  extends BaseController {
 			{
 				for (Act act : todoList) {
 					String businessId= act.getBusinessId();
-					businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());
-					OaCase oaCase = caseDao.get(businessId);
-					if(oaCase.getId().equals(id)){
-						model = oaCase;
+					businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());		
+					if(businessId.equals(id)){
+						model =  caseDao.get(businessId);
 						model.setAct(act);
 						model.setTask(act.getTask());
 						break;
@@ -188,6 +320,11 @@ public class ApiOaController  extends BaseController {
 						caseDao.update(tmpModelCase);
 						//结束
 						
+						//1110
+						if(approve.equals("pass")){
+							model.setInstitutionRegAssignee(userId);
+							model.setInstitutionRegDate(Calendar.getInstance().getTime());
+						}
 						model.setInstitutionRegApproval(approve.equals("pass") ? true
 								: false);
 						model.setInstitutionRegOption(opinion==null ? "该用户未填写意见(手机端)"
@@ -218,7 +355,11 @@ public class ApiOaController  extends BaseController {
 						tmpModelCase.setMainLeaderRegOption(null);
 						caseDao.update(tmpModelCase);
 						//结束
-						
+						//1110
+						if(approve.equals("pass")){
+							model.setDeptLeaderRegAssignee(userId);
+							model.setDeptLeaderRegDate(Calendar.getInstance().getTime());
+						}
 						model.setDeptLeaderRegApproval(approve.equals("pass") ? true
 								: false);
 						model.setDeptLeaderRegOption(opinion==null ? "该用户未填写意见(手机端)"
@@ -242,7 +383,9 @@ public class ApiOaController  extends BaseController {
 						
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
-						
+						if(approve.equals("pass")){
+							model.setMainLeaderRegAssignee(userId);
+						}
 						model.setMainLeaderRegApproval(approve.equals("pass") ? true
 								: false);
 						model.setMainLeaderRegOption(opinion==null? "该用户未填写意见(手机端)"
@@ -297,6 +440,11 @@ public class ApiOaController  extends BaseController {
 						tmpModelCase.setInstitutionPenalOption(null);
 						caseDao.update(tmpModelCase);
 						//结束
+						//1110
+						model.setPenalAssignee(userId);
+						model.setCasePenalStartDate(Calendar.getInstance().getTime());
+						
+						
 						model.setNormAssigneePenalOptPart2(punish);
 
 						model.setAssigneePenalOption(opinion==null? "该用户未填写意见(手机端)"
@@ -321,6 +469,11 @@ public class ApiOaController  extends BaseController {
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
 												
+						//1110
+						if(approve.equals("pass")){
+							model.setInstitutionPenalAssignee(userId);
+							model.setInstitutionPenalDate(Calendar.getInstance().getTime());
+						}
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setCaseMgtCenterPenalOption(null);
@@ -351,7 +504,12 @@ public class ApiOaController  extends BaseController {
 						
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
-												
+						//1110
+						if(approve.equals("pass"))
+						{
+							model.setCaseMgtCenterPenalAssignee(userId);
+							model.setCaseMgtCenterPenalDate(Calendar.getInstance().getTime());
+						}						
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setDeptLeaderPenalOption(null);
@@ -382,6 +540,11 @@ public class ApiOaController  extends BaseController {
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
 												
+						//1110
+						if(approve.equals("pass")){
+							model.setDeptLeaderPenalAssignee(userId);
+							model.setDeptLeaderPenalDate(Calendar.getInstance().getTime());
+						}
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setMainLeaderPenalOption(null);
@@ -411,7 +574,10 @@ public class ApiOaController  extends BaseController {
 						
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
-						
+						//1110
+						if(approve.equals("pass")){
+							model.setMainLeaderPenalAssignee(userId);
+						}
 						model.setMainLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
 						model.setMainLeaderPenalOption(opinion==null ? "该用户未填写意见(手机端)"
@@ -445,7 +611,8 @@ public class ApiOaController  extends BaseController {
 						tmpModelCase.setInstitutionCloseCaseOption(null);
 						caseDao.update(tmpModelCase);
 						//结束
-						
+						model.setCloseUpAssignee(userId);
+						model.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
 						model.setAssigneeCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
 								: opinion + "(手机端)");
 						if (model.getAct().getTaskDefKey()
@@ -467,6 +634,11 @@ public class ApiOaController  extends BaseController {
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
 												
+						//1110
+						if(approve.equals("pass")){
+							model.setInstitutionCloseAssignee(userId);
+							model.setInstitutionCloseDate(Calendar.getInstance().getTime());
+						}
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setCaseMgtCenterCloseCaseOption(null);
@@ -497,7 +669,12 @@ public class ApiOaController  extends BaseController {
 						
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
-												
+						
+						//1110
+						if(approve.equals("pass")){
+							model.setCaseMgtCenterCloseAssignee(userId);
+							model.setCaseMgtCenterCloseDate(Calendar.getInstance().getTime());
+						}		
 						//如果上级拒绝，则本次提交清空上次审批意见,以保证状态读取
 						OaCase tmpModelCase = caseDao.get(id);
 						tmpModelCase.setMainLeaderCloseCaseOption(null);
@@ -527,7 +704,11 @@ public class ApiOaController  extends BaseController {
 						
 						//验证是否签收
 						actTaskService.claim(model.getTask().getId(), userId);
-						
+						//1110
+						if(approve.equals("pass")){
+							model.setMainLeaderCloseAssignee(userId);
+							model.setCaseCloseUpEndDate(Calendar.getInstance().getTime());
+						}
 						model.setMainLeaderCloseCaseApproval(approve
 								.equals("pass") ? true : false);
 						model.setMainLeaderCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
@@ -730,8 +911,13 @@ public class ApiOaController  extends BaseController {
 			oaCase.setCaseDescription(caseJson.getString("caseDescription"));
 			oaCase.setAssigneeIds(caseJson.getString("assigneeIds"));
 			User user = userDao.get(userJson.getString("id"));
+			
 
 			Date nowDate = new Date();
+			//1110
+			oaCase.setLaRecAssignee(user.getId());
+			oaCase.setLaRecDate(nowDate);
+			
 			oaCase.setCreateBy(user);
 			oaCase.setCreateDate(nowDate);
 			oaCase.setUpdateBy(user);
@@ -2414,6 +2600,37 @@ public class ApiOaController  extends BaseController {
 		
 	}
 	
+	
+	public class ApiPlan {
+		private String id;
+		private String title;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		public int getExpire() {
+			return expire;
+		}
+		public void setExpire(int expire) {
+			this.expire = expire;
+		}
+		public String getPlanRemark() {
+			return planRemark;
+		}
+		public void setPlanRemark(String planRemark) {
+			this.planRemark = planRemark;
+		}
+		private int expire;
+		private String planRemark;
+	}
 	
 	
 	public class ApiOaCaseFields{

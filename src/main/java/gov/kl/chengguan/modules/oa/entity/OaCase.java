@@ -184,32 +184,93 @@ public class OaCase extends ActEntity<OaCase> {
 	/* 
 	 * 1030添加字段
 	 */
+	
+	//立案承办人
 	private String LaRecAssignee;
+	//立案承办机构
 	private String institutionRegAssignee;
+	//立案分管领导
 	private String deptLeaderRegAssignee;
+	//立案主要领导
 	private String mainLeaderRegAssignee;
+	//处罚 承办人
 	private String penalAssignee;
+	//处罚承办机构
 	private String institutionPenalAssignee;
+	//处罚案管中心
 	private String caseMgtCenterPenalAssignee;
+	//处罚分管领导
 	private String deptLeaderPenalAssignee;
+	//处罚主要领导
 	private String mainLeaderPenalAssignee;
+	//结案承办人
 	private String closeUpAssignee;
+	//结案承办机构
 	private String institutionCloseAssignee;
+	//结案案管中心
 	private String caseMgtCenterCloseAssignee;
+	//结案主要领导
 	private String mainLeaderCloseAssignee;
 
+	//立案 承办人 时间
 	private Date LaRecDate;
+	//立案承办机构 时间
 	private Date institutionRegDate;
+	//立案 分管领导 时间
 	private Date deptLeaderRegDate;
+	//处罚承办机构时间
 	private Date institutionPenalDate;
+	//处罚案管中心时间
 	private Date caseMgtCenterPenalDate;
+	//处罚分管领导时间
 	private Date deptLeaderPenalDate;
+	//结案 承办机构时间
 	private Date institutionCloseDate;
+	//结案 案管中心 时间
 	private Date caseMgtCenterCloseDate;
 	/*
 	 * 
 	 */
+	//催告时间
+	private Date gaozhiDate;
+	//处罚决定时间
+	private Date chufaDate;
+	//催告时间
+	private Date cuigaoDate;
+	//到期时间(实时计算)
+	private Integer queryExpire;
 	
+	public Date getGaozhiDate() {
+		return gaozhiDate;
+	}
+
+	public void setGaozhiDate(Date gaozhiDate) {
+		this.gaozhiDate = gaozhiDate;
+	}
+
+	public Date getChufaDate() {
+		return chufaDate;
+	}
+
+	public void setChufaDate(Date chufaDate) {
+		this.chufaDate = chufaDate;
+	}
+
+	public Date getCuigaoDate() {
+		return cuigaoDate;
+	}
+
+	public void setCuigaoDate(Date cuigaoDate) {
+		this.cuigaoDate = cuigaoDate;
+	}
+
+	public Integer getQueryExpire() {
+		return queryExpire;
+	}
+
+	public void setQueryExpire(Integer queryExpire) {
+		this.queryExpire = queryExpire;
+	}
 	// 与Case实例相关的流程定义，
 	// 所在的流程实例、所在任务，其中的流程变量，
 	// 流程历史实例

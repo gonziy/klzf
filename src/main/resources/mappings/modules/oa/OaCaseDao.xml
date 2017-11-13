@@ -710,7 +710,57 @@ UPDATE oa_case SET
 		AND a.caseCloseUpEndDate &lt;= #{caseQueryCloseDateEnd}
 	</if>		
 	${sqlMap.dsf}
-	ORDER BY a.id DESC
+	ORDER BY a.create_date DESC
+</select>
+<select id="liantodiaocha" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	AND a.caseRegEndDate IS NOT NULL and a.caseSurveyEndDate IS NULL AND a.LaRecAssignee = #{laRecAssignee}
+	ORDER BY a.create_date DESC
+</select>
+
+<select id="diaochatochufa" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	AND a.caseSurveyEndDate IS NOT NULL and a.casePenalStartDate IS NULL AND a.LaRecAssignee = #{laRecAssignee}
+	ORDER BY a.create_date DESC
+	
+</select>
+
+<select id="chufatogaozhi" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	AND a.casePenalEndDate IS NOT NULL and a.gaozhiDate IS NULL AND a.LaRecAssignee = #{laRecAssignee}
+	ORDER BY a.create_date DESC
+</select>
+
+<select id="gaozhitochufa" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	AND a.gaozhiDate IS NOT NULL AND a.chufaDate IS NULL AND a.illegal_construct_flag = '1' AND a.LaRecAssignee = #{laRecAssignee}
+	ORDER BY a.create_date DESC
+</select>
+
+<select id="chufatocuigao" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	AND a.chufaDate IS NOT NULL AND a.cuigaoDate IS NULL AND a.illegal_construct_flag = '1' AND a.LaRecAssignee = #{laRecAssignee}
+	ORDER BY a.create_date DESC
 </select>
 
 <select id="findAllList" resultType="OaCase">
@@ -719,7 +769,7 @@ UPDATE oa_case SET
 	FROM oa_case a
 		<include refid="caseJoins"/>
 	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
-	ORDER BY a.id DESC
+	ORDER BY a.create_date DESC
 </select>	
 	
 </mapper>

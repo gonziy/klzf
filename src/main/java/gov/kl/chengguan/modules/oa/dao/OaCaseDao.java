@@ -1,8 +1,11 @@
 package gov.kl.chengguan.modules.oa.dao;
 
+import java.util.List;
+
 import gov.kl.chengguan.common.persistence.CrudDao;
 import gov.kl.chengguan.common.persistence.annotation.MyBatisDao;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
+import gov.kl.chengguan.modules.sys.entity.User;
 
 @MyBatisDao
 public interface OaCaseDao extends CrudDao<OaCase>{
@@ -46,4 +49,11 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	
 	//案件数量
 	public Long getMax();
+	
+
+	public List<OaCase> liantodiaocha(OaCase oaCase);
+	public List<OaCase> diaochatochufa(OaCase oaCase);
+	public List<OaCase> chufatogaozhi(OaCase oaCase);
+	public List<OaCase> gaozhitochufa(OaCase oaCase);
+	public List<OaCase> chufatocuigao(OaCase oaCase);
 }

@@ -170,11 +170,11 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 			// 补充需要完成的字段一次性全部更新到库里
 			oaCase.setCaseCheckFlag(true);
 			
-			oaCase.setAutoId(Integer.parseInt(caseDao.getMax().toString()));
+			oaCase.setAutoId(Integer.parseInt(caseDao.getMax().toString())+1);
 			Calendar calendar = Calendar.getInstance();
 			String year = String.valueOf(calendar.get(Calendar.YEAR));
 			String officeCode = userDao.get(userId).getOffice().getCode();
-			String caseId = String.format("%03d", oaCase.getAutoId()+1);  
+			String caseId = String.format("%03d", oaCase.getAutoId());  
 			oaCase.setCaseDocNo(year + "05" + officeCode + caseId);
 			
 			oaCase.setCaseCheckResult("手机端，自动通过初审认证");
