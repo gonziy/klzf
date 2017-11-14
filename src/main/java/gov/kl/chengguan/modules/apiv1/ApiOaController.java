@@ -141,6 +141,59 @@ public class ApiOaController  extends BaseController {
 
 		}
 	}
+
+	@RequestMapping(value = { "oa/case/chufa" })
+	public void chufa(HttpServletRequest request,HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String id = request.getParameter("id");
+		OaCase oaCase = new OaCase();
+		oaCase.setId(id);
+		oaCase.setGaozhiDate(new Date());
+		
+		int result = caseDao.updateChuFa(oaCase);
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.print("{\"result\":"+result+"}");
+			out.flush();
+		} catch (IOException e1) {
+
+		}
+	}
+	@RequestMapping(value = { "oa/case/cuigao" })
+	public void cuigao(HttpServletRequest request,HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String id = request.getParameter("id");
+		OaCase oaCase = new OaCase();
+		oaCase.setId(id);
+		oaCase.setGaozhiDate(new Date());
+		
+		int result = caseDao.updateCuiGao(oaCase);
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.print("{\"result\":"+result+"}");
+			out.flush();
+		} catch (IOException e1) {
+
+		}
+	}
 	
 	
 	@RequestMapping(value = { "oa/case/planlist" })
