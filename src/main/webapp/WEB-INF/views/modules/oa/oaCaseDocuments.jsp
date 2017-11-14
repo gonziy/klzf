@@ -43,10 +43,10 @@
 				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令限期整改通知书</a></li>
 				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令停止违法行为通知书</a></li>
 				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">行政处罚审批表</a></li>
-				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">陈述、申辩（听证）权利告知书</a></li>
-				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令限期拆除决定书</a></li>
-				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">行政处罚决定书</a></li>
-				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">拆除催告通知书</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">陈述、申辩（听证）权利告知书  gaozhi</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">责令限期拆除决定书  chufa</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">行政处罚决定书     chufa</a></li>
+				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">拆除催告通知书  cuigao</a></li>
 				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">拆除公告通知书</a></li>
 				<li><a href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}">结案登记表</a></li>
 			</ul>

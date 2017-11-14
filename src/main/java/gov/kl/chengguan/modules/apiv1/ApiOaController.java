@@ -115,6 +115,33 @@ public class ApiOaController  extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value = { "oa/case/gaozhi" })
+	public void gaozhi(HttpServletRequest request,HttpServletResponse response) {
+		response.setContentType("application/json");
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept");
+		response.setCharacterEncoding("UTF-8");
+
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		String id = request.getParameter("id");
+		OaCase oaCase = new OaCase();
+		oaCase.setId(id);
+		oaCase.setGaozhiDate(new Date());
+		
+		int result = caseDao.updateGaoZhi(oaCase);
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.print("{\"result\":"+result+"}");
+			out.flush();
+		} catch (IOException e1) {
+
+		}
+	}
+	
 	
 	@RequestMapping(value = { "oa/case/planlist" })
 	public void CasePlanList(HttpServletRequest request,HttpServletResponse response) {
@@ -147,11 +174,18 @@ public class ApiOaController  extends BaseController {
 		}
 		oaCaseWhere.setLaRecAssignee(userId);
 		java.util.List<ApiPlan> list = new ArrayList<ApiPlan>();
+		//立案 - 调查 1工作日
 		java.util.List<OaCase> list1 = caseDao.liantodiaocha(oaCaseWhere);
+		//调查 - 处罚表 1工作日
 		java.util.List<OaCase> list2 = caseDao.diaochatochufa(oaCaseWhere);
+		//处罚表 - 告知 1工作日
 		java.util.List<OaCase> list3 = caseDao.chufatogaozhi(oaCaseWhere);
-//		java.util.List<OaCase> list4 = caseDao.gaozhitochufa(oaCaseWhere);
-//		java.util.List<OaCase> list5 = caseDao.chufatocuigao(oaCaseWhere);
+		//告知 - 处罚决定 3工作日
+		java.util.List<OaCase> list4 = caseDao.gaozhitochufa(oaCaseWhere);
+		//处罚决定 - 催告 180日
+		java.util.List<OaCase> list5 = caseDao.chufatocuigao(oaCaseWhere);
+		//催告-拆除 10工作日
+		java.util.List<OaCase> list6 = caseDao.cuigaotochaichu(oaCaseWhere);
 		if(list1!=null && list1.size()>0)
 		{
 			for (OaCase oaCase : list1) {
@@ -199,7 +233,7 @@ public class ApiOaController  extends BaseController {
 			for (OaCase oaCase : list3) {
 				Calendar cal1=Calendar.getInstance();
 				cal1.setTime(oaCase.getCasePenalEndDate());  
-				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 3));
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 1));
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
@@ -210,6 +244,73 @@ public class ApiOaController  extends BaseController {
 					plan.setPlanRemark("务必今日送达权利告知书");
 				}else{
 					plan.setPlanRemark("送达权利告知书已超过"+ Math.abs(expire) +"日");
+				}
+				
+				list.add(plan);
+			}
+		}
+
+		if(list4!=null && list4.size()>0)
+		{
+			for (OaCase oaCase : list4) {
+				Calendar cal1=Calendar.getInstance();
+				cal1.setTime(oaCase.getGaozhiDate());  
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 3));
+				ApiPlan plan = new ApiPlan();
+				plan.setId(oaCase.getId());
+				plan.setTitle(oaCase.getTitle());
+				plan.setExpire(expire);
+				if(expire>0){
+					plan.setPlanRemark(expire + "日后待送达决定书");
+				}else if(expire==0){
+					plan.setPlanRemark("务必今日送达决定书");
+				}else{
+					plan.setPlanRemark("送达决定书已超过"+ Math.abs(expire) +"日");
+				}
+				
+				list.add(plan);
+			}
+		}
+
+		if(list5!=null && list5.size()>0)
+		{
+			for (OaCase oaCase : list5) {
+				Calendar cal1=Calendar.getInstance();
+				cal1.setTime(oaCase.getChufaDate());
+				cal1.set(Calendar.DATE, cal1.get(Calendar.DATE) + 180);
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(), cal1);
+				ApiPlan plan = new ApiPlan();
+				plan.setId(oaCase.getId());
+				plan.setTitle(oaCase.getTitle());
+				plan.setExpire(expire);
+				if(expire>0){
+					plan.setPlanRemark(expire + "日后待送达拆除催告通知书");
+				}else if(expire==0){
+					plan.setPlanRemark("务必今日送达拆除催告通知书");
+				}else{
+					plan.setPlanRemark("送达拆除催告通知书已超过"+ Math.abs(expire) +"日");
+				}
+				
+				list.add(plan);
+			}
+		}
+
+		if(list6!=null && list6.size()>0)
+		{
+			for (OaCase oaCase : list6) {
+				Calendar cal1=Calendar.getInstance();
+				cal1.setTime(oaCase.getCuigaoDate());  
+				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 10));
+				ApiPlan plan = new ApiPlan();
+				plan.setId(oaCase.getId());
+				plan.setTitle(oaCase.getTitle());
+				plan.setExpire(expire);
+				if(expire>0){
+					plan.setPlanRemark(expire + "日后待送达拆除公告通知书");
+				}else if(expire==0){
+					plan.setPlanRemark("务必今日送达拆除公告通知书");
+				}else{
+					plan.setPlanRemark("送达拆除公告通知书已超过"+ Math.abs(expire) +"日");
 				}
 				
 				list.add(plan);

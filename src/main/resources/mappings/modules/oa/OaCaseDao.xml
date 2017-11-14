@@ -78,6 +78,11 @@
  a.institutionCloseDate as "institutionCloseDate",
  a.caseMgtCenterCloseDate as "caseMgtCenterCloseDate",
  a.proc_ins_id as "processInstanceId",
+ 
+ a.gaozhiDate as "gaozhiDate",
+ a.chufaDate as "chufaDate",
+ a.cuigaoDate as "cuigaoDate",
+ 
  u.id AS "createBy.id",
  u.name AS "createBy.name",
  o.id AS "publisher.office.id",
@@ -618,6 +623,24 @@ UPDATE oa_case SET
 	WHERE id = #{id}
 </update>
 
+<update id="updateGaoZhi">
+	UPDATE oa_case SET 
+		gaozhiDate = #{gaozhiDate}
+	WHERE id = #{id} and gaozhiDate is null
+</update>
+
+<update id="updateChuFa">
+	UPDATE oa_case SET 
+		chufaDate = #{chufaDate}
+	WHERE id = #{id} and chufaDate is null
+</update>
+
+<update id="updateCuiGao">
+	UPDATE oa_case SET 
+		cuigaoDate = #{cuigaoDate}
+	WHERE id = #{id} and cuigaoDate is null
+</update>
+
 
 <select id="get" resultType="OaCase">
 	SELECT 
@@ -760,6 +783,16 @@ UPDATE oa_case SET
 		<include refid="caseJoins"/>
 	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
 	AND a.chufaDate IS NOT NULL AND a.cuigaoDate IS NULL AND a.illegal_construct_flag = '1' AND a.LaRecAssignee = #{laRecAssignee}
+	ORDER BY a.create_date DESC
+</select>
+
+<select id="cuigaotochaichu" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	AND a.cuigaoDate IS NOT NULL AND a.caseCloseUpStartDate IS NULL AND a.illegal_construct_flag = '1' AND a.LaRecAssignee = #{laRecAssignee}
 	ORDER BY a.create_date DESC
 </select>
 

@@ -50,10 +50,15 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	//案件数量
 	public Long getMax();
 	
+	public int updateGaoZhi(OaCase oaCase);
+	public int updateChuFa(OaCase oaCase);
+	public int updateCuiGao(OaCase oaCase);
+	
 
 	public List<OaCase> liantodiaocha(OaCase oaCase);
 	public List<OaCase> diaochatochufa(OaCase oaCase);
 	public List<OaCase> chufatogaozhi(OaCase oaCase);
 	public List<OaCase> gaozhitochufa(OaCase oaCase);
 	public List<OaCase> chufatocuigao(OaCase oaCase);
+	public List<OaCase> cuigaotochaichu(OaCase oaCase);
 }
