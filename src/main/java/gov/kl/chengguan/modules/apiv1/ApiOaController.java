@@ -192,6 +192,9 @@ public class ApiOaController  extends BaseController {
 				Calendar cal1=Calendar.getInstance();
 				cal1.setTime(oaCase.getCaseRegEndDate());  
 				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 1));
+				if(Calendar.getInstance().compareTo(WorkDayUtil.addDateByWorkDay(cal1, 1))>0){
+					expire = -expire;	
+				}
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
@@ -213,6 +216,9 @@ public class ApiOaController  extends BaseController {
 				Calendar cal1=Calendar.getInstance();
 				cal1.setTime(oaCase.getCaseSurveyEndDate());  
 				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 1));
+				if(Calendar.getInstance().compareTo(WorkDayUtil.addDateByWorkDay(cal1, 1))>0){
+					expire = -expire;	
+				}
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
@@ -234,6 +240,9 @@ public class ApiOaController  extends BaseController {
 				Calendar cal1=Calendar.getInstance();
 				cal1.setTime(oaCase.getCasePenalEndDate());  
 				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 1));
+				if(Calendar.getInstance().compareTo(WorkDayUtil.addDateByWorkDay(cal1, 1))>0){
+					expire = -expire;	
+				}
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
@@ -256,6 +265,9 @@ public class ApiOaController  extends BaseController {
 				Calendar cal1=Calendar.getInstance();
 				cal1.setTime(oaCase.getGaozhiDate());  
 				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 3));
+				if(Calendar.getInstance().compareTo(WorkDayUtil.addDateByWorkDay(cal1, 3))>0){
+					expire = -expire;	
+				}
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
@@ -279,6 +291,10 @@ public class ApiOaController  extends BaseController {
 				cal1.setTime(oaCase.getChufaDate());
 				cal1.set(Calendar.DATE, cal1.get(Calendar.DATE) + 180);
 				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(), cal1);
+				int rrr = Calendar.getInstance().compareTo(cal1);
+				if(Calendar.getInstance().compareTo(cal1)>0){
+					expire = -expire;	
+				}
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
@@ -301,6 +317,9 @@ public class ApiOaController  extends BaseController {
 				Calendar cal1=Calendar.getInstance();
 				cal1.setTime(oaCase.getCuigaoDate());  
 				int expire = new WorkDayUtils().getDaysBetween(Calendar.getInstance(),WorkDayUtil.addDateByWorkDay(cal1, 10));
+				if(Calendar.getInstance().compareTo(WorkDayUtil.addDateByWorkDay(cal1, 10))>0){
+					expire = -expire;	
+				}
 				ApiPlan plan = new ApiPlan();
 				plan.setId(oaCase.getId());
 				plan.setTitle(oaCase.getTitle());
