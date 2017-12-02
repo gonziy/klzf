@@ -61,4 +61,8 @@ public interface OaCaseDao extends CrudDao<OaCase>{
 	public List<OaCase> gaozhitochufa(OaCase oaCase);
 	public List<OaCase> chufatocuigao(OaCase oaCase);
 	public List<OaCase> cuigaotochaichu(OaCase oaCase);
+	
+	//队长权限
+	public List<OaCase> duiZhangFindAllList(OaCase oaCase);
+	public List<OaCase> duiYuanFindAllList(OaCase oaCase);
 }

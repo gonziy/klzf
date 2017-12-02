@@ -292,10 +292,71 @@
 					var resviewersJsonData = eval('(' + resviewersData+ ')');
 					$("#assigneeIds").select2({
 						data : resviewersJsonData,
-						multiple : true
+						multiple : false
 					});
 				}
 			});
+			var url1 = "${ctx}/../apiv1/cms/article/list?categoryid=3";
+			$.ajax({
+				type : "get",
+				url : url1,
+				async : false,
+				success : function(result) {
+					var resviewersData = "[";
+					for (var i = 0; i < result.data.length; i++) {
+						resviewersData += "{\"id\":\"" + result.data[i].title + "\",\"text\":\"" + result.data[i].title + "\"},";
+					}
+					resviewersData = resviewersData.substring(0,resviewersData.length-1);
+					resviewersData += "]";
+					var resviewersJsonData = eval('(' + resviewersData+ ')');
+					$("#normCaseDescPart1").select2({
+						data : resviewersJsonData,
+						multiple : false
+					});
+				}
+			});
+			var url2 = "${ctx}/../apiv1/cms/article/similar?title=" + $("#normCaseDescPart1").val();
+				$.ajax({
+					type : "get",
+					url : url2,
+					async : false,
+					success : function(result) {
+						var resviewersData = "[";
+						for (var i = 0; i < result.data.length; i++) {
+							resviewersData += "{\"id\":\"" + result.data[i].title + "\",\"text\":\"" + result.data[i].title + "\"},";
+						}
+						resviewersData = resviewersData.substring(0,resviewersData.length-1);
+						resviewersData += "]";
+						var resviewersJsonData = eval('(' + resviewersData+ ')');
+						$("#normCaseDescPart2").select2({
+							data : resviewersJsonData,
+							multiple : false
+						});
+					}
+				});
+			$("#normCaseDescPart1").change(function(){
+				$("#normCaseDescPart2").empty();
+				var url3 = "${ctx}/../apiv1/cms/article/similar?title=" + $("#normCaseDescPart1").val();
+				$.ajax({
+					type : "get",
+					url : url3,
+					async : false,
+					success : function(result) {
+						var resviewersData = "[";
+						for (var i = 0; i < result.data.length; i++) {
+							resviewersData += "{\"id\":\"" + result.data[i].title + "\",\"text\":\"" + result.data[i].title + "\"},";
+						}
+						resviewersData = resviewersData.substring(0,resviewersData.length-1);
+						resviewersData += "]";
+						var resviewersJsonData = eval('(' + resviewersData+ ')');
+						$("#normCaseDescPart2").select2({
+							data : resviewersJsonData,
+							multiple : false
+						});
+					}
+				});
+			})
+			
 		});
 	</script>
 </head>
@@ -394,19 +455,11 @@
 				<tr>
 					<td class="tit">案情</td>
 					<td colspan="2">
-						<form:select path ="normCaseDescPart1" class="required">
-							<form:option value="行为1">行为1</form:option>
-							<form:option value="行为2">行为2</form:option>
-							<form:option value="行为3">行为3</form:option>																
-						</form:select>
+						<form:select path ="normCaseDescPart1" class="required"></form:select>
 					</td>
 					<td class="tit">违反了</td>
 					<td colspan="2">
-						<form:select path ="normCaseDescPart2" class="required">
-							<form:option value="法条1">条例1</form:option>
-							<form:option value="法条2">条例2</form:option>
-							<form:option value="法条3">条例3</form:option>																
-						</form:select>
+						<form:select path ="normCaseDescPart2" class="required"></form:select>
 					</td>
 				</tr>
 				<tr>

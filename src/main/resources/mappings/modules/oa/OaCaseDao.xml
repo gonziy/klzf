@@ -772,7 +772,7 @@ UPDATE oa_case SET
 	FROM oa_case a
 		<include refid="caseJoins"/>
 	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
-	AND a.gaozhiDate IS NOT NULL AND a.chufaDate IS NULL AND a.illegal_construct_flag = '1' AND a.LaRecAssignee = #{laRecAssignee}
+	AND a.gaozhiDate IS NOT NULL AND a.chufaDate IS NULL AND a.LaRecAssignee = #{laRecAssignee}
 	ORDER BY a.create_date DESC
 </select>
 
@@ -802,6 +802,26 @@ UPDATE oa_case SET
 	FROM oa_case a
 		<include refid="caseJoins"/>
 	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+	ORDER BY a.create_date DESC
+</select>
+
+<select id="duiZhangFindAllList" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.create_by in( select id from sys_user where office_id in( select id from sys_office where parent_id in( select parent_id from sys_office where id in( select office_id from sys_user where id = #{caseQueryUserId}))))
+	AND a.del_flag = #{DEL_FLAG_NORMAL} 
+	ORDER BY a.create_date DESC
+</select>
+
+<select id="duiYuanFindAllList" resultType="OaCase">
+	SELECT 
+		<include refid="caseColumns"/>
+	FROM oa_case a
+		<include refid="caseJoins"/>
+	WHERE a.create_by = #{caseQueryUserId}
+	AND a.del_flag = #{DEL_FLAG_NORMAL} 
 	ORDER BY a.create_date DESC
 </select>	
 	

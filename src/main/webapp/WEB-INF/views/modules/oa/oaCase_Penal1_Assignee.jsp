@@ -6,6 +6,28 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
+		
+			var url1 = "${ctx}/../apiv1/cms/article/list?categoryid=4";
+			$.ajax({
+				type : "get",
+				url : url1,
+				async : false,
+				success : function(result) {
+					var resviewersData = "[";
+					for (var i = 0; i < result.data.length; i++) {
+						resviewersData += "{\"id\":\"" + result.data[i].title + "\",\"text\":\"" + result.data[i].title + "\"},";
+					}
+					resviewersData = resviewersData.substring(0,resviewersData.length-1);
+					resviewersData += "]";
+					var resviewersJsonData = eval('(' + resviewersData+ ')');
+					$("#normAssigneePenalOptPart2").select2({
+						data : resviewersJsonData,
+						multiple : false
+					});
+				}
+			});
+			
+			
 			$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
@@ -43,7 +65,7 @@
 			<legend>承办人行政处罚意见：${oaCase.title}</legend>
 			<table class="table-form">
 				<c:if test="${oaCase.rejectFlag==true}">
-					<tr><td class ="redtit" colspan="6"><b style="color:white">该流程被驳回</b></td></tr>
+					<tr><td class ="redtit" colspan="6"><b style="color:#ffc600">该流程被驳回</b></td></tr>
 					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.institutionPenalOption}</td></tr>
 				</c:if>
 				<!-- 案件简报 -->
@@ -80,15 +102,10 @@
 				<tr><td class="tit" colspan="6"><h4>承办人填写处罚意见</h4></td></tr>	
 				<tr>
 					<td class="tit">依据：</td>
-					<td colspan="2">${oaCase.normCaseDescPart2 }</td>
+					<td colspan="2">${oaCase.normCaseDescPart2}</td>
 					<td class="tit">给出处罚：</td>
 					<td colspan="2">
-							<form:select path ="normAssigneePenalOptPart2" class="required">
-							<form:option value="处罚1">处罚1</form:option>
-							<form:option value="处罚2">处罚2</form:option>
-							<form:option value="处罚3">处罚3</form:option>
-							<form:option value="处罚4">处罚4</form:option>																									
-						</form:select>
+							<form:select path ="normAssigneePenalOptPart2" class="required"></form:select>
 					</td>
 				</tr>
 				<tr>

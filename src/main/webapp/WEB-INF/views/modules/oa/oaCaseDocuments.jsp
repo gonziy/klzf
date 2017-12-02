@@ -26,6 +26,7 @@
 					}
 				}
 			});
+			
 		});
 	</script>
 </head>
@@ -40,18 +41,18 @@
 			<legend>文书打印</legend>
 			<img src="${ctxStatic}/images/case_progress.png" alt="" width="1180" height="650" usemap="#Map"/>
 			<map name="Map">
-			  <area shape="rect" coords="61,432,185,480" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#责令限期改正通知书">
-			  <area shape="rect" coords="60,491,186,534" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#责令停止违法行为通知书">
-			  <area shape="rect" coords="299,312,420,354" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#询问笔录">
-			  <area shape="rect" coords="297,366,422,409" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#勘验检查笔录">
-			  <area shape="rect" coords="506,456,632,499" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#权利告知书">
-			  <area shape="rect" coords="510,511,635,553" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#责令限期拆除决定书">
-			  <area shape="rect" coords="510,565,632,608" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#行政处罚决定书">
-			  <area shape="rect" coords="710,356,831,401" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#拆除催告通知书">
-			  <area shape="rect" coords="705,450,834,493" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#拆除公告通知书">
-			  <area shape="rect" coords="25,121,245,420" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#立案审批表">
-			  <area shape="rect" coords="462,100,680,443" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#行政处罚表">
-			  <area shape="rect" coords="909,123,1131,421" href="#${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#结案表">
+			  <area shape="rect" coords="299,312,420,354" href="${ctx}/oa/oaCase/doc_xunwenbilu?id=${oaCase.id}#询问笔录">
+			  <area shape="rect" coords="25,121,245,420" href="${ctx}/oa/oaCase/doc_lianshenpibiao?id=${oaCase.id}#立案审批表">
+			  <area shape="rect" coords="61,432,185,480" href="${ctx}/oa/oaCase/doc_zelingxianqigaizhengtongzhishu?id=${oaCase.id}#责令限期改正通知书">
+			  <area shape="rect" coords="60,491,186,534" href="${ctx}/oa/oaCase/doc_zelingtingzhiweifaxingweitongzhishu?id=${oaCase.id}#责令停止违法行为通知书">
+			  <area shape="rect" coords="297,366,422,409" href="${ctx}/oa/oaCase/doc_kanyanjianchabilu?id=${oaCase.id}#勘验检查笔录">
+			  <area shape="rect" coords="506,456,632,499" href="${ctx}/oa/oaCase/doc_quanligaozhishu?id=${oaCase.id}#权利告知书">
+			  <area shape="rect" coords="510,511,635,553" href="${ctx}/oa/oaCase/doc_zelingxianqichaichujuedingshu?id=${oaCase.id}#责令限期拆除决定书">
+			  <area shape="rect" coords="510,565,632,608" href="${ctx}/oa/oaCase/doc_xingzhengchufajuedingshu?id=${oaCase.id}#行政处罚决定书">
+			  <area shape="rect" coords="710,356,831,401" href="${ctx}/oa/oaCase/doc_chaichucuigaotongzhishu?id=${oaCase.id}#拆除催告通知书">
+			  <area shape="rect" coords="705,450,834,493" href="${ctx}/oa/oaCase/doc_chaichugonggaotongzhishu?id=${oaCase.id}#拆除公告通知书">
+			  <area shape="rect" coords="462,100,680,443" href="${ctx}/oa/oaCase/doc_xingzhengchufashenpibiao?id=${oaCase.id}#行政处罚表">
+			  <area shape="rect" coords="909,123,1131,421" href="${ctx}/oa/oaCase/doc_jieandengjibiao?id=${oaCase.id}#结案登记表">
 			</map>
 		</fieldset>
 		<div class="form-actions">

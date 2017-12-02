@@ -72,6 +72,17 @@ public class OaCaseService extends CrudService<OaCaseDao, OaCase> {
 		page.setList(dao.findList(oaCase));
 		return page;
 	}
+	
+	public Page<OaCase> duiZhangFindPage(Page<OaCase> page, OaCase oaCase) {
+		oaCase.setPage(page);
+		page.setList(dao.duiZhangFindAllList(oaCase));
+		return page;
+	}
+	public Page<OaCase> duiYuanFindPage(Page<OaCase> page, OaCase oaCase) {
+		oaCase.setPage(page);
+		page.setList(dao.duiYuanFindAllList(oaCase));
+		return page;
+	}
 
 	/*
 	 * 根据用户返回代办的案件

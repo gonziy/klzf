@@ -64,6 +64,15 @@ public class OaDoc3 extends ActEntity<OaDoc3> {
 	private HistoricProcessInstance historicProcessInstance;
 	
 	// 查询时使用的变量列表
+	private String docQueryUserId;
+	public String getDocQueryUserId() {
+		return docQueryUserId;
+	}
+
+	public void setDocQueryUserId(String docQueryUserId) {
+		this.docQueryUserId = docQueryUserId;
+	}
+
 	private String docQueryTitle;	 
 	private Date docQueryCreateDateStart;  
 	private Date docQueryCreateDateEnd;

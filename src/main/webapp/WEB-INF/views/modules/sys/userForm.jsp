@@ -41,7 +41,7 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
 		<div class="control-group">
-			<label class="control-label">头像:</label>
+			<label class="control-label">签章:</label>
 			<div class="controls">
 				<form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 				<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/>
@@ -62,7 +62,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">工号:</label>
+			<label class="control-label">执法证号:</label>
 			<div class="controls">
 				<form:input path="no" htmlEscape="false" maxlength="50" class="required"/>
 				<span class="help-inline"><font color="red">*</font> </span>

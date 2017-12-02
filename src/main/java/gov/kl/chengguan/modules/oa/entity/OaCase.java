@@ -12,7 +12,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import gov.kl.chengguan.common.persistence.ActEntity;
 import gov.kl.chengguan.common.utils.SpringContextHolder;
+import gov.kl.chengguan.modules.sys.dao.OfficeDao;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
+import gov.kl.chengguan.modules.sys.entity.Office;
 import gov.kl.chengguan.modules.sys.entity.User;
 
 /*
@@ -21,6 +23,7 @@ import gov.kl.chengguan.modules.sys.entity.User;
 public class OaCase extends ActEntity<OaCase> {
 
 	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
+	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
 	
 	/**
 	 * 版本id
@@ -59,6 +62,7 @@ public class OaCase extends ActEntity<OaCase> {
 	private String caseDocuments;	
 	private String caseImages;	
 	private String caseVideos;	
+	
 	private String caseThumbnails;
 	// 初步审核意见
 	private String caseCheckResult;
@@ -68,6 +72,33 @@ public class OaCase extends ActEntity<OaCase> {
 	// 案件承办人,可以多个，用;隔开
 	private String assigneeIds;
 	private String assigneeNames;
+	
+	private String assigneeNameAndId1;
+	private String assigneeNameAndId2;
+	private String assigneeNamesAndId;
+
+	private String officeAddress;	
+	private String officeTel;
+	private String officeName;
+	public String getOfficeName() {
+		User user = userDao.get(createBy.getId());
+		Office office = officeDao.get(user.getOffice().getId());
+		Office parentOffice = officeDao.get(office.getParentId());
+		return parentOffice.getName();
+	}
+
+	public String getOfficeAddress() {
+		User user = userDao.get(createBy.getId());
+		Office office = officeDao.get(user.getOffice().getId());
+		return office.getAddress();
+	}
+
+	public String getOfficeTel() {
+		User user = userDao.get(createBy.getId());
+		Office office = officeDao.get(user.getOffice().getId());
+		return office.getPhone();
+	}
+	
 
 	public String getAssigneeNames() {
 		String strAssigneeNames = "";
@@ -86,6 +117,33 @@ public class OaCase extends ActEntity<OaCase> {
 			}
 		}
 		return strAssigneeNames;
+	}
+	public String getAssigneeNameAndId1() {
+		String[] us = getAssigneeNamesAndId().split("<br/>");
+		return us[0];
+	}
+
+	public String getAssigneeNameAndId2() {
+		String[] us = getAssigneeNamesAndId().split("<br/>");
+		return us[1];
+	}
+	public String getAssigneeNamesAndId() {
+		String strAssigneeNamesAndIds = "";
+		if(getAssigneeIds()!=null && !getAssigneeIds().isEmpty()){
+			String[] assigneeIdsList = getAssigneeIds().split(";");
+			if(assigneeIdsList.length>0){
+				for (String id : assigneeIdsList) {
+					User user = userDao.get(id);
+					if(user!=null){
+						strAssigneeNamesAndIds += user.getName() +"(执法证号:"+user.getNo() +")" + "<br/>";
+					}
+				}
+				if(strAssigneeNamesAndIds.endsWith("<br/>")){
+					strAssigneeNamesAndIds = strAssigneeNamesAndIds.substring(0,strAssigneeNamesAndIds.length()-5);
+				}
+			}
+		}
+		return strAssigneeNamesAndIds;
 	}
 	// 案件的规范描述：[某行为] 违反了 [某条例]
 	private String normCaseDescPart1;
@@ -288,6 +346,15 @@ public class OaCase extends ActEntity<OaCase> {
 	/*
 	 * 查询时使用的变量列表
 	 */
+
+	private String caseQueryUserId;	 
+	public String getCaseQueryUserId() {
+		return caseQueryUserId;
+	}
+
+	public void setCaseQueryUserId(String caseQueryUserId) {
+		this.caseQueryUserId = caseQueryUserId;
+	}
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人

@@ -58,22 +58,138 @@ public class OaCaseController extends BaseController {
 	public String getDocuments(OaCase oaCase, Model model){
 		model.addAttribute("oaCase", oaCase);
 		return "modules/oa/oaCaseDocuments";
-		
 	}
+	/*
+	 * doc立案审批表
+	 */
 	@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = "doc_lianshenpibiao")
 	public String getDocuments1(OaCase oaCase, Model model){
 		model.addAttribute("oaCase", oaCase);
 		return "modules/oa/doc_lianshenpibiao";
-		
+	}
+	/*
+	 * doc询问笔录
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_xunwenbilu")
+	public String getDocuments2(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_xunwenbilu";
+	}
+	/*
+	 * doc勘验检查笔录
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_kanyanjianchabilu")
+	public String getDocuments3(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_kanyanjianchabilu";	
+	}
+	/*
+	 * doc权利告知书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_quanligaozhishu")
+	public String getDocuments4(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_quanligaozhishu";
+	}
+	/*
+	 * doc责令限期改正通知书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_zelingxianqigaizhengtongzhishu")
+	public String getDocuments5(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_zelingxianqigaizhengtongzhishu";
+	}
+
+	/*
+	 * doc责令停止违法行为通知书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_zelingtingzhiweifaxingweitongzhishu")
+	public String getDocuments6(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_zelingtingzhiweifaxingweitongzhishu";
+	}
+	/*
+	 * doc行政处罚审批表
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_xingzhengchufashenpibiao")
+	public String getDocuments7(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_xingzhengchufashenpibiao";
+	}
+	/*
+	 * doc责令限期拆除决定书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_zelingxianqichaichujuedingshu")
+	public String getDocuments8(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_zelingxianqichaichujuedingshu";
+	}
+	/*
+	 * doc行政处罚决定书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_xingzhengchufajuedingshu")
+	public String getDocuments9(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_xingzhengchufajuedingshu";
+	}
+	/*
+	 * doc拆除催告通知书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_chaichucuigaotongzhishu")
+	public String getDocuments10(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_chaichucuigaotongzhishu";
+	}
+	/*
+	 * doc拆除公告通知书
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_chaichugonggaotongzhishu")
+	public String getDocuments11(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_chaichugonggaotongzhishu";
+	}
+	/*
+	 * doc结案登记表
+	 */
+	@RequiresPermissions("oa:oaCase:view")
+	@RequestMapping(value = "doc_jieandengjibiao")
+	public String getDocuments12(OaCase oaCase, Model model){
+		model.addAttribute("oaCase", oaCase);
+		return "modules/oa/doc_jieandengjibiao";
 	}
 	
 	//@RequiresPermissions("oa:oaCase:view")
 	@RequestMapping(value = {"list"})
 	public String list(OaCase oaCase, HttpServletRequest request, HttpServletResponse response, Model model) {
-        Page<OaCase> page = oaCaseService.findPage(new Page<OaCase>(request, response), oaCase); 
+        Page<OaCase> page = null;
+        if(UserUtils.getUser().getOffice().getName().equals("队长") || UserUtils.getUser().getOffice().getName().equals("中队长")){
+        	oaCase.setCaseQueryUserId(UserUtils.getUser().getId());
+        	page = oaCaseService.duiZhangFindPage(new Page<OaCase>(request, response), oaCase);
+        }else if(UserUtils.getUser().getOffice().getName().equals("队员")){     
+        	oaCase.setCaseQueryUserId(UserUtils.getUser().getId());
+        	page = oaCaseService.duiYuanFindPage(new Page<OaCase>(request, response), oaCase); 
+        }else if(UserUtils.getUser().getOffice().getName().equals("局长") || UserUtils.getUser().getOffice().getName().equals("副局长") || UserUtils.getUser().getOffice().getName().equals("案管中心")){
+        	page = oaCaseService.findPage(new Page<OaCase>(request, response), oaCase); 
+        }
+        		
         model.addAttribute("page", page);        
 		return "modules/oa/oaCaseList";
+	}
+	
+	@RequestMapping(value = {"planlist"})
+	public String planlist(OaCase oaCase, HttpServletRequest request, HttpServletResponse response, Model model) {       
+		return "modules/oa/oaCasePlanList";
 	}
 	
 	/**

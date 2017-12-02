@@ -194,9 +194,9 @@
 					</td>	
 				</tr>				
 				<tr>
-					<td class="tit">案件申报日期</td><td>${oaCase.caseRegStartDate}</td>
-					<td class="tit">立案日期</td><td>${oaCase.caseRegEndDate}</td>
-					<td class="tit">结案日期</td><td>${oaCase.caseCloseUpEndDate}</td>					
+					<td class="tit">立案结束日期</td><td><fmt:formatDate value="${oaCase.caseRegEndDate}" pattern="yyyy年MM月dd日"/></td>
+					<td class="tit">处罚结束日期</td><td><fmt:formatDate value="${oaCase.casePenalEndDate}" pattern="yyyy年MM月dd日"/></td>
+					<td class="tit">结案日期</td><td><fmt:formatDate value="${oaCase.caseCloseUpEndDate}" pattern="yyyy年MM月dd日"/></td>					
 				</tr>
 				<tr>
 					<td class="tit">文档</td><td colspan="5"><div id="filedocs"></div></td>				

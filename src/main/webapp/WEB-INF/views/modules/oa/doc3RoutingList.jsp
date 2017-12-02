@@ -21,7 +21,7 @@
 		<li><a href="${ctx}/oa/doc3Routing/form">发文</a></li>
 		<!--</shiro:hasPermission> -->
 	</ul>
-	<form:form id="searchForm" modelAttribute="doc" action="${ctx}/oa/doc3Routing/list" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="doc" action="${ctx}/oa/doc3Routing/list" method="post" class="breadcrumb form-search" style="display:none">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<div>

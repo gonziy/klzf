@@ -65,7 +65,13 @@ public class OaDoc3RoutingController extends BaseController {
 	//@RequiresPermissions("oa:oaDoc3:view")
 	@RequestMapping(value = {"list"})
 	public String list(OaDoc3 oaDoc3, HttpServletRequest request, HttpServletResponse response, Model model) {
-	    Page<OaDoc3> page = oaDoc3RoutingService.findPage(new Page<OaDoc3>(request, response), oaDoc3); 
+	    Page<OaDoc3> page = null;
+	    if(UserUtils.getUser().getOffice().getName().equals("主任")){
+	    	page = oaDoc3RoutingService.findPage(new Page<OaDoc3>(request, response), oaDoc3);
+	    }else{
+	    	oaDoc3.setDocQueryUserId(UserUtils.getUser().getId());
+	    	page = oaDoc3RoutingService.findPage(new Page<OaDoc3>(request, response), oaDoc3);
+	    }
 	    model.addAttribute("page", page); 
 	    //
 		return "modules/oa/doc3RoutingList";

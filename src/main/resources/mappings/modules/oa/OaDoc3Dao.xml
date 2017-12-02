@@ -43,6 +43,9 @@
 		</if>
 		<if test="docQueryStage != null and docQueryStage != ''">
 			AND a.DRStage = #{docQueryStage}
+		</if>
+		<if test="docQueryUserId != null and docQueryUserId != ''">
+			AND a.LeaderId = #{docQueryUserId}
 		</if>		
 		${sqlMap.dsf}
 		ORDER BY a.id DESC

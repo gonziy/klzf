@@ -44,7 +44,7 @@
 			<table class="table-form">
 				<!-- 案件申报 -->
 				<c:if test="${oaCase.rejectFlag==true}">
-					<tr><td class ="redtit" colspan="6"><b style="color:white">该流程被驳回</b></td></tr>
+					<tr><td class ="redtit" colspan="6"><b style="color:#ffc600">该流程被驳回</b></td></tr>
 					<tr><td class ="tit">原因</td><td colspan="5">${oaCase.mainLeaderRegOption}</td></tr>
 				</c:if>
 				<!-- 驳回提示 -->

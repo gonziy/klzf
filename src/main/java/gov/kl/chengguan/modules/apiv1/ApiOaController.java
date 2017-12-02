@@ -156,7 +156,7 @@ public class ApiOaController  extends BaseController {
 		String id = request.getParameter("id");
 		OaCase oaCase = new OaCase();
 		oaCase.setId(id);
-		oaCase.setGaozhiDate(new Date());
+		oaCase.setChufaDate(new Date());
 		
 		int result = caseDao.updateChuFa(oaCase);
 		PrintWriter out;
@@ -182,7 +182,7 @@ public class ApiOaController  extends BaseController {
 		String id = request.getParameter("id");
 		OaCase oaCase = new OaCase();
 		oaCase.setId(id);
-		oaCase.setGaozhiDate(new Date());
+		oaCase.setCuigaoDate(new Date());
 		
 		int result = caseDao.updateCuiGao(oaCase);
 		PrintWriter out;
