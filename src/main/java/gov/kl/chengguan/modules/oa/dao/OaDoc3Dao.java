@@ -23,4 +23,6 @@ public interface OaDoc3Dao extends CrudDao<OaDoc3>{
 	
 	public int updateInsId(OaDoc3 doc);
 	
+	
+	
 }

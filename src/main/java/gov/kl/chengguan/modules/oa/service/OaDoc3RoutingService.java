@@ -1,6 +1,7 @@
 package gov.kl.chengguan.modules.oa.service;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -207,7 +208,6 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 				{
 					reviewers.add(s.trim());				
 				}
-				oaDoc3.setReviewersIDs1(reviewerIds);
 			}
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
@@ -246,6 +246,8 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		
 		// 对不同环节的业务逻辑进行操作
 		String taskDefKey = oaDoc3.getAct().getTaskDefKey();
+		String currentUser = UserUtils.getUser().getId();
+		
 		PushService pushService = new PushService();
 
 		Map<String, Object> vars = Maps.newHashMap();
@@ -255,8 +257,24 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			oaDoc3.setDRStage("1");
 			if("yes".equals(oaDoc3.getAct().getFlag())){
 				oaDoc3.setOfficeHeaderApproval(true);
-				vars.put("leader", oaDoc3.getLeaderId());
-				pushService.PushToUser(oaDoc3.getLeaderId(), Message);
+				
+				String leaderIds = oaDoc3.getLeaderId();
+				leaderIds= leaderIds.replace(",", ";");
+				oaDoc3.setLeaderId(leaderIds);
+				List<String> leaders = new ArrayList<String>();			
+				if(leaderIds != null && leaderIds.trim().length() > 1) {
+					String[] ss = leaderIds.trim().split(";");
+					for(String s : ss)
+					{
+						String userId = s.trim();
+						leaders.add(userId);	
+						pushService.PushToUser(userId, Message);			
+					}
+				}
+				
+				vars.put("leaders", leaders);
+				
+				oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
 			}
 			else {
 				oaDoc3.setOfficeHeaderApproval(false);				
@@ -268,6 +286,15 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 			oaDoc3.setLeaderApproveDate(Calendar.getInstance().getTime());
 			oaDoc3.setDRStage("2");
 			oaDoc3Dao.updateLeaderApproval(oaDoc3);
+			
+			// 请按照这个查询领导审批意见，(NAME_)流程ID:用户ID，取得(TEXT_)审批时间;领导意见
+			String k1 = oaDoc3.getProcInsId() + ":" + currentUser;	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");			
+			String v1 = sdf.format(oaDoc3.getLeaderApproveDate()) 
+					+ "#" + oaDoc3.getReviewersIDs()
+					+ "#" + oaDoc3.getLeaderOption();
+
+			vars.put(k1, v1);
 		}
 		else if ("utInformApplyer".equals(taskDefKey)){
 			// 
@@ -285,10 +312,8 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 					reviewers.add(userId);	
 					pushService.PushToUser(userId, Message);			
 				}
-
-				oaDoc3.setReviewersIDs1(reviewerIds);
 			}
-
+			
 			vars.put("approvers", reviewers);
 			oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
 		}

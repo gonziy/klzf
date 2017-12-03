@@ -355,6 +355,15 @@ public class OaCase extends ActEntity<OaCase> {
 	public void setCaseQueryUserId(String caseQueryUserId) {
 		this.caseQueryUserId = caseQueryUserId;
 	}
+	//模糊检索关键字
+	private String caseQueryKeyword;	 
+	public String getCaseQueryKeyword() {
+		return caseQueryKeyword;
+	}
+
+	public void setCaseQueryKeyword(String caseQueryKeyword) {
+		this.caseQueryKeyword = caseQueryKeyword;
+	}
 	// 涉案人
 	private String caseQueryParty;	 
 	// 法人

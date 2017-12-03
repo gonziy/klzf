@@ -28,7 +28,7 @@ public class Doc3OfficeHeaderApproveCreateListener implements TaskListener {
 		logger.info(TAG, "set Office Header");
 		
 		UserService userService = new UserService();
-		List<BaseUser> officeHeaders = 	userService.getOfficeLeader();
+		List<BaseUser> officeHeaders = userService.getOfficeLeader();
 		PushService pusher = new PushService();
 		
 		// 只处理第一个
@@ -40,7 +40,7 @@ public class Doc3OfficeHeaderApproveCreateListener implements TaskListener {
 			pusher.PushToUser(officeHeaderId, Message);
 		}
 		else {
-			logger.error(TAG, "no office Headers Error! docs can not be approved!");
+			logger.error(TAG, "no office Headers Error! doc can not be approved!");
 		}
 	}
 

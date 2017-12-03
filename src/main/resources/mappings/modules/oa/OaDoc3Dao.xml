@@ -4,6 +4,7 @@
 	
     <sql id="docColumns">
 		a.*,
+		a.proc_ins_id AS "processInstanceId",
 		u.id AS "createBy.id",
 		u.name AS "createBy.name",
 		o.id AS "publisher.office.id",
@@ -36,16 +37,13 @@
 			AND a.create_date &lt;= #{docQueryPublishDateEnd}
 		</if>
 		<if test="docQueryTitle != null and docQueryTitle != ''">
-			AND a.doc_title LIKE
+			AND a.DocTitle LIKE
 					<if test="dbName == 'mysql'">CONCAT('%', #{docQueryTitle}, '%')</if>
 					<if test="dbName == 'oracle'">'%'||#{docQueryTitle}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{udocQueryTitle}+'%'</if>
 		</if>
 		<if test="docQueryStage != null and docQueryStage != ''">
 			AND a.DRStage = #{docQueryStage}
-		</if>
-		<if test="docQueryUserId != null and docQueryUserId != ''">
-			AND a.LeaderId = #{docQueryUserId}
 		</if>		
 		${sqlMap.dsf}
 		ORDER BY a.id DESC
@@ -73,6 +71,7 @@
 			id,
 		DocTitle,
 		AttachLinks,
+		ApplyerOption,
 		OfficeHeaderOption,
 		OfficeHeaderApproval,
 		DueDate,
@@ -94,6 +93,7 @@
 			#{id}, 
 		#{docTitle},
 		#{attachLinks},
+		#{applyerOption},
 		#{officeHeaderOption},
 		#{officeHeaderApproval},
 		#{dueDate},
@@ -118,13 +118,12 @@
 		UPDATE oa_doc3 SET 
 			DocTitle = #{docTitle},
 			AttachLinks = #{attachLinks},
+			ApplyerOption = #{applyerOption},
 			OfficeHeaderOption = #{officeHeaderOption},
 			OfficeHeaderApproval = #{officeHeaderApproval},
 			DueDate = #{dueDate},
 			OfficeHeaderApproveDate = #{officeHeaderApproveDate},
 			LeaderId = #{leaderId},
-			LeaderOption = #{leaderOption},
-			LeaderApproveDate = #{leaderApproveDate},
 			reviewersIDs = #{reviewersIDs},
 			reviewersIDs1 = #{reviewersIDs1},
 			DRStage = #{DRStage}
@@ -134,7 +133,6 @@
 	
 	<update id="updateOfficeHeaderApproval">
 		UPDATE oa_doc3 SET 
-			DRStage = #{DRStage},
 			OfficeHeaderOption = #{officeHeaderOption},
 			OfficeHeaderApproval = #{officeHeaderApproval},
 			DueDate = #{dueDate},
@@ -148,9 +146,6 @@
 	<update id="updateLeaderApproval">
 		UPDATE oa_doc3 SET 
 			LeaderId = #{leaderId},
-			LeaderOption = #{leaderOption},
-			LeaderApproveDate = #{leaderApproveDate},
-			reviewersIDs = #{reviewersIDs},
 			DRStage = #{DRStage},
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}

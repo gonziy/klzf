@@ -21,24 +21,24 @@
 		<li><a href="${ctx}/oa/doc3Routing/form">发文</a></li>
 		<!--</shiro:hasPermission> -->
 	</ul>
-	<form:form id="searchForm" modelAttribute="doc" action="${ctx}/oa/doc3Routing/list" method="post" class="breadcrumb form-search" style="display:none">
+	<form:form id="searchForm" modelAttribute="doc" action="${ctx}/oa/doc3Routing/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<div>
 			<label>发文名称：&nbsp;</label>
-			<input id="docTitle"  name="docTitle"  type="text" maxlength="100" class="input-medium" style="width:130px;" placeholder="请输入欲查询的发文名"
-				value="${doc.docQueryTitle}" />
+			<input id="docQueryTitle"  name="docQueryTitle"  type="text" maxlength="100" class="input-medium" style="width:130px;" placeholder="请输入发文关键字"
+				value="${doc.docQueryTitle}" />&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 		</div>
 		<div style="margin-top:8px;">
-			<label>发文时间：</label>
+			<!-- <label>发文时间：</label>
 			<input id="docPublishDateStart"  name="docPublishDateStart"  type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:130px;"
 				value="<fmt:formatDate value="${doc.docQueryCreateDateStart}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 				　--　
 			<input id="docPublishDateEnd" name="docPublishDateEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" style="width:130px;"
 				value="<fmt:formatDate value="${doc.docQueryCreateDateEnd}" pattern="yyyy-MM-dd"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
-			&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>-->
+			
 		</div>
 	</form:form>
 	
@@ -46,6 +46,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr>
 			<th>发文名称</th>
+			<th>文件</th>
 			<th>创建人</th>
 			<th>创建时间</th>
 		</tr></thead>
@@ -56,6 +57,7 @@
 			<c:set var="hpi" value="${doc.historicProcessInstance }" />
 			<tr>
 				<td>${doc.docTitle}</td>
+				<td>${doc.attachLinksLinks}</td>
 				<td>${doc.createBy.name}</td>
 				<td><fmt:formatDate value="${doc.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 			</tr>

@@ -126,15 +126,17 @@
 						</div> 
 					    <form:input path="attachLinks" class="required" style="width:80%; display:none;"/>	
 					</td>
-				</tr>									
+				</tr>
+				<tr>
+					<td class="tit">发文建议</td>
+					<td><form:input path="applyerOption" maxlength="100"/>	</td>
+				</tr>										
 			</table>
 		</fieldset>
 	
 		<div class="form-actions">
-			<!--<shiro:hasPermission name="oa:leave:edit"> -->
-				<input id="btnSubmit" class="btn btn-primary" type="submit" value="提 交"/>&nbsp;
-			<!--</shiro:hasPermission>-->
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+		<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交审阅" onclick="$('#flag').val('yes')"/>&nbsp;
+		<input id="btnSubmit" class="btn btn-inverse" type="submit" value="修 回" onclick="$('#flag').val('no')"/>&nbsp;
 		</div>
 	</form:form>
 </body>

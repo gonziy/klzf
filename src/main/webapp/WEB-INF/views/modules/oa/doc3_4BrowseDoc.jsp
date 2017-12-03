@@ -44,7 +44,7 @@
 			<table class="table-form">
 				<!-- 案件简报 -->
 				<tr>
-					<td class="tit">文件及附件链接</td><td colspan="2"><a href="${oaDoc3.attachLinks}">${oaDoc3.attachLinks}</a></td>					
+					<td class="tit">文件及附件链接</td><td colspan="2">${oaDoc3.attachLinksLinks}</td>					
 				</tr>
 				<tr style="display:none">
 					<td class="tit">截止时间</td><td><fmt:formatDate value="${oaDoc3.dueDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>

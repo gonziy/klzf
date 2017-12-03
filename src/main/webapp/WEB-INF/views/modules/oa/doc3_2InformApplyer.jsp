@@ -45,7 +45,7 @@
 				<tr><td class ="redtit" colspan="2"><b style="color:white">提报文件修回</b></td></tr>
 				<tr><td class ="tit">原因</td><td colspan="2">${oaDoc3.officeHeaderOption}</td></tr>
 				<tr>
-					<td class="tit">文件及附件链接</td><td colspan="2"><a href="${oaDoc3.attachLinks}">${oaDoc3.attachLinks}</a></td>					
+					<td class="tit">文件及附件链接</td><td colspan="2">${oaDoc3.attachLinksLinks}</td>					
 				</tr>				
 			</table>
 		</fieldset>

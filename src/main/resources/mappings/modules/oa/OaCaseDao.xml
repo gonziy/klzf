@@ -662,6 +662,60 @@ UPDATE oa_case SET
 	WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
 	<if test="caseQueryStage >0">
 		AND a.case_stage = #{caseQueryStage}
+	</if>
+	<if test="caseQueryKeyword != null and caseQueryKeyword != ''" >
+		AND 
+			( 
+			a.title LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.parties LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.legal_agent LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.address LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.phone_number LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.case_desc LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.norm_desc_Part1 LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.norm_desc_Part2 LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.norm_penal_Part2 LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>
+			OR
+			a.doc_no LIKE
+			<if test="dbName == 'mysql'">CONCAT('%', #{caseQueryKeyword}, '%')</if>
+			<if test="dbName == 'oracle'">'%'||#{caseQueryKeyword}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{caseQueryKeyword}+'%'</if>		
+			)
 	</if>	
 	<if test="caseQueryTitle != null and caseQueryTitle != ''" >
 		AND a.caseTitle LIKE

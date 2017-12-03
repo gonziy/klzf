@@ -21,13 +21,11 @@
 		<li class="active"><a href="${ctx}/oa/oaCase/">案件列表</a></li>
 		<li><a href="${ctx}/act/task/form?procDefId=CaseProcess:1:e253a8a5f2fb4cf4937619da3e0c8541">新建任务</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/list" method="post" class="breadcrumb form-search" style="display:none">
+	<form:form id="searchForm" modelAttribute="oaCase" action="${ctx}/oa/oaCase/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<label>按承办人查询：</label>
-		<sys:treeselect id="user" name="user.id" value="${oaCase.caseQueryAssignee.id}" labelName="user.name" labelValue="${oaCase.caseQueryAssignee.name}" 
-			title="承办人" url="/sys/office/treeData?type=3" cssStyle="width:150px" allowClear="true" notAllowSelectParent="true"/>
-		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+		<input id="caseQueryKeyword"  name="caseQueryKeyword"  type="text" maxlength="100" class="input-medium" style="width:130px;" placeholder="请输入关键字"
+				value="${oaCase.caseQueryKeyword}" />&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	
 	<sys:message content="${message}"/>

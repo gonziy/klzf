@@ -27,7 +27,7 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<div>
 			<label>发文名称：&nbsp;</label>
-			<input id="docTitle"  name="docTitle"  type="text" maxlength="100" class="input-medium" style="width:130px;" placeholder="请输入欲查询的发文名"
+			<input id="docQueryTitle"  name="docQueryTitle"  type="text" maxlength="100" class="input-medium" style="width:130px;" placeholder="请输入欲查询的发文名"
 				value="${doc.docQueryTitle}" />
 		</div>
 		<div style="margin-top:8px;">
