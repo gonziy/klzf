@@ -118,6 +118,14 @@ public class ApiDocController  extends BaseController {
 			JSONObject json = JSONObject.parseObject(dataString);
 			JSONObject userJson = json.getJSONObject("user");
 			JSONObject docJson = json.getJSONObject("document");
+			if(userJson==null){
+				jsonObject.put("msg", "missing user");
+				jsonObject.put("code", 41010);
+			}
+			if(userJson.getString("userId")==null || userJson.getString("userId").isEmpty()){
+				jsonObject.put("msg", "missing userId");
+				jsonObject.put("code", 41010);
+			}
 //			java.util.List<Act> todoList = actTaskService.findTodoTasks(userJson.getString("userId"), ActUtils.PD_DOC3_ROUTING[0]);
 			java.util.List<OaDoc3> todoList =doc3Service.findTodoTasks(userJson.getString("userId"));
 			OaDoc3 model = null;
@@ -165,13 +173,13 @@ public class ApiDocController  extends BaseController {
 							}
 							return;
 						}
-						
+						model.setOfficeHeaderOption(docJson.getString("opinion"));
 						model.setLeaderId(docJson.getString("approvalId"));
 						model.setDueDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2099-12-31 23:59:59"));
 						User updater = userDao.get(userJson.getString("userId"));
 						model.setUpdateBy(updater);
 						model.setUpdateDate(new Date());
-						doc3Service.mobileSaveStep(model, 1);
+						doc3Service.mobileSaveStep(userJson.getString("userId"),model, 1);
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
 						jsonObject.put("result", "success");
@@ -182,7 +190,7 @@ public class ApiDocController  extends BaseController {
 
 				}else if(stage == 2){
 					try {
-						if(docJson.getString("userId")==null || docJson.getString("userId").isEmpty())
+						if(userJson.getString("userId")==null || userJson.getString("userId").isEmpty())
 						{
 							jsonObject.put("msg", "missing url, userId is null, please put a parameter");
 							jsonObject.put("code", 41010);
@@ -212,7 +220,7 @@ public class ApiDocController  extends BaseController {
 						User updater = userDao.get(userJson.getString("userId"));
 						model.setUpdateBy(updater);
 						model.setUpdateDate(new Date());
-						doc3Service.mobileSaveStep(model, 1);
+						doc3Service.mobileSaveStep(userJson.getString("userId"),model, 1);
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
 						jsonObject.put("result", "success");
@@ -222,10 +230,9 @@ public class ApiDocController  extends BaseController {
 					
 				}else if(stage == 3){
 					try {
-
-						if(docJson.getJSONArray("readerIds")==null || docJson.getJSONArray("readerIds").size()==0)
+						if(userJson.getString("userId")==null || userJson.getString("userId").isEmpty())
 						{
-							jsonObject.put("msg", "missing url, readerIds is null, please put a parameter");
+							jsonObject.put("msg", "missing url, userId is null, please put a parameter");
 							jsonObject.put("code", 41010);
 							try {
 								out = response.getWriter();
@@ -236,6 +243,37 @@ public class ApiDocController  extends BaseController {
 							}
 							return;
 						}
+						
+						java.util.List<Act> todoList2 = actTaskService.findTodoTasks(userJson.getString("userId"), ActUtils.PD_CASE[0]);
+						if(todoList2.size()>0)
+						{
+							for (Act act : todoList2) {
+								String businessId= act.getBusinessId();
+								businessId = businessId.substring(businessId.indexOf(":") + 1,businessId.length());		
+								if(businessId.equals(docJson.getString("id"))){
+									model = oaDoc3Dao.get(businessId);
+									model.setAct(act);
+									model.setTask(act.getTask());
+									break;
+								}
+							}
+						}
+						//验证是否签收
+						actTaskService.claim(model.getTask().getId(), userJson.getString("userId"));
+						
+//						if(docJson.getJSONArray("readerIds")==null || docJson.getJSONArray("readerIds").size()==0)
+//						{
+//							jsonObject.put("msg", "missing url, readerIds is null, please put a parameter");
+//							jsonObject.put("code", 41010);
+//							try {
+//								out = response.getWriter();
+//								out.print(jsonObject.toJSONString());
+//								out.flush();
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//							return;
+//						}
 						JSONArray readersarray = docJson.getJSONArray("readerIds");
 						String readers ="";
 						if(readersarray!=null){
@@ -255,7 +293,7 @@ public class ApiDocController  extends BaseController {
 						User updater = userDao.get(userJson.getString("userId"));
 						model.setUpdateBy(updater);
 						model.setUpdateDate(new Date());
-						doc3Service.mobileSaveStep(model, 1);
+						doc3Service.mobileSaveStep(userJson.getString("userId"),model, 1);
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
 						jsonObject.put("result", "success");
@@ -281,7 +319,7 @@ public class ApiDocController  extends BaseController {
 						User updater = userDao.get(userJson.getString("userId"));
 						model.setUpdateBy(updater);
 						model.setUpdateDate(new Date());
-						doc3Service.mobileSaveStep(model, 1);
+						doc3Service.mobileSaveStep(userJson.getString("userId"),model, 1);
 						jsonObject.put("msg", "success");
 						jsonObject.put("code", 0);
 						jsonObject.put("result", "success");
@@ -377,6 +415,7 @@ public class ApiDocController  extends BaseController {
 			User currorUser = userDao.get(userJson.getString("userId"));
 			doc3.setCreateBy(currorUser);
 			doc3.setCreateDate(new Date());
+			doc3.setApplyerOption(docJson.getString("opinion"));
 			doc3.setDocTitle(docJson.getString("title"));
 			doc3.setUpdateBy(currorUser);
 			doc3.setUpdateDate(new Date());

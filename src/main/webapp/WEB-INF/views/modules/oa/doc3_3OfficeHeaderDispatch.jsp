@@ -72,7 +72,7 @@
 					<td class="tit">截止时间</td><td><fmt:formatDate value="${oaDoc3.dueDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				</tr>
 				<tr>
-					<td class="tit">领导意见</td><td colspan="2">${oaDoc3.leaderOption}</td>				
+					<td class="tit">领导意见</td><td colspan="2">${oaDoc3.leaderOptions}</td>				
 				</tr>
 				<tr style="display:none">
 					<td class="tit">传阅人列表</td><td colspan="2">${oaDoc3.reviewersIDs}</td>

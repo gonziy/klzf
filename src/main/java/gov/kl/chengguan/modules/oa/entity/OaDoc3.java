@@ -64,6 +64,13 @@ public class OaDoc3 extends ActEntity<OaDoc3> {
 	// 审阅领导
 	private String leaderId;
 	private String leaderOption;
+	public String getLeaderOption() {
+		return leaderOption;
+	}
+
+
+
+	private String leaderOptions;
 	private Date leaderApproveDate;
 	// 公文审阅人ID列表，用;分割
 	private String reviewersIDs;
@@ -244,7 +251,7 @@ public class OaDoc3 extends ActEntity<OaDoc3> {
 		this.leaderId = leaderId;
 	}
 
-	public String getLeaderOption() {
+	public String getLeaderOptions() {
 		String tmpOption= "";
 		leaders = getLeaders();
 		if(leaders!=null && leaders.size()>0)

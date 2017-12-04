@@ -165,35 +165,66 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		}
 	}
 
+	
+	
+
 	/**
 	 * 审核审批保存
 	 * @param oaDoc3
 	 */
 	@Transactional(readOnly = false)
-	public void mobileSaveStep(OaDoc3 oaDoc3, int iReturnState) {		
+	public void mobileSaveStep(String userId,OaDoc3 oaDoc3, int iReturnState) {		
 		// 设置意见
 		oaDoc3.getAct().setComment(iReturnState ==1?"[同意] ":"[驳回] ");
 		oaDoc3.preUpdate();
 		
 		// 对不同环节的业务逻辑进行操作
 		String taskDefKey = oaDoc3.getAct().getTaskDefKey();
-
+		
 		Map<String, Object> vars = Maps.newHashMap();
 		// 审核环节
 		if ("utOfficeHeaderApprove".equals(taskDefKey)){
 			oaDoc3.setOfficeHeaderApproveDate(Calendar.getInstance().getTime());
 			oaDoc3.setDRStage("1");
-			oaDoc3.setOfficeHeaderApproval((iReturnState ==1)?true : false);
+			if(iReturnState ==1){
+				oaDoc3.setOfficeHeaderApproval(true);
+				
+				String leaderIds = oaDoc3.getLeaderId();
+				
+				List<String> leaders = new ArrayList<String>();			
+				if(leaderIds != null && leaderIds.trim().length() > 1) {
+					String[] ss = leaderIds.trim().split(";");
+					for(String s : ss)
+					{
+						String uid = s.trim();
+						leaders.add(uid);	
+						// if(pushService.isEnabled()) pushService.PushToUser(userId, Message);			
+					}
+				}
+				
+				vars.put("leaders", leaders);
+				// oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
+			}
+			else {
+				oaDoc3.setOfficeHeaderApproval(false);				
+			}		
 			oaDoc3Dao.updateOfficeHeaderApproval(oaDoc3);
-	
-			vars.put("pass", iReturnState);	
-			// 需要设置办理该工作的领导
-			if(iReturnState == 1) vars.put("leader", oaDoc3.getLeaderId());		
+			
+			vars.put("pass", iReturnState);		
 		}
 		else if ("utLeaderApprove".equals(taskDefKey)){
 			oaDoc3.setLeaderApproveDate(Calendar.getInstance().getTime());
 			oaDoc3.setDRStage("2");
 			oaDoc3Dao.updateLeaderApproval(oaDoc3);
+			
+			// 请按照这个查询领导审批意见，(NAME_)流程ID:用户ID，取得(TEXT_)审批时间;领导意见
+			String k1 = oaDoc3.getProcInsId() + ":" + userId;	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");			
+			String v1 = sdf.format(oaDoc3.getLeaderApproveDate()) 
+					+ "#" + oaDoc3.getReviewersIDs()
+					+ "#" + oaDoc3.getLeaderOption();
+
+			vars.put(k1, v1);
 		}
 		else if ("utInformApplyer".equals(taskDefKey)){
 			// 
@@ -261,6 +292,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 				String leaderIds = oaDoc3.getLeaderId();
 				leaderIds= leaderIds.replace(",", ";");
 				oaDoc3.setLeaderId(leaderIds);
+				
 				List<String> leaders = new ArrayList<String>();			
 				if(leaderIds != null && leaderIds.trim().length() > 1) {
 					String[] ss = leaderIds.trim().split(";");
@@ -274,7 +306,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 				
 				vars.put("leaders", leaders);
 				
-				oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
+				// oaDoc3Dao.updateOfficeHeaderDispatch(oaDoc3);
 			}
 			else {
 				oaDoc3.setOfficeHeaderApproval(false);				
@@ -332,6 +364,7 @@ public class OaDoc3RoutingService extends CrudService<OaDoc3Dao, OaDoc3> {
 		// 提交流程任务
 		actTaskService.complete(oaDoc3.getAct().getTaskId(), oaDoc3.getAct().getProcInsId(), oaDoc3.getAct().getComment(), vars);
 	}
+
 
 }
 

@@ -45,14 +45,14 @@
 				<!-- 案件简报 -->
 				<tr><td class="tit">标题</td><td colspan="2">${oaDoc3.docTitle}</td></tr>	
 				<tr><td class="tit">文件及附件链接</td><td colspan="2">${oaDoc3.attachLinksLinks}</td></tr>	
-				<tr><td class="tit">发文建议</td><td colspan="2">${oaDoc3.applyerOption}</td></tr>	
+				<tr><td class="tit">发文建议</td><td colspan="2">${oaDoc3.officeHeaderOption}</td></tr>	
 				<tr style="display:none">
 					<td class="tit">截止时间</td><td><fmt:formatDate value="${oaDoc3.dueDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				</tr>
-				<tr><td class="tit" colspan="3" style="color: red"><h4>填写</h4></td></tr>				
+				<tr><td class="tit" colspan="3"><h4>填写</h4></td></tr>				
 				<tr>
 					<td class="tit">审阅意见</td>
-					<td colspan="2"><form:input path="leaderOption" maxlength="150"/></td>				
+					<td colspan="2"><form:input path="leaderOption" maxlength="150" value="" /></td>				
 				</tr>
 				<tr style="display:none">
 					<td class="tit">选择传阅人</td>
