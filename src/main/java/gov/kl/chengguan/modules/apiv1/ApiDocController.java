@@ -42,8 +42,10 @@ import gov.kl.chengguan.modules.cms.dao.BaseArticleDao;
 import gov.kl.chengguan.modules.cms.service.BaseArticleService;
 import gov.kl.chengguan.modules.cms.utils.CmsUtils;
 import gov.kl.chengguan.modules.oa.dao.OaDoc3Dao;
+import gov.kl.chengguan.modules.oa.dao.OaDoc3DaoLeaders;
 import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaDoc3;
+import gov.kl.chengguan.modules.oa.entity.OaDoc3Leaders;
 import gov.kl.chengguan.modules.oa.service.OaDoc3RoutingService;
 import gov.kl.chengguan.modules.sys.dao.BaseUserDao;
 import gov.kl.chengguan.modules.sys.dao.UserDao;
@@ -66,6 +68,8 @@ public class ApiDocController  extends BaseController {
 	private UserDao userDao;
 	@Autowired
 	private BaseUserDao baseUserDao;
+	@Autowired
+	private OaDoc3DaoLeaders leadersDao;
 	@Autowired
 	private OaDoc3Dao oaDoc3Dao;
 	@Autowired
@@ -615,6 +619,28 @@ public class ApiDocController  extends BaseController {
 				return;
 			}
 			OaDoc3 oaDoc3 = doc3Service.get(id);
+			
+			java.util.List<OaDoc3Leaders> lds = new ArrayList<OaDoc3Leaders>();
+			if(oaDoc3.getProcInsId()!=null && !oaDoc3.getProcInsId().isEmpty()){
+				lds = leadersDao.getLeadersOpinions(oaDoc3.getProcInsId());
+				if(lds==null || lds.size()==0){
+					lds = leadersDao.getLeadersOpinionsHistory(oaDoc3.getProcInsId());
+				}
+			}
+			String tmpOption= "";
+			if(lds!=null && lds.size()>0)
+			{
+				for (OaDoc3Leaders oaDoc3Leaders : lds) {
+					if(oaDoc3Leaders!=null){
+						tmpOption += oaDoc3Leaders.getOpinion() + "|";
+					}
+				}
+				if(tmpOption.endsWith("|")){
+					tmpOption = tmpOption.substring(0,tmpOption.length()-1);
+				}
+			}
+			oaDoc3.setQueryLeaderOptions(tmpOption);
+			
 			if(oaDoc3!=null){
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
@@ -656,6 +682,8 @@ public class ApiDocController  extends BaseController {
 		apiDoc3.setDocTitle(doc.getDocTitle());
 		apiDoc3.setDRStage(doc.getDRStage());
 		apiDoc3.setDueDate(doc.getDueDate());
+		apiDoc3.setApplyerOption(doc.getApplyerOption());
+		apiDoc3.setLeaderOptions(doc.getQueryLeaderOptions());
 		apiDoc3.setId(doc.getId());
 		apiDoc3.setLeaderApproveDate(doc.getLeaderApproveDate());
 		apiDoc3.setLeaderId(doc.getLeaderId());
@@ -664,6 +692,7 @@ public class ApiDocController  extends BaseController {
 		apiDoc3.setOfficeHeaderApproveDate(doc.getOfficeHeaderApproveDate());
 		apiDoc3.setOfficeHeaderOption(doc.getOfficeHeaderOption());
 		apiDoc3.setReviewersIDs(doc.getReviewersIDs());
+		apiDoc3.setReviewersIDs1(doc.getReviewersIDs1());
 		apiDoc3.setReviewersIDs1(doc.getReviewersIDs1());
 		return apiDoc3;
 	}
@@ -675,6 +704,8 @@ public class ApiDocController  extends BaseController {
 		private String docTitle;
 		// 到公文的链接，可能一次发布多个文件，用;分割
 		private String files;
+		//文员意见
+		private String applyerOption;
 		// 办公室领导意见
 		private String officeHeaderOption;
 		private boolean officeHeaderApproval;
@@ -685,12 +716,26 @@ public class ApiDocController  extends BaseController {
 		// 审阅领导
 		private String leaderId;
 		private String leaderOption;
+
+		private String leaderOptions;
 		private Date leaderApproveDate;
 		// 公文审阅人ID列表，用;分割
 		private String reviewersIDs;
 		private String reviewersIDs1;
 		private String DRStage;
 		
+		public String getApplyerOption() {
+			return applyerOption;
+		}
+		public void setApplyerOption(String applyerOption) {
+			this.applyerOption = applyerOption;
+		}
+		public String getLeaderOptions() {
+			return leaderOptions;
+		}
+		public void setLeaderOptions(String leaderOptions) {
+			this.leaderOptions = leaderOptions;
+		}
 		public String getId() {
 			return id;
 		}

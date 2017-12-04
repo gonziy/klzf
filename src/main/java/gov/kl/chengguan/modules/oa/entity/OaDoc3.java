@@ -25,6 +25,12 @@ import gov.kl.chengguan.modules.sys.dao.UserDao;
  */
 public class OaDoc3 extends ActEntity<OaDoc3> {
 
+	public void setLeaderOptions(String leaderOptions) {
+		this.leaderOptions = leaderOptions;
+	}
+
+
+
 	private static OaDoc3DaoLeaders leadersDao = SpringContextHolder.getBean(OaDoc3DaoLeaders.class);
 	/**
 	 * 版本id
@@ -71,6 +77,19 @@ public class OaDoc3 extends ActEntity<OaDoc3> {
 
 
 	private String leaderOptions;
+	private String queryLeaderOptions;
+	
+	
+	public String getQueryLeaderOptions() {
+		return queryLeaderOptions;
+	}
+
+	public void setQueryLeaderOptions(String queryLeaderOptions) {
+		this.queryLeaderOptions = queryLeaderOptions;
+	}
+
+
+
 	private Date leaderApproveDate;
 	// 公文审阅人ID列表，用;分割
 	private String reviewersIDs;
