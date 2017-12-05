@@ -49,6 +49,7 @@
 			<th>文件</th>
 			<th>创建人</th>
 			<th>创建时间</th>
+			<th>操作</th>
 		</tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="doc">
@@ -60,6 +61,7 @@
 				<td>${doc.attachLinksLinks}</td>
 				<td>${doc.createBy.name}</td>
 				<td><fmt:formatDate value="${doc.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				<td><a href="${ctx}/oa/doc3Routing/detail?id=${doc.id}">查询</a></td>
 			</tr>
 		</c:forEach>
 		</tbody>

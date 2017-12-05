@@ -39,6 +39,7 @@ import com.google.common.collect.Maps;
 import gov.kl.chengguan.common.mapper.JsonMapper;
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.web.BaseController;
+import gov.kl.chengguan.modules.oa.entity.OaCase;
 import gov.kl.chengguan.modules.oa.entity.OaDoc3;
 import gov.kl.chengguan.modules.oa.service.OaDoc3RoutingService;
 import gov.kl.chengguan.modules.sys.utils.UserUtils;
@@ -60,6 +61,13 @@ public class OaDoc3RoutingController extends BaseController {
 			oaDoc3 = new OaDoc3();
 		}
 		return oaDoc3;
+	}
+	
+	//@RequiresPermissions("oa:oaDoc3:view")
+	@RequestMapping(value = "detail")
+	public String getDocuments(OaDoc3 oaDoc3, Model model){
+		model.addAttribute("oaDoc3", oaDoc3);
+		return "modules/oa/doc3RoutingDetail";
 	}
 	
 	//@RequiresPermissions("oa:oaDoc3:view")

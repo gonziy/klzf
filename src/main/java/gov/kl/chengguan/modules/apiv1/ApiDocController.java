@@ -645,9 +645,7 @@ public class ApiDocController  extends BaseController {
 				jsonObject.put("msg", "success");
 				jsonObject.put("code", 0);
 				jsonObject.put("data", JSONObject.toJSON(ToApiDoc3(oaDoc3)));
-			}
-			else {
-
+			}else {
 				jsonObject.put("msg", "data is null");
 				jsonObject.put("code", 44004);
 			}
