@@ -139,7 +139,8 @@
 			LeaderId = #{leaderId},
 			OfficeHeaderApproveDate = #{officeHeaderApproveDate},
 			update_by = #{updateBy.id}, 
-			update_date = #{updateDate}
+			update_date = #{updateDate},
+			DRStage = #{DRStage}
 		WHERE id = #{id}
 	</update>
 	

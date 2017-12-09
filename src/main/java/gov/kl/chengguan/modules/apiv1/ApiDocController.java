@@ -680,7 +680,7 @@ public class ApiDocController  extends BaseController {
 		apiDoc3.setDocTitle(doc.getDocTitle());
 		apiDoc3.setDRStage(doc.getDRStage());
 		apiDoc3.setDueDate(doc.getDueDate());
-		apiDoc3.setApplyerOption(doc.getApplyerOption());
+		apiDoc3.setOpinion1(doc.getApplyerOption());
 		apiDoc3.setLeaderOptions(doc.getQueryLeaderOptions());
 		apiDoc3.setId(doc.getId());
 		apiDoc3.setLeaderApproveDate(doc.getLeaderApproveDate());
@@ -688,7 +688,7 @@ public class ApiDocController  extends BaseController {
 		apiDoc3.setLeaderOption(doc.getLeaderOption());
 		apiDoc3.setOfficeHeaderApproval(doc.isOfficeHeaderApproval());
 		apiDoc3.setOfficeHeaderApproveDate(doc.getOfficeHeaderApproveDate());
-		apiDoc3.setOfficeHeaderOption(doc.getOfficeHeaderOption());
+		apiDoc3.setOpinion2(doc.getOfficeHeaderOption());
 		apiDoc3.setReviewersIDs(doc.getReviewersIDs());
 		apiDoc3.setReviewersIDs1(doc.getReviewersIDs1());
 		apiDoc3.setReviewersIDs1(doc.getReviewersIDs1());
@@ -702,10 +702,23 @@ public class ApiDocController  extends BaseController {
 		private String docTitle;
 		// 到公文的链接，可能一次发布多个文件，用;分割
 		private String files;
+		public String getOpinion1() {
+			return opinion1;
+		}
+		public void setOpinion1(String opinion1) {
+			this.opinion1 = opinion1;
+		}
+		public String getOpinion2() {
+			return opinion2;
+		}
+		public void setOpinion2(String opinion2) {
+			this.opinion2 = opinion2;
+		}
 		//文员意见
-		private String applyerOption;
+		private String opinion1;
 		// 办公室领导意见
-		private String officeHeaderOption;
+		private String opinion2;
+		
 		private boolean officeHeaderApproval;
 		private Date officeHeaderApproveDate;
 		// 到期日期
@@ -714,20 +727,13 @@ public class ApiDocController  extends BaseController {
 		// 审阅领导
 		private String leaderId;
 		private String leaderOption;
-
 		private String leaderOptions;
 		private Date leaderApproveDate;
 		// 公文审阅人ID列表，用;分割
 		private String reviewersIDs;
 		private String reviewersIDs1;
 		private String DRStage;
-		
-		public String getApplyerOption() {
-			return applyerOption;
-		}
-		public void setApplyerOption(String applyerOption) {
-			this.applyerOption = applyerOption;
-		}
+
 		public String getLeaderOptions() {
 			return leaderOptions;
 		}
@@ -752,12 +758,7 @@ public class ApiDocController  extends BaseController {
 		public void setFiles(String attachLinks) {
 			this.files = attachLinks;
 		}
-		public String getOfficeHeaderOption() {
-			return officeHeaderOption;
-		}
-		public void setOfficeHeaderOption(String officeHeaderOption) {
-			this.officeHeaderOption = officeHeaderOption;
-		}
+
 		public boolean isOfficeHeaderApproval() {
 			return officeHeaderApproval;
 		}
