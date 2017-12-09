@@ -307,7 +307,7 @@ public class ApiDocController  extends BaseController {
 					
 				}else if(stage == 4){
 					try {
-						if(docJson.getString("userId")==null || docJson.getString("userId").isEmpty())
+						if(userJson.getString("userId")==null || userJson.getString("userId").isEmpty())
 						{
 							jsonObject.put("msg", "missing url, userId is null, please put a parameter");
 							jsonObject.put("code", 41010);
