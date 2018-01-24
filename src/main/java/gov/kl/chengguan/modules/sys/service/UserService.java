@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sun.tools.classfile.Annotation.element_value;
+
 import gov.kl.chengguan.common.config.Global;
 import gov.kl.chengguan.common.persistence.Page;
 import gov.kl.chengguan.common.security.Digests;
@@ -121,16 +123,44 @@ public class UserService extends BaseService{
 			Office officeWhere = new Office();
 			officeWhere.setId(mine.getOffice().getId());
 			Office myOffice = officeDao.get(officeWhere);
-			Office parentOffice = myOffice.getParent();
-			if(parentOffice!=null){
-				BaseUser userWhere2 = new BaseUser();
-				userWhere2.setOffice(parentOffice);
-				List<BaseUser> tmpUsers  = baseUserDao.findAllList(userWhere2);
-				for (BaseUser baseUser : tmpUsers) {
-					if(baseUser.getOffice().getName().equals(officeName)){
-						instUsers.add(baseUser);
-					}
-				}
+			if(officeName.equals("中队长")){
+				User deptUser = myOffice.getDeputyPerson();
+				BaseUser baseUser = new BaseUser();
+				baseUser.setBaiduPushChannelId(deptUser.getBaiduPushChannelId());
+				baseUser.setCompany(deptUser.getCompany());
+				baseUser.setCurrentUser(deptUser.getCurrentUser());
+				baseUser.setDelFlag(deptUser.getDelFlag());
+				baseUser.setEmail(deptUser.getEmail());
+				baseUser.setId(deptUser.getId());
+				baseUser.setName(deptUser.getName());
+				baseUser.setLoginName(deptUser.getLoginName());
+				baseUser.setMobile(deptUser.getMobile());
+				baseUser.setNo(deptUser.getNo());
+				baseUser.setOffice(deptUser.getOffice());
+				baseUser.setPhone(deptUser.getPhone());
+				baseUser.setPhoto(deptUser.getPhoto());
+				baseUser.setUserType(deptUser.getUserType());
+				baseUser.setRemarks(deptUser.getRemarks());
+				instUsers.add(baseUser);
+			}else if(officeName.equals("队长")){
+				User deptUser = myOffice.getPrimaryPerson();
+				BaseUser baseUser = new BaseUser();
+				baseUser.setBaiduPushChannelId(deptUser.getBaiduPushChannelId());
+				baseUser.setCompany(deptUser.getCompany());
+				baseUser.setCurrentUser(deptUser.getCurrentUser());
+				baseUser.setDelFlag(deptUser.getDelFlag());
+				baseUser.setEmail(deptUser.getEmail());
+				baseUser.setId(deptUser.getId());
+				baseUser.setName(deptUser.getName());
+				baseUser.setLoginName(deptUser.getLoginName());
+				baseUser.setMobile(deptUser.getMobile());
+				baseUser.setNo(deptUser.getNo());
+				baseUser.setOffice(deptUser.getOffice());
+				baseUser.setPhone(deptUser.getPhone());
+				baseUser.setPhoto(deptUser.getPhoto());
+				baseUser.setUserType(deptUser.getUserType());
+				baseUser.setRemarks(deptUser.getRemarks());
+				instUsers.add(baseUser);
 			}
 		}
 		return instUsers;
@@ -165,6 +195,12 @@ public class UserService extends BaseService{
 			for (BaseUser baseUser : tmpAssigneeUsers) {
 				if(!baseUser.getId().equals(id))
 					assigneeUsers.add(baseUser);
+			}
+			List<BaseUser> deptUsers = getInstitutionUser(id, "中队长");
+			if(deptUsers!=null && deptUsers.size()>0){
+				for (BaseUser baseUser : deptUsers) {
+					assigneeUsers.add(baseUser);
+				}
 			}
 		}
 		

@@ -168,6 +168,7 @@ public class ApiOaController  extends BaseController {
 
 		}
 	}
+	
 	@RequestMapping(value = { "oa/case/cuigao" })
 	public void cuigao(HttpServletRequest request,HttpServletResponse response) {
 		response.setContentType("application/json");
@@ -500,8 +501,8 @@ public class ApiOaController  extends BaseController {
 						}
 						model.setInstitutionRegApproval(approve.equals("pass") ? true
 								: false);
-						model.setInstitutionRegOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setInstitutionRegOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utLaShp_Cbjg")) {
 							oaCaseService.mobileSaveStep(model,
@@ -535,8 +536,8 @@ public class ApiOaController  extends BaseController {
 						}
 						model.setDeptLeaderRegApproval(approve.equals("pass") ? true
 								: false);
-						model.setDeptLeaderRegOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setDeptLeaderRegOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utLaShp_Fgld")) {
 							oaCaseService.mobileSaveStep(model,
@@ -561,8 +562,8 @@ public class ApiOaController  extends BaseController {
 						}
 						model.setMainLeaderRegApproval(approve.equals("pass") ? true
 								: false);
-						model.setMainLeaderRegOption(opinion==null? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setMainLeaderRegOption(opinion==null? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utLaShp_Zgld")) {
 							oaCaseService.mobileSaveStep(model,
@@ -620,8 +621,8 @@ public class ApiOaController  extends BaseController {
 						
 						model.setNormAssigneePenalOptPart2(punish);
 
-						model.setAssigneePenalOption(opinion==null? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setAssigneePenalOption(opinion==null? "该用户未填写意见"
+								: opinion + "");
 						
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_CbrYj")) {
@@ -654,8 +655,8 @@ public class ApiOaController  extends BaseController {
 						//结束
 						model.setInstitutionPenalApproval(approve
 								.equals("pass") ? true : false);
-						model.setInstitutionPenalOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setInstitutionPenalOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						model.setCaseMgtCenterPenalOption("");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_Cbjg")) {
@@ -691,8 +692,8 @@ public class ApiOaController  extends BaseController {
 						
 						model.setCaseMgtCenterPenalApproval(approve
 								.equals("pass") ? true : false);
-						model.setCaseMgtCenterPenalOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setCaseMgtCenterPenalOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_AjGlZhx")) {
 							oaCaseService.mobileSaveStep(model,
@@ -726,8 +727,8 @@ public class ApiOaController  extends BaseController {
 						
 						model.setDeptLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
-						model.setDeptLeaderPenalOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setDeptLeaderPenalOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_Fgld")) {
 							oaCaseService.mobileSaveStep(model,
@@ -753,8 +754,8 @@ public class ApiOaController  extends BaseController {
 						}
 						model.setMainLeaderPenalApproval(approve.equals("pass") ? true
 								: false);
-						model.setMainLeaderPenalOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setMainLeaderPenalOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utXzhChf_Zgld")) {
 							oaCaseService.mobileSaveStep(model,
@@ -786,8 +787,8 @@ public class ApiOaController  extends BaseController {
 						//结束
 						model.setCloseUpAssignee(userId);
 						model.setCaseCloseUpStartDate(Calendar.getInstance().getTime());
-						model.setAssigneeCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setAssigneeCloseCaseOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_Chbr")) {
 							oaCaseService.mobileSaveStep(model, 1);
@@ -820,8 +821,8 @@ public class ApiOaController  extends BaseController {
 						
 						model.setInstitutionCloseCaseApproval(approve
 								.equals("pass") ? true : false);
-						model.setInstitutionCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setInstitutionCloseCaseOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_Cbjg")) {
 							oaCaseService.mobileSaveStep(model,
@@ -856,8 +857,8 @@ public class ApiOaController  extends BaseController {
 						
 						model.setCaseMgtCenterCloseCaseApproval(approve
 								.equals("pass") ? true : false);
-						model.setCaseMgtCenterCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setCaseMgtCenterCloseCaseOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_AjGlZhx")) {
 							oaCaseService.mobileSaveStep(model,
@@ -884,8 +885,8 @@ public class ApiOaController  extends BaseController {
 						}
 						model.setMainLeaderCloseCaseApproval(approve
 								.equals("pass") ? true : false);
-						model.setMainLeaderCloseCaseOption(opinion==null ? "该用户未填写意见(手机端)"
-								: opinion + "(手机端)");
+						model.setMainLeaderCloseCaseOption(opinion==null ? "该用户未填写意见"
+								: opinion + "");
 						if (model.getAct().getTaskDefKey()
 								.equals("utJaShp_Zgld")) {
 							oaCaseService.mobileSaveStep(model,
@@ -2736,7 +2737,7 @@ public class ApiOaController  extends BaseController {
 						return;
 					}
 
-					String httpPath = "http://47.93.52.62:8080/klzf2"
+					String httpPath = "http://218.58.213.88/klzf2"
 							+ Global.USERFILES_BASE_URL + fileType + "/"
 							+ folderName + "/" + newFileName;
 					try {

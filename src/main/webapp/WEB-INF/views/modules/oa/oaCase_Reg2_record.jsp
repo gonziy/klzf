@@ -277,7 +277,7 @@
 				}
 			});
 			
-			var url = "${ctx}/../apiv1/user/info/list";
+			var url = "${ctx}/../apiv1/user/info/list?office_id=${fns:getUser().office.id}";
 			$.ajax({
 				type : "get",
 				url : url,

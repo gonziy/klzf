@@ -8,12 +8,25 @@
 	.listimg{ width:150px; height:120px; margin-right:10px;}
 	</style>
 	<script type="text/javascript">
+		String.prototype.endWith=function(str){
+			if(str==null||str==""||this.length==0||str.length>this.length)
+			  return false;
+			if(this.substring(this.length-str.length)==str)
+			  return true;
+			else
+			  return false;
+			return true;
+		}
 		$(document).ready(function() {
 			var imgs = "${oaCase.caseImages}";
 			var arrayimgs = imgs.split(";");
 			for(var i=0; i<arrayimgs.length;i++){
 				if(arrayimgs[i].length>0){
-					$("#fileimgs").append("<img class=\"listimg\" src=\""+arrayimgs[i]+"\" \/>");
+					if(arrayimgs[i].endWith("jpg")||arrayimgs[i].endWith("png")||arrayimgs[i].endWith("jpeg")){
+						$("#fileimgs").append("<a target=\"_blank\" href=\""+arrayimgs[i]+"\"><img onerror=\"this.src='${ctxStatic}/images/file_default.png'\" class=\"listimg\" src=\""+arrayimgs[i]+"\" \/></a>");
+					}else{
+						$("#fileimgs").append("<a target=\"_blank\" href=\""+arrayimgs[i]+"\"><img src=\"${ctxStatic}/images/file_default.png\" class=\"listimg\" \/></a>");
+					}
 				}
 			}
 			
@@ -21,7 +34,11 @@
 			var arrayvdos = vdos.split(";");
 			for(var i=0; i<arrayvdos.length;i++){
 				if(arrayvdos[i].length>0){
-					$("#filevdos").append("<img class=\"listimg\" src=\""+arrayvdos[i]+"\" \/>");
+					if(arrayvdos[i].endWith("jpg")||arrayvdos[i].endWith("png")||arrayvdos[i].endWith("jpeg")){
+						$("#filevdos").append("<a target=\"_blank\" href=\""+arrayvdos[i]+"\"><img onerror=\"this.src='${ctxStatic}/images/file_default.png'\" class=\"listimg\" src=\""+arrayvdos[i]+"\" \/></a>");
+					}else{
+						$("#filevdos").append("<a target=\"_blank\" href=\""+arrayvdos[i]+"\"><img src=\"${ctxStatic}/images/file_default.png\" class=\"listimg\" \/></a>");
+					}
 				}
 			}
 			
@@ -29,7 +46,11 @@
 			var arraydocs = docs.split(";");
 			for(var i=0; i<arraydocs.length;i++){
 				if(arraydocs[i].length>0){
-					$("#filedocs").append("<img class=\"listimg\" src=\""+arraydocs[i]+"\" \/>");
+					if(arraydocs[i].endWith("jpg")||arraydocs[i].endWith("png")||arraydocs[i].endWith("jpeg")){
+						$("#filedocs").append("<a target=\"_blank\" href=\""+arraydocs[i]+"\"><img onerror=\"this.src='${ctxStatic}/images/file_default.png'\" class=\"listimg\" src=\""+arraydocs[i]+"\" \/></a>");
+					}else{
+						$("#filedocs").append("<a target=\"_blank\" href=\""+arraydocs[i]+"\"><img src=\"${ctxStatic}/images/file_default.png\" class=\"listimg\" \/></a>");
+					}
 				}
 			}
 			
